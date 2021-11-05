@@ -6,16 +6,28 @@
   }
 
   &__connect {
+    position: relative;
     width: 100%;
     height: 5px;
     background-color: greenyellow;
     margin: 10px 0px;
   }
 
-  &__handle {
+  &__handle_left,
+  &__handle_right {
     width: 10px;
     height: 10px;
     border-radius: 50%;
     background-color: green;
+  }
+
+  &__handle_left {
+    position: absolute;
+    left: 0;
+  }
+
+  &__handle_right {
+    position: absolute;
+    right: 0;
   }
 }
