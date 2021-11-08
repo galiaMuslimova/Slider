@@ -1,33 +1,14 @@
-/*import {view} from "@/view/view.js";
+import {View} from "@/view/view.js";
+import Handle from "@/view/handle.js";
 
-export const controller = {
-  slider: {},
-  setElement: function(e){
-    this.slider = e;
-  },
-  getElement: function(){
-    return this.slider
-  }
-  //createSlider: view.createSlider(slider),
-}
+export function Controller(element, options) {
+  this.options = options;
+  this.element = element;
 
-$(function () { 
-  //controller.setElement('ffo')
-  console.log(controller.getElement())
+  let view = new View(this.element, this.options);
 
-  $(".slider__handle_left").on("mousedown", function () {     
-    handle.moveHandle(trackElement, handleElement);
-    document.addEventListener('mousemove', handle.onMouseMove.bind(handle));
-    document.onmouseup = function () {
-      document.removeEventListener('mousemove', handle.onMouseMove);
-      handleElement.onmouseup = null;
-    };
-    handleElement.ondragstart = function () {
-      return false;
-    };
+  this.element.on('mousedown', '.slider__handle', function (event) {
+    let handle = new Handle;
+    handle.moveHandle(this)
   })
-
-})*/
-
-
-
+}

@@ -1,37 +1,35 @@
 export default class Handle {
   constructor(){
-    this.className = "slider__handle_left";
-    this.trackPosition;
     this.element;
   }
 
-  addElement() {
-    let newDiv = document.createElement("div");
-    if (this.className) {
-      $(newDiv).addClass(this.className);
+  moveHandle(element) {
+    let handle = element;
+    let trackPosition = handle.closest('.slider__track').getBoundingClientRect();
+
+    let startPositionX = trackPosition.left;
+    let trackWidth = trackPosition.width;
+
+    function moveAt(pageX) {
+      if ((pageX - startPositionX < trackWidth) && (pageX > startPositionX)) {
+        handle.style.left = pageX - startPositionX + window.pageXOffset + 'px';
+        handle.style.top = 0 + 'px';
+      }
     }
-    this.element = newDiv;
-    return this.element;
-  }
 
-  onMouseMove(event) {
-    let startPositionX = this.trackPosition.left;
-    let startPositionY = this.trackPosition.top;
-    let trackWidth = this.trackPosition.width;
-
-    if ((event.pageX - startPositionX < trackWidth) && (event.pageX > startPositionX)) {
-      this.element.style.left = event.pageX + 'px';
-      this.element.style.top = startPositionY + 'px';
+    function onMouseMove(event) {
+      moveAt(event.pageX);
     }
-  }
 
-  moveHandle(track, handle) {
-    document.body.append(handle);
-    this.trackPosition = track.getBoundingClientRect();
+    document.addEventListener('mousemove', onMouseMove);
+
+    document.onmouseup = function () {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.onmouseup = null;
+    };
+
+    handle.ondragstart = function () {
+      return false;
+    };
   } 
-  
-  createElement() {
-    this.addElement();
-    return this.element;
-  }
 }
