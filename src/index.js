@@ -1,5 +1,5 @@
 import "./index.scss";
-import Controller from "./controller/controller.js"
+import {controller} from "./controller/controller.js"
 
 
 (function($) {
@@ -8,19 +8,10 @@ import Controller from "./controller/controller.js"
       to: 't-red'
     }, options);
 
-    function main(e) {
-
-      $(function(){        
-        let controller = new Controller();
-        let slider = controller.createSlider();
-        e[0].appendChild(slider)
-      })
-
-      /*let container = addNode('slider__container');
-      container.appendChild(track);*/
-
-      
+    function main(e) {  
+      controller(e[0]);         
     }
+    
     this.each(function () { main($(this)); });
     return this;
 	};

@@ -11,19 +11,16 @@ export default class Track {
       $(newDiv).addClass(this.className);
     }
     this.element = newDiv;
-  }
-
-  setPosition() {
-    this.trackPosition = this.element.getBoundingClientRect();
+    return this.element;
   }
 
   getPosition() {
+    this.trackPosition = this.element.getBoundingClientRect();
     return this.trackPosition;
   }
 
   createElement() {
     this.addElement();
-    this.setPosition();
     return this.element;
   }
 }

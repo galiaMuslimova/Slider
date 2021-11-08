@@ -1,7 +1,7 @@
 export default class Handle {
-  constructor(trackPosition){
+  constructor(){
     this.className = "slider__handle_left";
-    this.trackPosition = trackPosition;
+    this.trackPosition;
     this.element;
   }
 
@@ -11,41 +11,27 @@ export default class Handle {
       $(newDiv).addClass(this.className);
     }
     this.element = newDiv;
+    return this.element;
   }
 
-  moveElement() {
+  onMouseMove(event) {
     let startPositionX = this.trackPosition.left;
     let startPositionY = this.trackPosition.top;
     let trackWidth = this.trackPosition.width;
-    this.element.style.position = 'absolute';
-    this.element.style.zIndex = 10;
-    let handle = this.element;
-    
-    this.element.onmousedown = function (event) { 
-      document.body.append(handle);
-      function moveAt(pageX) {
-        if ((pageX - startPositionX < trackWidth) && (pageX > startPositionX)) {
-          handle.style.left = pageX + 'px';
-          handle.style.top = startPositionY + 'px';
-        }
-      }
-      function onMouseMove(event) {
-        moveAt(event.pageX);
-      }
-      document.addEventListener('mousemove', onMouseMove);
-      document.onmouseup = function () {
-        document.removeEventListener('mousemove', onMouseMove);
-        handle.onmouseup = null;
-      };
-    };
-    this.element.ondragstart = function () {
-      return false;
-    };
+
+    if ((event.pageX - startPositionX < trackWidth) && (event.pageX > startPositionX)) {
+      this.element.style.left = event.pageX + 'px';
+      this.element.style.top = startPositionY + 'px';
+    }
+  }
+
+  moveHandle(track, handle) {
+    document.body.append(handle);
+    this.trackPosition = track.getBoundingClientRect();
   } 
   
   createElement() {
     this.addElement();
-    this.moveElement();
     return this.element;
   }
 }

@@ -20,15 +20,15 @@
     height: 10px;
     border-radius: 50%;
     background-color: green;
+    position: absolute;
+    z-index: 10;
   }
 
   &__handle_left {
-    position: absolute;
     left: 0;
   }
 
   &__handle_right {
-    position: absolute;
     right: 0;
   }
 }
