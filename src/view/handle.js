@@ -1,14 +1,39 @@
 export default class Handle {
-  constructor(element){
+  constructor(element, config){
     this.element = element;
+    this.config = config;
+    this.trackPosition;
+    this.stepLength;
+    this.value;    
+    this.x;    
+  }
+
+  init(){
+    let handle = this.element;
+    this.trackPosition = handle.find('.slider__track')[0].getBoundingClientRect();
+    let stepsCount = (this.config.max - this.config.min) / this.config.step;
+    this.stepLength = this.trackPosition.width/stepsCount;
+  }
+
+  move(x){
+    let handle = this.element;
+    handle.style.left = x + 'px';
+  }
+
+  changePosition(value) {
+    let scalePosition = $('.slider__scale')[0].getBoundingClientRect().left;
+    let valueElement = $('.slider__scale').find(`.slider__value[data_value=${value}]`);
+    let valuePosition = valueElement[0].getBoundingClientRect().left;
+    let x = valuePosition - scalePosition;
+    this.x = x;
+    return x
   }
 
   moveHandle() {
     let handle = this.element;
 
     function onMouseMove(event) {
-      let trackPosition = handle.closest('.slider__track').getBoundingClientRect();
-      let trackWidth = trackPosition.width;
+      let trackWidth = this.trackPosition.width;
       let startPositionX = trackPosition.left;
       let endPositionX = startPositionX + trackWidth;
       let siblingHandlePosition = $(handle).siblings()[0].getBoundingClientRect().left;
