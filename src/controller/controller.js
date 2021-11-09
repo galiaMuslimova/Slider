@@ -8,7 +8,7 @@ export function Controller(element, options) {
   let view = new View(this.element, this.options);
 
   this.element.on('mousedown', '.slider__handle', function (event) {
-    let handle = new Handle;
-    handle.moveHandle(this)
+    let handle = new Handle(this);
+    handle.moveHandle()
   })
 }

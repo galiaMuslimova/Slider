@@ -1,31 +1,38 @@
 export default class Handle {
-  constructor(){
-    this.element;
+  constructor(element){
+    this.element = element;
   }
 
-  moveHandle(element) {
-    let handle = element;
-    let trackPosition = handle.closest('.slider__track').getBoundingClientRect();
+  moveHandle() {
+    let handle = this.element;
 
-    let startPositionX = trackPosition.left;
-    let trackWidth = trackPosition.width;
+    function onMouseMove(event) {
+      let trackPosition = handle.closest('.slider__track').getBoundingClientRect();
+      let trackWidth = trackPosition.width;
+      let startPositionX = trackPosition.left;
+      let endPositionX = startPositionX + trackWidth;
+      let siblingHandlePosition = $(handle).siblings()[0].getBoundingClientRect().left;
+      let isLeft = $(handle).hasClass('slider__handle_left');
+      let isRight = $(handle).hasClass('slider__handle_right');
 
-    function moveAt(pageX) {
-      if ((pageX - startPositionX < trackWidth) && (pageX > startPositionX)) {
-        handle.style.left = pageX - startPositionX + window.pageXOffset + 'px';
-        handle.style.top = 0 + 'px';
+      if(isLeft) {
+        if ((event.pageX < siblingHandlePosition) && (event.pageX > startPositionX)) {
+          handle.style.left = event.pageX - startPositionX + window.pageXOffset + 'px';
+        }
+      }
+      else if(isRight) {
+        if ((event.pageX < endPositionX) && (event.pageX > siblingHandlePosition)) {
+          handle.style.left = event.pageX - startPositionX + window.pageXOffset + 'px';
+        }
       }
     }
 
-    function onMouseMove(event) {
-      moveAt(event.pageX);
-    }
-
-    document.addEventListener('mousemove', onMouseMove);
+    document.onmousemove = function (event) {
+      onMouseMove(event)
+    };
 
     document.onmouseup = function () {
-      document.removeEventListener('mousemove', onMouseMove);
-      document.onmouseup = null;
+      document.onmousemove = document.onmouseup = null;
     };
 
     handle.ondragstart = function () {

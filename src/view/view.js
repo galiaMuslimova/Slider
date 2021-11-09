@@ -3,7 +3,10 @@ import Track from "@/view/track.js";
 
 const defaults = {
   text: "this is slider",
-  handleCount: 2
+  handleCount: 2,
+  min: 0,
+  max: 50,
+  step: 5
 }
 
 export class View {
@@ -23,11 +26,28 @@ View.prototype.init = function () {
     class: "slider__track"
   }).appendTo(this.element);
 
-  $('<div/>', {
-    class: "slider__handle slider__handle_left"
-  }).appendTo(track);
+  let scale = $('<div/>', {
+    class: "slider__scale"
+  }).appendTo(this.element);
+
+  for(let i = this.config.min; i <= this.config.max; i += this.config.step) {
+    $('<input/>', {
+      class: 'slider__input',
+      value: i
+    }).appendTo(scale)
+  }
+
+  if (this.config.handleCount == 1){
+    $('<div/>', {
+      class: "slider__handle slider__handle_center"
+    }).appendTo(track);
+  }  
 
   if (this.config.handleCount == 2) {
+    $('<div/>', {
+      class: "slider__handle slider__handle_left"
+    }).appendTo(track);
+
     $('<div/>', {
       class: "slider__handle slider__handle_right"
     }).appendTo(track);

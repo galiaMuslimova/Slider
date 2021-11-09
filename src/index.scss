@@ -1,7 +1,7 @@
 .slider {
   &__container {
     width: 500px;
-    height: 50px;
+    height: 70px;
     background-color: lightblue;
     margin: 10em auto;
   }
@@ -12,6 +12,21 @@
     height: 5px;
     background-color: greenyellow;
     margin: 10px 0px;
+  }
+
+  &__scale {
+    width: 100%;
+    border: 1px dotted red;
+    line-height: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: white;
+  }
+
+  &__input {
+    border: none;
+    width: 20px;
   }
 
   &__handle_left,
