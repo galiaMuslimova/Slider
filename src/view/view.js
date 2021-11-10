@@ -17,6 +17,10 @@ export class View {
       class: "slider__track"
     }).appendTo(this.element);
 
+    let interval = $('<div/>', {
+      class: "slider__interval"
+    }).appendTo(track);
+
     let scale = $('<div/>', {
       class: "slider__scale"
     }).appendTo(this.element);

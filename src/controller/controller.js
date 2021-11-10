@@ -1,5 +1,6 @@
-import {View} from "@/view/view.js";
+import { View } from "@/view/view.js";
 import Handle from "@/view/handle.js";
+import Interval from "@/view/interval.js";
 
 const defaults = {
   text: "this is slider",
@@ -10,41 +11,68 @@ const defaults = {
   current: [10, 40],
   sliderLeft: 0,
   sliderWidth: 500,
+  leftHandlePosition: 0,
+  rightHandlePosition: 0,
   stepsCount: 10,
   stepLength: 50
 }
 
 export class Controller {
-  constructor(element, options){
+  constructor(slider, options) {
     this.config = $.extend({}, defaults, options);
     this.options = options;
-    this.element = element;
-    this.init();
-  }
-  
-  init(){
-    let config = this.config;
-    let sliderPosition = this.element[0].getBoundingClientRect();
+    this.slider = slider;
+    this.view;
+    this.track;
+    this.interval;
+    this.leftHandle;
+    this.rightHandle;
 
+    this.init();
+    this.setConfig();
+    this.main();
+  }
+
+  init() {
+    this.view = new View(this.slider, this.config);
+    this.interval = new Interval(this.slider.find(".slider__interval")[0]);
+    this.leftHandle = new Handle(this.slider.find(".slider__handle_left")[0], this.config);
+    this.rightHandle = new Handle(this.slider.find(".slider__handle_right")[0], this.config);
+  }
+
+  setConfig() {
     this.config.current = [this.config.min + this.config.step, this.config.max - this.config.step]
-    this.config.sliderLeft = sliderPosition.left;
-    this.config.sliderWidth = sliderPosition.width;
+    this.config.sliderLeft = this.slider[0].getBoundingClientRect().left;
+    this.config.sliderWidth = this.slider[0].getBoundingClientRect().width;
     this.config.stepsCount = (this.config.max - this.config.min) / this.config.step;
     this.config.stepLength = this.config.sliderWidth / this.config.stepsCount;
+    this.config.leftHandlePosition = this.leftHandle.takePositionByValue(this.config.current[0]);
+    this.config.rightHandlePosition = this.rightHandle.takePositionByValue(this.config.current[1]);
+  }
 
-    let view = new View(this.element, this.config);
+  main() {
+    this.leftHandle.moveByX(this.config.leftHandlePosition);
+    this.rightHandle.moveByX(this.config.rightHandlePosition);
+    this.interval.moveByX(this.config.leftHandlePosition, this.config.rightHandlePosition);
 
-    let handleLeft = new Handle(this.element.find(".slider__handle_left")[0], this.config);
-    let handleRight = new Handle(this.element.find(".slider__handle_right")[0], this.config);
+    this.moveHandle();
+  }
 
-    handleLeft.moveByValue(this.config.current[0]);
-    handleRight.moveByValue(this.config.current[1]);
+  moveInterval() {
+    this.interval.moveByX(this.config.leftHandlePosition, this.config.rightHandlePosition)
+  }
 
-    this.element.on('mousedown', '.slider__handle', function (event) {
-      let handle = new Handle(this, config);
+  moveHandle() {
+    let element = this; 
+    
+    this.slider.on('mousedown', '.slider__handle', function (event) {      
+      let handle = new Handle(this, element.config);
+      let isLeft = $(this).hasClass('slider__handle_left');
 
       document.onmousemove = function (event) {
-        handle.moveByMouse(event)
+        let position = handle.moveByMouse(event);
+        isLeft ? element.config.leftHandlePosition = position : element.config.rightHandlePosition = position;
+        element.moveInterval()
       };
 
       document.onmouseup = function () {
@@ -55,6 +83,5 @@ export class Controller {
         return false;
       };
     })
-
   }
 }
