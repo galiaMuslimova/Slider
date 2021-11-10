@@ -7,30 +7,54 @@ const defaults = {
   min: 0,
   max: 50,
   step: 5,
-  current: [10, 40]
+  current: [10, 40],
+  sliderLeft: 0,
+  sliderWidth: 500,
+  stepsCount: 10,
+  stepLength: 50
 }
 
-export function Controller(element, options) {
-  this.config = $.extend({}, defaults, options);
-  this.options = options;
-  this.element = element;
+export class Controller {
+  constructor(element, options){
+    this.config = $.extend({}, defaults, options);
+    this.options = options;
+    this.element = element;
+    this.init();
+  }
+  
+  init(){
+    let config = this.config;
+    let sliderPosition = this.element[0].getBoundingClientRect();
 
-  let view = new View(this.element, this.config);
-  let handle = new Handle(this.element, this.config);
-  handle.init();
-  let handleLeft = new Handle(this.element.find(".slider__handle_left")[0]);
-  let handleRight = new Handle(this.element.find(".slider__handle_right")[0]);
+    this.config.current = [this.config.min + this.config.step, this.config.max - this.config.step]
+    this.config.sliderLeft = sliderPosition.left;
+    this.config.sliderWidth = sliderPosition.width;
+    this.config.stepsCount = (this.config.max - this.config.min) / this.config.step;
+    this.config.stepLength = this.config.sliderWidth / this.config.stepsCount;
 
-  //массив из двух элементов, указывающих на значения бегунков
-  let currentValues = this.config.current;  
+    let view = new View(this.element, this.config);
 
-  let handleLeftX = handleLeft.changePosition(currentValues[0]);
-  let handleRightX = handleRight.changePosition(currentValues[1]);
-  handleLeft.move(handleLeftX);
-  handleRight.move(handleRightX)
+    let handleLeft = new Handle(this.element.find(".slider__handle_left")[0], this.config);
+    let handleRight = new Handle(this.element.find(".slider__handle_right")[0], this.config);
 
-  this.element.on('mousedown', '.slider__handle', function (event) {
-    let handle = new Handle(this);
-    handle.moveHandle()
-  })
+    handleLeft.moveByValue(this.config.current[0]);
+    handleRight.moveByValue(this.config.current[1]);
+
+    this.element.on('mousedown', '.slider__handle', function (event) {
+      let handle = new Handle(this, config);
+
+      document.onmousemove = function (event) {
+        handle.moveByMouse(event)
+      };
+
+      document.onmouseup = function () {
+        document.onmousemove = document.onmouseup = null;
+      };
+
+      handle.ondragstart = function () {
+        return false;
+      };
+    })
+
+  }
 }

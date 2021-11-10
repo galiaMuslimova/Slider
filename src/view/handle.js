@@ -1,67 +1,40 @@
 export default class Handle {
-  constructor(element, config){
-    this.element = element;
+  constructor(handle, config) {
+    this.handle = handle;
     this.config = config;
-    this.trackPosition;
-    this.stepLength;
-    this.value;    
-    this.x;    
   }
 
-  init(){
-    let handle = this.element;
-    this.trackPosition = handle.find('.slider__track')[0].getBoundingClientRect();
-    let stepsCount = (this.config.max - this.config.min) / this.config.step;
-    this.stepLength = this.trackPosition.width/stepsCount;
+  moveByX(x) {
+    this.handle.style.left = x + 'px';
   }
 
-  move(x){
-    let handle = this.element;
-    handle.style.left = x + 'px';
-  }
-
-  changePosition(value) {
-    let scalePosition = $('.slider__scale')[0].getBoundingClientRect().left;
-    let valueElement = $('.slider__scale').find(`.slider__value[data_value=${value}]`);
+  moveByValue(value) {
+    let slider = this.handle.closest(".slider");
+    let valueElement = $(slider).find(`.slider__value[data_value=${value}]`);
     let valuePosition = valueElement[0].getBoundingClientRect().left;
-    let x = valuePosition - scalePosition;
-    this.x = x;
-    return x
+    let x = valuePosition - this.config.sliderLeft;
+    this.moveByX(x);
   }
 
-  moveHandle() {
-    let handle = this.element;
+  moveByMouse(event) {
+    let endPosition = this.config.sliderLeft + this.config.sliderWidth;
+    let siblingHandlePosition = $(this.handle).siblings()[0].getBoundingClientRect().left;
 
-    function onMouseMove(event) {
-      let trackWidth = this.trackPosition.width;
-      let startPositionX = trackPosition.left;
-      let endPositionX = startPositionX + trackWidth;
-      let siblingHandlePosition = $(handle).siblings()[0].getBoundingClientRect().left;
-      let isLeft = $(handle).hasClass('slider__handle_left');
-      let isRight = $(handle).hasClass('slider__handle_right');
+    let isLeft = $(this.handle).hasClass('slider__handle_left');
+    let isRight = $(this.handle).hasClass('slider__handle_right');
 
-      if(isLeft) {
-        if ((event.pageX < siblingHandlePosition) && (event.pageX > startPositionX)) {
-          handle.style.left = event.pageX - startPositionX + window.pageXOffset + 'px';
-        }
-      }
-      else if(isRight) {
-        if ((event.pageX < endPositionX) && (event.pageX > siblingHandlePosition)) {
-          handle.style.left = event.pageX - startPositionX + window.pageXOffset + 'px';
-        }
+    let movedStepsCount = Math.round((event.pageX - this.config.sliderLeft) / this.config.stepLength);
+    let x = this.config.stepLength * movedStepsCount;
+
+    if (isLeft) {
+      if ((event.pageX < siblingHandlePosition) && (event.pageX > this.config.sliderLeft)) {
+        this.moveByX(x);
       }
     }
-
-    document.onmousemove = function (event) {
-      onMouseMove(event)
-    };
-
-    document.onmouseup = function () {
-      document.onmousemove = document.onmouseup = null;
-    };
-
-    handle.ondragstart = function () {
-      return false;
-    };
-  } 
+    else if (isRight) {
+      if ((event.pageX < endPosition) && (event.pageX > siblingHandlePosition)) {
+        this.moveByX(x);
+      }
+    }
+  }
 }

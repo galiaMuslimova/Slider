@@ -10,5 +10,9 @@ import { View } from "./view/view.js"
 })(jQuery);
 
 $(function () {
-  $(".slider").slider()
+  $(".slider").slider({
+    min: -10,
+    max: 10,
+    step: 2
+  })
 })
