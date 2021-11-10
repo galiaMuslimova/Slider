@@ -1,4 +1,5 @@
 import "./index.scss";
+import "./config.scss";
 import { Controller } from "./controller/controller.js"
 import { View } from "./view/view.js"
 
@@ -12,7 +13,7 @@ import { View } from "./view/view.js"
 $(function () {
   $(".slider").slider({
     min: -10,
-    max: 10,
-    step: 2
+    max: 30,
+    step: 5
   })
 })

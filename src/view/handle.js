@@ -26,21 +26,33 @@ export default class Handle {
 
   moveByMouse(event) {
     let endPosition = this.config.sliderLeft + this.config.sliderWidth;
-    let siblingHandlePosition = $(this.handle).siblings('.slider__handle')[0].getBoundingClientRect().left;
+    let sibling = $(this.handle).siblings('.slider__handle');
+    let hasSibling = sibling.length > 0;
+    let siblingHandlePosition;
+    if (hasSibling) {
+      siblingHandlePosition = sibling[0].getBoundingClientRect().left;
+    }     
 
-    let isLeft = $(this.handle).hasClass('slider__handle_left');
-    let isRight = $(this.handle).hasClass('slider__handle_right');
+    let isFirst = $(this.handle).hasClass('slider__handle_first');
+    let isSecond = $(this.handle).hasClass('slider__handle_second');
 
     let movedStepsCount = Math.round((event.pageX - this.config.sliderLeft) / this.config.stepLength);
     let x = this.config.stepLength * movedStepsCount;
 
-    if (isLeft) {
-      if ((event.pageX < siblingHandlePosition) && (event.pageX > this.config.sliderLeft)) {
-        this.moveByX(x);
-        return x
-      }
+    if (isFirst) {
+      if (hasSibling){
+        if ((event.pageX < siblingHandlePosition) && (event.pageX > this.config.sliderLeft)) {
+          this.moveByX(x);
+          return x
+        }
+      } else {
+        if ((event.pageX < endPosition) && (event.pageX > this.config.sliderLeft)) {
+          this.moveByX(x);
+          return x
+        }
+      }      
     }
-    else if (isRight) {
+    else if (isSecond) {
       if ((event.pageX < endPosition) && (event.pageX > siblingHandlePosition)) {
         this.moveByX(x);
         return x

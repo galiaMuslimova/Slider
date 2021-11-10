@@ -1,11 +1,10 @@
-.slider {
-  &__container {
-    width: 500px;
-    height: 70px;
-    background-color: lightblue;
-    margin: 10em auto;
-  }
+.container {
+  width: 500px;
+  background-color: lightblue;
+  margin: 10em auto;
+}
 
+.slider {
   &__track {
     position: relative;
     width: 100%;
@@ -35,21 +34,20 @@
     position: relative;
   }
 
-  &__handle_left,
-  &__handle_right {
+  &__handle {
     width: 10px;
     height: 10px;
     border-radius: 50%;
     background-color: green;
     position: absolute;
     z-index: 10;
-  }
 
-  &__handle_left {
-    left: 0;
-  }
+    &__first {
+      left: 0;
+    }
 
-  &__handle_right {
-    right: 0;
+    &_second {
+      right: 0;
+    }
   }
 }

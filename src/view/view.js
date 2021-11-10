@@ -33,21 +33,14 @@ export class View {
       }).appendTo(scale)
     }
 
-    if (this.config.handleCount == 1) {
-      $('<div/>', {
-        class: "slider__handle slider__handle_center",
-        data_position: this.config.current
-      }).appendTo(track);
-    }
+    $('<div/>', {
+      class: "slider__handle slider__handle_first",
+      data_position: this.config.current[0]
+    }).appendTo(track);
 
     if (this.config.handleCount == 2) {
       $('<div/>', {
-        class: "slider__handle slider__handle_left",
-        data_position: this.config.current[0]
-      }).appendTo(track);
-
-      $('<div/>', {
-        class: "slider__handle slider__handle_right",
+        class: "slider__handle slider__handle_second",
         data_position: this.config.current[1]
       }).appendTo(track);
     }
