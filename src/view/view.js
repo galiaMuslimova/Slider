@@ -35,13 +35,13 @@ export class View {
 
     $('<div/>', {
       class: "slider__handle slider__handle_first",
-      data_position: this.config.current[0]
+      data_position: this.config.values[0]
     }).appendTo(track);
 
     if (this.config.handleCount == 2) {
       $('<div/>', {
         class: "slider__handle slider__handle_second",
-        data_position: this.config.current[1]
+        data_position: this.config.values[1]
       }).appendTo(track);
     }
   }

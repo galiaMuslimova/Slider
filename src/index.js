@@ -12,8 +12,9 @@ import { View } from "./view/view.js"
 
 $(function () {
   $(".slider").slider({
-    min: -10,
-    max: 30,
-    step: 5
+    //handleCount: 1,
+    min: -20,
+    max: 0,
+    step: 2
   })
 })
