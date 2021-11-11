@@ -12,7 +12,7 @@ import { View } from "./view/view.js"
 
 $(function () {
   $(".slider").slider({
-    //handleCount: 1,
+    handleCount: 1,
     min: -20,
     max: 0,
     step: 2
