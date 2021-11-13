@@ -4,8 +4,9 @@ export default class Interval {
   }
 
   moveByX(left, right){
+    let domElement = $(this.interval)[0]
     let width = right - left;
-    this.interval.style.width = width + 'px';
-    this.interval.style.left = left + 'px';
+    domElement.style.width = width + 'px';
+    domElement.style.left = left + 'px';
   }
 }
