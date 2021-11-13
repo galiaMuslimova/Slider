@@ -7,12 +7,7 @@ const defaults = {
   min: 0,
   max: 50,
   step: 5,
-  values: [20, 30],
-  sliderLeft: 0,
-  sliderWidth: 500,
-  stepsCount: 10,
-  stepLength: 50,
-  handleX: []
+  values: [20, 30]
 }
 
 export class Controller {
@@ -20,21 +15,18 @@ export class Controller {
     this.config = $.extend({}, defaults, options);
     this.options = options;
     this.slider = slider;
-
     this.view = new View(this.slider, this.config);
     this.model = new Model(this.slider, this.config);
-
     this.init();
   }
 
   init() {
     let handleX = this.model.initPosition();
-    this.changePosition(handleX)
+    this.changePosition(handleX);
 
     this.view.observer.subscribe({ key: 'mousemove', observer: this.moveHandle.bind(this) });
     this.view.observer.subscribe({ key: 'click', observer: this.clickValue.bind(this) });
-    this.model.observer.subscribe({ key: 'changePosition', observer: this.changePosition.bind(this) });
-    this.model.observer.subscribe({ key: 'changeValues', observer: this.changeValues.bind(this) });    
+    //this.model.observer.subscribe({ key: 'changeValues', observer: this.changeValues.bind(this) });
   }
 
   moveHandle(data) {

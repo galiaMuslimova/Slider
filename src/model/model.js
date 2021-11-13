@@ -12,24 +12,35 @@ export default class Model {
     this.sliderLeft = this.slider[0].getBoundingClientRect().left;
     this.sliderWidth = this.slider[0].getBoundingClientRect().width;
     this.stepsCount = (this.config.max - this.config.min) / this.config.step;
-    this.stepLength = this.config.sliderWidth / this.config.stepsCount;
+    this.stepLength = this.sliderWidth / this.stepsCount;
     this.init();
   }
 
   init() {
+    this.initValues();
     this.initPositionsArr();
-    this.changeValues();
     this.initPosition();
+  }
+
+  initValues() {
+    switch (this.config.handleCount) {
+      case 1:
+        this.values = [this.config.min + Math.round(this.stepsCount / 2) * this.config.step];
+        break;
+      case 2:
+        this.values = [this.config.min + this.config.step, this.config.max - this.config.step];
+        break;
+    }
   }
 
   initPositionsArr() {
     let start = this.config.min;
     let step = this.config.step;
-    let stepsCount = this.config.stepsCount;
+    let stepsCount = this.stepsCount;
     let valuesArr = Array.from(Array(stepsCount + 1), (_, i) => (start + step * i));
     let positionsArr = [];
     valuesArr.map(el => positionsArr.push({ value: el, x: this.initPositionsforArray(el) }))
-    this.positionsArr = positionsArr;    
+    this.positionsArr = positionsArr;
   }
 
   /*function for create positions at positions array*/
@@ -41,25 +52,30 @@ export default class Model {
   }
 
   initPosition() {
-    this.handleX = [this.takeX(this.values[0])];
-    if (this.isTwoHandle) {
-      this.handleX = [this.takeX(this.values[0]), this.takeX(this.values[1])];
+    switch (this.config.handleCount) {
+      case 1:
+        this.handleX = [this.takeX(this.values[0])];
+        break;
+      case 2:
+        this.handleX = [this.takeX(this.values[0]), this.takeX(this.values[1])];
+        break;
     }
-    this.observer.notify('initPosition', this.handleX);
-    return this.handleX;    
-  }
-
-  changeValues() {
-    this.values = [this.config.min + Math.round(this.config.stepsCount / 2) * this.config.step];
-    if (this.isTwoHandle) {
-      this.values = [this.config.min + this.config.step, this.config.max - this.config.step];
-    }
-    //this.observer.notify('changeValues', this.values)
+    return this.handleX;
   }
 
   takeX(val) {
     let result = this.positionsArr.filter(el => el.value == val);
     return result[0].x;
+  }
+
+  takeValue(position) {
+    let result = this.positionsArr.filter(el => el.x == position);
+    return result[0].value;
+  }
+
+  changeParameters(x, index) {
+    this.values[index] = this.takeValue(x);
+    this.handleX[index] = x;
   }
 
   takePositionByEvent(event, handleOrder) {
@@ -73,19 +89,21 @@ export default class Model {
     if (isInScale) {
       let x = this.positionsArr[passedSteps].x;
 
-      if (handleOrder == 1) {
-        if (this.isTwoHandle) {
+      if (this.isTwoHandle) {
+        if (handleOrder == 1) {
           if (x < secondHandleX) {
-            return x
+            this.changeParameters(x, 0);
+            return x;
           }
         } else {
-          return x
+          if (x > firstHandleX) {
+            this.changeParameters(x, 1);
+            return x;
+          }
         }
-      }
-      else {
-        if (x > firstHandleX) {
-          return x
-        }
+      } else {
+        this.changeParameters(x, 0);
+        return x;
       }
     }
   }
@@ -94,11 +112,14 @@ export default class Model {
     let x = this.takeX(currentValue);
     if (this.isTwoHandle) {
       if (currentValue < this.values[1]) {
+        this.changeParameters(x, 0)
         return [1, x];
       } else {
+        this.changeParameters(x, 1)
         return [2, x];
       }
     } else {
+      this.changeParameters(x, 0)
       return [1, x];
     }
   }
