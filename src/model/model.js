@@ -22,7 +22,7 @@ export default class Model {
     this.initPosition();
   }
 
-  initValues() {
+  initValues() {    
     switch (this.config.handleCount) {
       case 1:
         this.values = [this.config.min + Math.round(this.stepsCount / 2) * this.config.step];
@@ -36,8 +36,8 @@ export default class Model {
   initPositionsArr() {
     let start = this.config.min;
     let step = this.config.step;
-    let stepsCount = this.stepsCount;
-    let valuesArr = Array.from(Array(stepsCount + 1), (_, i) => (start + step * i));
+    let stepsCount = Math.floor(this.stepsCount);
+    let valuesArr = Array.from(Array(stepsCount+1), (_, i) => (start + step * i));
     let positionsArr = [];
     valuesArr.map(el => positionsArr.push({ value: el, x: this.initPositionsforArray(el) }))
     this.positionsArr = positionsArr;
@@ -45,13 +45,14 @@ export default class Model {
 
   /*function for create positions at positions array*/
   initPositionsforArray(value) {
-    let valueElement = $(this.slider).find(`.slider__value[data_value=${value}]`);
+    let valueElement = $(this.slider).find(`.slider__value[data_value='${value}']`);
     let valuePosition = valueElement[0].getBoundingClientRect().left;
     let x = valuePosition - this.sliderLeft;
     return x;
   }
 
   initPosition() {
+    console.log(this.values)
     switch (this.config.handleCount) {
       case 1:
         this.handleX = [this.takeX(this.values[0])];
@@ -76,6 +77,11 @@ export default class Model {
   changeParameters(x, index) {
     this.values[index] = this.takeValue(x);
     this.handleX[index] = x;
+  }
+
+  changeSettings(settings) {
+    this.config[settings.key] = +settings.value;
+    this.init();
   }
 
   takePositionByEvent(event, handleOrder) {

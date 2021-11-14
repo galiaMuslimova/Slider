@@ -1,5 +1,4 @@
 import "./index.scss";
-import "./config.scss";
 import { Controller } from "./controller/controller.js"
 
 (function($) {  
@@ -12,8 +11,8 @@ import { Controller } from "./controller/controller.js"
 $(function () {
   $(".slider").slider({
     handleCount: 2,
-    min: 0,
-    max: 5000,
-    step: 500
+    min: 1,
+    max: 15,
+    step: 4
   })
 })

@@ -26,7 +26,12 @@ export class Controller {
 
     this.view.observer.subscribe({ key: 'mousemove', observer: this.moveHandle.bind(this) });
     this.view.observer.subscribe({ key: 'click', observer: this.clickValue.bind(this) });
+    this.view.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) });
     //this.model.observer.subscribe({ key: 'changeValues', observer: this.changeValues.bind(this) });
+  }
+
+  changeSettings(settings){
+    this.model.changeSettings(settings)
   }
 
   moveHandle(data) {
