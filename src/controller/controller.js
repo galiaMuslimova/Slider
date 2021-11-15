@@ -35,7 +35,7 @@ export class Controller {
   }
 
   moveHandle(data) {
-    let x = this.model.takePositionByEvent(data.event);
+    let x = this.model.takeXByEvent(data.event);
     this.view.moveByHandle(x, data.handle)
   }
 
@@ -44,11 +44,11 @@ export class Controller {
     this.view.moveByX(x)
   }
 
-  changePosition(data) {
+  /*changePosition(data) {
     this.view.moveByX(data);
-  }
+  }*/
 
-  changeValues(data) {
+  /*changeValues(data) {
     switch (data.length) {
       case 1:
         this.view.moveByX(1, this.model.takeXByValue(data[0]));
@@ -58,6 +58,6 @@ export class Controller {
         this.view.moveByX(2, this.model.takeXByValue(data[1]))
         break;
     }
-  }
+  }*/
 }
 

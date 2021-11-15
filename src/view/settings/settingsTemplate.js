@@ -1,4 +1,4 @@
-export const settings = `<div class="settings">
+export const settingsTemplate = `<div class="settings">
       <form>
         <label>
           <p>min</p>

@@ -17,11 +17,3 @@ $(function () {
   })
 })
 
-$(function () {
-  $(".slider2").slider({
-    handleCount: 2,
-    min: -5,
-    max: 15,
-    step: 3
-  })
-})

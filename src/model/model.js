@@ -11,7 +11,7 @@ export default class Model {
     this.values = [];
     this.sliderLeft = this.slider[0].getBoundingClientRect().left;
     this.sliderWidth = this.slider[0].getBoundingClientRect().width;
-    this.stepsCount = (this.config.max - this.config.min) / this.config.step;
+    this.stepsCount;
     this.stepLength = this.sliderWidth / this.stepsCount;
     this.init();
   }
@@ -22,7 +22,7 @@ export default class Model {
     this.initPosition();
   }
 
-  initValues() {    
+  initValues() {
     switch (this.config.handleCount) {
       case 1:
         this.values = [this.config.min + Math.round(this.stepsCount / 2) * this.config.step];
@@ -36,8 +36,8 @@ export default class Model {
   initPositionsArr() {
     let start = this.config.min;
     let step = this.config.step;
-    let stepsCount = Math.floor(this.stepsCount);
-    let valuesArr = Array.from(Array(stepsCount+1), (_, i) => (start + step * i));
+    this.stepsCount = Math.floor((this.config.max - this.config.min) / this.config.step);
+    let valuesArr = Array.from(Array(this.stepsCount + 1), (_, i) => (start + step * i));
     let positionsArr = [];
     valuesArr.map(el => positionsArr.push({ value: el, x: this.initPositionsforArray(el) }))
     this.positionsArr = positionsArr;
@@ -68,24 +68,19 @@ export default class Model {
     return result[0].x;
   }
 
-  takeValue(position) {
-    let result = this.positionsArr.filter(el => el.x == position);
-    return result[0].value;
-  }
-
   changeSettings(settings) {
     this.config[settings.key] = +settings.value;
     this.init();
   }
 
-  takePositionByEvent(event) {
+  takeXByEvent(event) {
     //how many steps passed? ex. 0,1,2,3 e.t.c
     let passedSteps = Math.round((event.pageX - this.sliderLeft) / this.stepLength);
     let isInScale = passedSteps >= 0 && passedSteps <= this.stepsCount;
 
     if (isInScale) {
       let x = this.positionsArr[passedSteps].x;
-      return x;      
+      return x;
     }
   }
 }

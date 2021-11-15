@@ -33,7 +33,8 @@ export default class View {
     this.settings.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) })
   }
 
-  changeSettings(settings) {    
+  changeSettings(settings) {
+    this.scale.changeScale(settings)    
     this.observer.notify('settings', settings);
   }
 
