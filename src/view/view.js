@@ -13,7 +13,7 @@ export default class View {
     this.slider = slider;
 
     this.isTwoHandle = this.config.handleCount == 2;    
-    this.handleX = [0, 0];
+    this.handleX;
 
     this.init();
     this.dragNDropHandle();
@@ -29,6 +29,7 @@ export default class View {
     this.interval = new Interval(this.slider, this.config);
     this.scale = new Scale(this.slider, this.config);
     
+    this.settings.observer.subscribe({ key: 'moveHandle', observer: this.moveInterval.bind(this) })
     this.settings.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) })
   }
 
@@ -36,28 +37,27 @@ export default class View {
     this.observer.notify('settings', settings);
   }
 
-  moveInterval(x1 = this.handleX[0], x2 = this.handleX[1]) {
-    switch (this.config.handleCount) {
-      case 1:
-        this.interval.moveByX(this.config.min, x1);
-        break;
-      case 2:
-        this.interval.moveByX(x1, x2)
-        break;
-    }
+  moveInterval(handleX = this.handleX) {
+    this.interval.moveInterval(handleX)
   }
 
   /* move handle by parameter x */
-  moveByX(handleOrder, x) {
-    switch (handleOrder) {
-      case 1:
-        this.handleX[0] = this.firstHandle.moveByX(x);
-        break;
-      case 2:
-        this.handleX[1] = this.secondHandle.moveByX(x);
-        break;
-    }
-    this.moveInterval()
+  initHandles(handleX) {
+    this.handleX = handleX;
+    this.handles.initHandles(handleX);
+    this.interval.moveInterval(handleX)
+  }
+
+  moveByHandle(x, handle){
+    let handleX = this.handles.moveByHandle(x, handle);
+    this.handleX = handleX;
+    this.interval.moveInterval(handleX);
+  }
+
+  moveByX(x) {
+    let handleX = this.handles.moveByX(x);
+    this.handleX = this.handleX;
+    this.interval.moveInterval(handleX);
   }
 
   /*when user move handle by drag*/
@@ -65,9 +65,8 @@ export default class View {
     let element = this;
     this.slider.on('mousedown', '.slider__handle', function () {
       let handle = this;
-      let handleOrder = $(handle).hasClass('slider__handle_first') ? 1 : 2;
       document.onmousemove = function (event) {
-        element.observer.notify('mousemove', { event, handleOrder })
+        element.observer.notify('mousemove', { event, handle })
       };
 
       document.onmouseup = function () {

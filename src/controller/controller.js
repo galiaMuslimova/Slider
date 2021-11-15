@@ -22,7 +22,7 @@ export class Controller {
 
   init() {
     let handleX = this.model.initPosition();
-    this.changePosition(handleX);
+    this.view.initHandles(handleX);
 
     this.view.observer.subscribe({ key: 'mousemove', observer: this.moveHandle.bind(this) });
     this.view.observer.subscribe({ key: 'click', observer: this.clickValue.bind(this) });
@@ -35,35 +35,27 @@ export class Controller {
   }
 
   moveHandle(data) {
-    let x = this.model.takePositionByEvent(data.event, data.handleOrder);
-    this.view.moveByX(data.handleOrder, x)
+    let x = this.model.takePositionByEvent(data.event);
+    this.view.moveByHandle(x, data.handle)
   }
 
   clickValue(data) {
-    let [handleOrder, x] = this.model.takePositionByValue(data);
-    this.view.moveByX(handleOrder, x)
+    let x = this.model.takeXByValue(data);
+    this.view.moveByX(x)
   }
 
   changePosition(data) {
-    switch (data.length) {
-      case 1:
-        this.view.moveByX(1, data[0]);
-        break;
-      case 2:
-        this.view.moveByX(1, data[0]);
-        this.view.moveByX(2, data[1]);
-        break;
-    }
+    this.view.moveByX(data);
   }
 
   changeValues(data) {
     switch (data.length) {
       case 1:
-        this.view.moveByX(1, this.model.takePositionByValue(data[0]));
+        this.view.moveByX(1, this.model.takeXByValue(data[0]));
         break;
       case 2:
-        this.view.moveByX(1, this.model.takePositionByValue(data[0]));
-        this.view.moveByX(2, this.model.takePositionByValue(data[1]))
+        this.view.moveByX(1, this.model.takeXByValue(data[0]));
+        this.view.moveByX(2, this.model.takeXByValue(data[1]))
         break;
     }
   }

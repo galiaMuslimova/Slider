@@ -52,19 +52,18 @@ export default class Model {
   }
 
   initPosition() {
-    console.log(this.values)
     switch (this.config.handleCount) {
       case 1:
-        this.handleX = [this.takeX(this.values[0])];
+        this.handleX = [this.takeXByValue(this.values[0])];
         break;
       case 2:
-        this.handleX = [this.takeX(this.values[0]), this.takeX(this.values[1])];
+        this.handleX = [this.positionsArr[1].x, this.positionsArr.at(-1).x];
         break;
     }
     return this.handleX;
   }
 
-  takeX(val) {
+  takeXByValue(val) {
     let result = this.positionsArr.filter(el => el.value == val);
     return result[0].x;
   }
@@ -74,59 +73,19 @@ export default class Model {
     return result[0].value;
   }
 
-  changeParameters(x, index) {
-    this.values[index] = this.takeValue(x);
-    this.handleX[index] = x;
-  }
-
   changeSettings(settings) {
     this.config[settings.key] = +settings.value;
     this.init();
   }
 
-  takePositionByEvent(event, handleOrder) {
-    let firstHandleX = this.handleX[0];
-    let secondHandleX = this.handleX[1];
-
+  takePositionByEvent(event) {
     //how many steps passed? ex. 0,1,2,3 e.t.c
     let passedSteps = Math.round((event.pageX - this.sliderLeft) / this.stepLength);
     let isInScale = passedSteps >= 0 && passedSteps <= this.stepsCount;
 
     if (isInScale) {
       let x = this.positionsArr[passedSteps].x;
-
-      if (this.isTwoHandle) {
-        if (handleOrder == 1) {
-          if (x < secondHandleX) {
-            this.changeParameters(x, 0);
-            return x;
-          }
-        } else {
-          if (x > firstHandleX) {
-            this.changeParameters(x, 1);
-            return x;
-          }
-        }
-      } else {
-        this.changeParameters(x, 0);
-        return x;
-      }
-    }
-  }
-
-  takePositionByValue(currentValue) {
-    let x = this.takeX(currentValue);
-    if (this.isTwoHandle) {
-      if (currentValue < this.values[1]) {
-        this.changeParameters(x, 0)
-        return [1, x];
-      } else {
-        this.changeParameters(x, 1)
-        return [2, x];
-      }
-    } else {
-      this.changeParameters(x, 0)
-      return [1, x];
+      return x;      
     }
   }
 }
