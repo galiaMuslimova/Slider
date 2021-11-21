@@ -1,19 +1,38 @@
-import Settings from "@/view/settings/settings.js";
-import Observer from "@/observer.js";
+import Settings from "./settings/settings";
+import Observer from "../observer";
+import { IConfig, ISettings} from "../interfaces";
 
-import Track from "@/view/elements/track.js";
-import Scale from "@/view/elements/scale.js";
-import Handle from "@/view/elements/handle.js";
-import Interval from "@/view/elements/interval.js";
+import Track from "./elements/track";
+import Scale from "./elements/scale";
+import Handle from "./elements/handle";
+import Interval from "./elements/interval";
 
 
-export default class View {
-  constructor(slider, config) {
+export class View {
+  config: IConfig;
+  slider: JQuery<HTMLElement>;
+  isTwoHandle: boolean;
+  handleX: number[];
+  values: number[];
+  observer: Observer;
+  settings: Settings;
+  track: Track;
+  handles: Handle;
+  interval: Interval;
+  scale: Scale;
+
+  constructor(slider: JQuery<HTMLElement>, config: IConfig) {
     this.config = config;
     this.slider = slider;
-
     this.isTwoHandle = this.config.handleCount == 2;    
-    this.handleX;
+    this.handleX = [];
+    this.values = [];
+    this.observer = new Observer();
+    this.settings = new Settings(this.slider, this.config);
+    this.track = new Track(this.slider, this.config);
+    this.handles = new Handle(this.slider, this.config);
+    this.interval = new Interval(this.slider, this.config);
+    this.scale = new Scale(this.slider, this.config);
 
     this.init();
     this.dragNDropHandle();
@@ -21,19 +40,11 @@ export default class View {
   }
 
   init() {
-    this.observer = new Observer();
-    this.settings = new Settings(this.slider, this.config);
-
-    this.track = new Track(this.slider, this.config);
-    this.handles = new Handle(this.slider, this.config);
-    this.interval = new Interval(this.slider, this.config);
-    this.scale = new Scale(this.slider, this.config);
-    
     this.settings.observer.subscribe({ key: 'moveHandle', observer: this.moveInterval.bind(this) })
     this.settings.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) })
   }
 
-  changeSettings(settings) {
+  changeSettings(settings: ISettings) {
     this.scale.changeScale(settings)    
     this.observer.notify('settings', settings);
   }
@@ -43,19 +54,24 @@ export default class View {
   }
 
   /* move handle by parameter x */
-  initHandles(handleX) {
+  initHandles(handleX: number[]) {
     this.handleX = handleX;
     this.handles.initHandles(handleX);
     this.interval.moveInterval(handleX)
   }
 
-  moveByHandle(x, handle){
+  initValues(values: number[]) {
+    this.values = values;
+    this.settings.initValues(values);
+  }
+
+  moveByHandle(x:number, handle){
     let handleX = this.handles.moveByHandle(x, handle);
     this.handleX = handleX;
     this.interval.moveInterval(handleX);
   }
 
-  moveByX(x) {
+  moveByX(x:number) {
     let handleX = this.handles.moveByX(x);
     this.handleX = this.handleX;
     this.interval.moveInterval(handleX);

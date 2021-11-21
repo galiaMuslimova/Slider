@@ -31,6 +31,7 @@ export default class Model {
         this.values = [this.config.min + this.config.step, this.config.max - this.config.step];
         break;
     }
+    return this.values;
   }
 
   initPositionsArr() {
@@ -52,14 +53,10 @@ export default class Model {
   }
 
   initPosition() {
-    switch (this.config.handleCount) {
-      case 1:
-        this.handleX = [this.takeXByValue(this.values[0])];
-        break;
-      case 2:
-        this.handleX = [this.positionsArr[1].x, this.positionsArr.at(-1).x];
-        break;
-    }
+    this.handleX = [];
+    this.values.forEach(item => {
+      this.handleX.push(this.takeXByValue(item));
+    });   
     return this.handleX;
   }
 
