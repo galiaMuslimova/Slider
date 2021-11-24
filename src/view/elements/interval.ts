@@ -1,19 +1,22 @@
+import { IConfig } from "../../interfaces";
+
 export default class Interval {
-  constructor(slider, config) {
+  config: IConfig;
+  slider: JQuery<HTMLElement>;
+  interval: JQuery<HTMLElement>;
+  track: JQuery<HTMLElement>;
+
+  constructor(slider: JQuery<HTMLElement>, config: IConfig) {
     this.slider = slider;
     this.config = config;
-    this.interval;
-    this.init()
+    jQuery('<div>', {
+      class: 'slider__interval',
+    }).appendTo(this.slider);
+    this.interval = this.slider.find(".slider__interval");
+    this.track = $(this.slider).find('.slider__track');
   }
 
-  init() {
-    let interval = `<div class="slider__interval"></div>`;
-    let track = $(this.slider).find('.slider__track')[0];
-    track.insertAdjacentHTML("afterBegin", interval);
-    this.interval = $(this.slider).find('.slider__interval')[0];
-  }
-
-  moveInterval(handleX){
+  moveInterval(handleX: number[]){
     let left;
     let right;
     switch (handleX.length) {
@@ -26,8 +29,15 @@ export default class Interval {
         right = handleX[1];
         break;
     }
-    let width = right - left;
-    this.interval.style.width = width + 'px';
-    this.interval.style.left = left + 'px';
+    
+    if (!left) {
+      throw new Error("left point error")
+    } else if (!right) {
+      throw new Error("right point error")
+    } else {
+      let width = right - left;
+      this.interval.width(`${width}px`);
+      this.interval.css("left", `${left}px`);
+    }
   }
 }

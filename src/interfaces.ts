@@ -1,18 +1,15 @@
 interface IConfig {
   min?: number,
   max?: number,
-  (step?: string): number | null,
-  (from?: string): number | null,
-  (to?: string): number | null,
-  (handleCount?:string): number | null,
-  (vertical?: string): boolean
+  step?: number,
+  from?: number | null,
+  to?: number | null,
+  handleCount?: number | null,
+  vertical?: boolean
 }
 
-type Set = keyof IConfig;
-
 interface ISettings {
-  key: Set,
-  value: number
+  [index: string]: number;
 }
 
 export {

@@ -1,12 +1,11 @@
 import Settings from "./settings/settings";
 import Observer from "../observer";
-import { IConfig, ISettings} from "../interfaces";
+import { IConfig, ISettings } from "../interfaces";
 
 import Track from "./elements/track";
 import Scale from "./elements/scale";
 import Handle from "./elements/handle";
 import Interval from "./elements/interval";
-
 
 export class View {
   config: IConfig;
@@ -24,7 +23,7 @@ export class View {
   constructor(slider: JQuery<HTMLElement>, config: IConfig) {
     this.config = config;
     this.slider = slider;
-    this.isTwoHandle = this.config.handleCount == 2;    
+    this.isTwoHandle = this.config.handleCount == 2;
     this.handleX = [];
     this.values = [];
     this.observer = new Observer();
@@ -45,7 +44,7 @@ export class View {
   }
 
   changeSettings(settings: ISettings) {
-    this.scale.changeScale(settings)    
+    this.scale.changeScale(settings)
     this.observer.notify('settings', settings);
   }
 
@@ -53,7 +52,6 @@ export class View {
     this.interval.moveInterval(handleX)
   }
 
-  /* move handle by parameter x */
   initHandles(handleX: number[]) {
     this.handleX = handleX;
     this.handles.initHandles(handleX);
@@ -65,13 +63,17 @@ export class View {
     this.settings.initValues(values);
   }
 
-  moveByHandle(x:number, handle){
+  moveByHandle(x: number, handle: JQuery<HTMLElement>) {
     let handleX = this.handles.moveByHandle(x, handle);
-    this.handleX = handleX;
-    this.interval.moveInterval(handleX);
+    if (handleX) {
+      this.handleX = handleX;
+      this.interval.moveInterval(handleX);
+    } else {
+      throw new Error('cant take handle(s) position')
+    }
   }
 
-  moveByX(x:number) {
+  moveByX(x: number) {
     let handleX = this.handles.moveByX(x);
     this.handleX = this.handleX;
     this.interval.moveInterval(handleX);
@@ -85,11 +87,9 @@ export class View {
       document.onmousemove = function (event) {
         element.observer.notify('mousemove', { event, handle })
       };
-
       document.onmouseup = function () {
         document.onmousemove = document.onmouseup = null;
       };
-
       handle.ondragstart = function () {
         return false;
       };
@@ -100,7 +100,7 @@ export class View {
   clickOnValue() {
     let element = this;
     this.slider.on('click', '.slider__value', function () {
-      let currentValue = +$(this).attr('data_value');
+      let currentValue = Number($(this).attr('data_value'));
       element.observer.notify('click', currentValue);
     })
   }

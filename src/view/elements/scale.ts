@@ -1,4 +1,4 @@
-import { IConfig, ISettings, configKeys } from "../../interfaces";
+import { IConfig, ISettings } from "../../interfaces";
 
 export default class Scale {
   config: IConfig;
@@ -40,7 +40,7 @@ export default class Scale {
   }
 
   changeScale(settings: ISettings) {
-    this.config[settings.key] = +settings.value;
+    this.config = $.extend(this.config, settings);
     $(this.scale).find('.slider__value').each(function () {
       this.remove()
     });

@@ -1,12 +1,18 @@
+import { IConfig, ISettings } from "../../interfaces";
+
 export default class Track {
-  constructor(slider, config) {
+  config: IConfig;
+  slider: JQuery<HTMLElement>;
+
+  constructor(slider: JQuery<HTMLElement>, config: IConfig) {
     this.slider = slider;
     this.config = config;   
     this.init()
   }
 
   init(){
-    let track = `<div class="slider__track"></div>`;
-    this.slider[0].insertAdjacentHTML("afterBegin", track);
+    jQuery('<div>', {
+      class: 'slider__track',
+    }).appendTo(this.slider);
   }
 }

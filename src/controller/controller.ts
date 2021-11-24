@@ -1,6 +1,6 @@
 import { View } from "../view/view";
 import Model from "../model/model";
-import { IConfig } from "../interfaces";
+import { IConfig, ISettings } from "../interfaces";
 
 const defaults: IConfig = {
   min: 10,
@@ -18,38 +18,42 @@ export class Controller {
   config: IConfig;
   slider: JQuery<HTMLElement>;
 
-constructor(slider: JQuery < HTMLElement >, options: IConfig) {
-  this.config = $.extend({}, defaults, options);
-  this.slider = slider;
-  this.view = new View(this.slider, this.config);
-  this.model = new Model(this.slider, this.config);
-  this.init();
-}
+  constructor(slider: JQuery<HTMLElement>, options: IConfig) {
+    this.config = $.extend({}, defaults, options);
+    this.slider = slider;
+    this.view = new View(this.slider, this.config);
+    this.model = new Model(this.slider, this.config);
+    this.init();
+  }
 
-init() {
-  let handleX = this.model.initPosition();
-  let values = this.model.initValues();
-  this.view.initHandles(handleX);
-  this.view.initValues(values);
+  init() {
+    let handleX = this.model.initPosition();
+    let values = this.model.initValues();
+    this.view.initHandles(handleX);
+    this.view.initValues(values);
 
-  this.view.observer.subscribe({ key: 'mousemove', observer: this.moveHandle.bind(this) });
-  this.view.observer.subscribe({ key: 'click', observer: this.clickValue.bind(this) });
-  this.view.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) });
-  //this.model.observer.subscribe({ key: 'changeValues', observer: this.changeValues.bind(this) });
-}
+    this.view.observer.subscribe({ key: 'mousemove', observer: this.moveHandle.bind(this) });
+    this.view.observer.subscribe({ key: 'click', observer: this.clickValue.bind(this) });
+    this.view.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) });
+    //this.model.observer.subscribe({ key: 'changeValues', observer: this.changeValues.bind(this) });
+  }
 
-changeSettings(settings){
-  this.model.changeSettings(settings)
-}
+  changeSettings(settings: ISettings) {
+    this.model.changeSettings(settings)
+  }
 
-moveHandle(data) {
-  let x = this.model.takeXByEvent(data.event);
-  this.view.moveByHandle(x, data.handle)
-}
+  moveHandle(data: { event: MouseEvent, handle: JQuery<HTMLElement> }) {
+    let x = this.model.takeXByEvent(data.event);
+    if (x) {
+      this.view.moveByHandle(x, data.handle)
+    } else {
+      throw new Error('error in taking position of handle')
+    }
+  }
 
-clickValue(data) {
-  let x = this.model.takeXByValue(data);
-  this.view.moveByX(x)
-}  
+  clickValue(value: number) {
+    let x: number = this.model.takeXByValue(value);
+    this.view.moveByX(x)
+  }
 }
 

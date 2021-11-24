@@ -28,7 +28,7 @@ export default class Settings {
       if (key in settingsArr) {
         $(this.settings).find(`input[name='${key}']`).val(value);
         $(this.settings).find(`input[name='${key}']`).on('change', function () {
-          let setting: ISettings = { key: key, value: value }
+          let setting: ISettings = { key: value };
           observer.notify('settings', setting);
         });
       }
