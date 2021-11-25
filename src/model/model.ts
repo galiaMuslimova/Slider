@@ -3,7 +3,6 @@ import { IConfig, ISettings } from "../interfaces";
 
 export default class Model {
   config: IConfig;
-  params: IConfig;
   slider: JQuery<HTMLElement>;
   observer: Observer;
   positionsArr: { value: number, x: number }[];
@@ -23,30 +22,20 @@ export default class Model {
     this.isTwoHandle = this.config.handleCount == 2;
     this.handleX = [];
     this.values = [];
-    this.sliderLeft = Number(this.slider.css('left'));
+    this.sliderLeft = Number(this.slider.position().left);
     this.sliderWidth = this.slider.width();
-    this.stepsCount;
+    if (this.config.min && this.config.max && this.config.step) {
+      this.stepsCount = Math.floor((this.config.max - this.config.min) / this.config.step);
+    } else {
+      throw new Error('wrong parameters')
+    }
     this.init();
-    this.params = this.checkParameters();
   }
 
   init() {
-    this.checkParameters();
     this.initValues();
     this.initPositionsArr();
     this.initPosition();
-  }
-
-  checkParameters(params: IConfig = this.config) {
-    if (!params.max) {
-      throw new Error("max number error")
-    } else if (!params.min) {
-      throw new Error("min number error")
-    } else if (!params.step) {
-      throw new Error("step number error")
-    } else {
-      return params
-    }
   }
 
   initValues() {
@@ -66,10 +55,9 @@ export default class Model {
   }
 
   initPositionsArr() {
-    if (this.config.min && this.config.max && this.config.step) {
+    if (this.config.min && this.config.max && this.config.step && this.stepsCount) {
       let start = this.config.min;
       let step = this.config.step;
-      this.stepsCount = Math.floor((this.config.max - this.config.min) / this.config.step);
       let valuesArr = Array.from(Array(this.stepsCount + 1), (_, i) => (start + step * i));
       let positionsArr: { value: number, x: number }[] = [];
       valuesArr.map(el => positionsArr.push({ value: el, x: this.initPositionsforArray(el) }))
@@ -82,13 +70,8 @@ export default class Model {
   /*function for create positions at positions array*/
   initPositionsforArray(value: number) {
     let valueElement = $(this.slider).find(`.slider__value[data_value='${value}']`);
-    let valuePosition = valueElement[0].getBoundingClientRect().left;
-    if (this.sliderLeft) {
-      let x = valuePosition - this.sliderLeft;
-      return x;
-    } else {
-      throw new Error('error in slider position')
-    }
+    let x = valueElement.position().left;
+    return x;
   }
 
   initPosition() {
@@ -110,14 +93,14 @@ export default class Model {
   }
 
   takeXByEvent(event: MouseEvent) {
-    if (this.stepsCount && this.sliderLeft && this.stepLength) {
+    if (this.stepsCount && this.sliderLeft) {
       //how many steps passed? ex. 0,1,2,3 e.t.c
-      let passedSteps = Math.round((event.pageX - this.sliderLeft) / this.stepLength);
+      let stepLength = this.positionsArr[1].x - this.positionsArr[0].x;
+      let passedSteps = Math.round((event.pageX - this.sliderLeft) / stepLength);
       let isInScale = passedSteps >= 0 && passedSteps <= this.stepsCount;
-
       if (isInScale) {
         let x = this.positionsArr[passedSteps].x;
-        return x;
+        return x;       
       }
     } else {
       throw new Error('wrong parameters of slider')

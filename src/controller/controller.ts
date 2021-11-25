@@ -44,7 +44,7 @@ export class Controller {
 
   moveHandle(data: { event: MouseEvent, handle: JQuery<HTMLElement> }) {
     let x = this.model.takeXByEvent(data.event);
-    if (x) {
+    if (x != undefined) {
       this.view.moveByHandle(x, data.handle)
     } else {
       throw new Error('error in taking position of handle')

@@ -9,11 +9,11 @@ export default class Interval {
   constructor(slider: JQuery<HTMLElement>, config: IConfig) {
     this.slider = slider;
     this.config = config;
+    this.track = $(this.slider).find('.slider__track');
     jQuery('<div>', {
       class: 'slider__interval',
-    }).appendTo(this.slider);
+    }).appendTo(this.track);
     this.interval = this.slider.find(".slider__interval");
-    this.track = $(this.slider).find('.slider__track');
   }
 
   moveInterval(handleX: number[]){
@@ -30,9 +30,9 @@ export default class Interval {
         break;
     }
     
-    if (!left) {
+    if (left == undefined) {
       throw new Error("left point error")
-    } else if (!right) {
+    } else if (right == undefined) {
       throw new Error("right point error")
     } else {
       let width = right - left;

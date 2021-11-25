@@ -33,7 +33,8 @@ export default class Scale {
         jQuery('<div>', {
           class: 'slider__value',
           data_value: i,
-          style: `width: ${stepWidth}px`
+          style: `width: ${stepWidth}px`,
+          text: i
         }).appendTo(this.scale);
       }
     }

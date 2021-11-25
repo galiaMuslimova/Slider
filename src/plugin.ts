@@ -10,6 +10,7 @@ declare global {
 
 (function ($) {
   $.fn.slider = function (options: IConfig) {
+    
     new Controller(this, options)
     return this;
   }

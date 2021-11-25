@@ -83,14 +83,14 @@ export class View {
   dragNDropHandle() {
     let element = this;
     this.slider.on('mousedown', '.slider__handle', function () {
-      let handle = this;
+      let handle = $(this);
       document.onmousemove = function (event) {
         element.observer.notify('mousemove', { event, handle })
       };
       document.onmouseup = function () {
         document.onmousemove = document.onmouseup = null;
       };
-      handle.ondragstart = function () {
+      this.ondragstart = function () {
         return false;
       };
     })

@@ -52,15 +52,17 @@ export default class Handle {
     this.handleX = handleX;
   }
 
-  moveByHandle(x: number, handle: JQuery<HTMLElement>) {
+  moveByHandle(x: number, handle: JQuery<HTMLElement>) {    
     for (let i in this.handles) {
-      if (this.handles[i] == handle) {
+      if (this.handles[i][0] == handle[0]) {
         this.handles[i].css("left", `${x}px`);
         this.handleX[i] = x;
+        
         if (this.handleX[0] > this.handleX[1]) {
           this.handleX = this.handleX.reverse();
           this.handles = this.handles.reverse();
         }
+        
         return this.handleX;
       }
     }

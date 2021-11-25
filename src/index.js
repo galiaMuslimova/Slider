@@ -1,3 +1,5 @@
+import './plugin'
+
 $(function () {
   $(".slider1").slider({
     handleCount: 2,

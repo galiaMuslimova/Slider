@@ -22,6 +22,7 @@
 
   &__interval {
     position: absolute;
+    z-index: 9;
     height: 10px;
     background-color: rgb(74, 122, 10);
   }
