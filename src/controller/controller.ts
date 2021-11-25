@@ -27,10 +27,7 @@ export class Controller {
   }
 
   init() {
-    let handleX = this.model.initPosition();
-    let values = this.model.initValues();
-    this.view.initHandles(handleX);
-    this.view.initValues(values);
+    this.changeSettings(null);
 
     this.view.observer.subscribe({ key: 'mousemove', observer: this.moveHandle.bind(this) });
     this.view.observer.subscribe({ key: 'click', observer: this.clickValue.bind(this) });
@@ -38,9 +35,10 @@ export class Controller {
     //this.model.observer.subscribe({ key: 'changeValues', observer: this.changeValues.bind(this) });
   }
 
-  changeSettings(settings: ISettings) {
-    let handleX: number[] = this.model.changeSettings(settings);
-    this.view.initHandles(handleX);
+  changeSettings(settings: ISettings | null) {
+    let data: { handleX: number[], values: number[] } = this.model.changeSettings(settings);
+    this.view.initHandles(data.handleX);
+    this.view.initValues(data.values);
   }
 
   moveHandle(data: { event: MouseEvent, handle: JQuery<HTMLElement> }) {

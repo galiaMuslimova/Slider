@@ -12,7 +12,7 @@ export default class Model {
   sliderLeft: number | undefined;
   sliderWidth: number | undefined;
   stepsCount: number | undefined;
-  stepLength: number | undefined;;
+  stepLength: number | undefined;
 
   constructor(slider: JQuery<HTMLElement>, config: IConfig) {
     this.config = config;
@@ -25,10 +25,16 @@ export default class Model {
     this.sliderLeft = Number(this.slider.position().left);
     this.sliderWidth = this.slider.width();
     this.stepsCount;
+    this.stepLength;
     this.init();
   }
 
   init() {
+    if (this.config.min && this.config.max && this.config.step && this.sliderWidth) {
+      this.stepLength = this.sliderWidth / (this.config.max - this.config.min) * this.config.step;
+    } else {
+      throw new Error('wrong parameters')
+    }
     this.initValues();
     this.initPositionsArr();
     this.initPosition();
@@ -45,30 +51,23 @@ export default class Model {
           this.values = [this.config.min + this.config.step, this.config.max - this.config.step];
           break;
       }
-      return this.values;
     } else {
       throw new Error('wrong parameters')
     }
   }
 
   initPositionsArr() {
-    if (this.config.min && this.config.max && this.config.step && this.stepsCount) {
+    if (this.config.min && this.config.step && this.stepsCount && this.stepLength) {
       let start = this.config.min;
       let step = this.config.step;
-      let valuesArr = Array.from(Array(this.stepsCount + 1), (_, i) => (start + step * i));
+      let stepLength = this.stepLength;
       let positionsArr: { value: number, x: number }[] = [];
-      valuesArr.map(el => positionsArr.push({ value: el, x: this.initPositionsforArray(el) }))
+      let valuesArr = Array.from(Array(this.stepsCount + 1), (_, i) => (start + step * i));      
+      valuesArr.map((el, index) => positionsArr.push({ value: el, x: stepLength * index }));
       this.positionsArr = positionsArr;
     } else {
       throw new Error('wrong parameters')
     }
-  }
-
-  /*function for create positions at positions array*/
-  initPositionsforArray(value: number) {
-    let valueElement = $(this.slider).find(`.slider__value[data_value='${value}']`);
-    let x = valueElement.position().left;
-    return x;
   }
 
   initPosition() {
@@ -76,7 +75,6 @@ export default class Model {
     this.values.forEach(item => {
       this.handleX.push(this.takeXByValue(item));
     });
-    return this.handleX;
   }
 
   takeXByValue(val: number) {
@@ -84,17 +82,21 @@ export default class Model {
     return result[0].x;
   }
 
-  changeSettings(settings: ISettings) {
-    this.config = $.extend({}, this.config, settings)
+  changeSettings(settings: ISettings | null) {
+    if (settings) {
+      this.config = $.extend({}, this.config, settings)
+    }
     this.init();
-    return this.handleX
+    return {
+      handleX: this.handleX,
+      values: this.values
+    }
   }
 
   takeXByEvent(event: MouseEvent) {
-    if (this.stepsCount && this.sliderLeft) {
+    if (this.stepsCount && this.sliderLeft && this.stepLength) {
       //how many steps passed? ex. 0,1,2,3 e.t.c
-      let stepLength = this.positionsArr[1].x - this.positionsArr[0].x;
-      let passedSteps = Math.round((event.pageX - this.sliderLeft) / stepLength);
+      let passedSteps = Math.round((event.pageX - this.sliderLeft) / this.stepLength);
       let isInScale = passedSteps >= 0 && passedSteps <= this.stepsCount;
       if (isInScale) {
         let x = this.positionsArr[passedSteps].x;

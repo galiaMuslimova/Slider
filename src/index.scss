@@ -37,14 +37,16 @@
     line-height: 20px;
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
     position: relative;
     padding: 20px 0px;
   }
 
   &__value {
-    width: min-content;
+    width: 1.5em;
     position: relative;
     cursor: pointer;
+    text-align: center;
   }
 
   &__handle {

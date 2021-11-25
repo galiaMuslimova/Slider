@@ -18,25 +18,16 @@ export default class Scale {
   }
 
   initScaleValues() {
-    if (!this.config.max) {
-      throw new Error("max number error")
-    } else if (!this.config.min) {
-      throw new Error("min number error")
-    } else if (!this.config.step) {
-      throw new Error("step number error")
-    } else if (!this.sliderWidth) {
-      throw new Error("wrong width of slider")
-    } else {
-      let range = this.config.max - this.config.min;
-      let stepWidth = this.sliderWidth / range * this.config.step;
+    if (this.config.max && this.config.min && this.config.step) {
       for (let i = this.config.min; i <= this.config.max; i += this.config.step) {
         jQuery('<div>', {
           class: 'slider__value',
           data_value: i,
-          style: `width: ${stepWidth}px`,
-          text: i
+          text: i,          
         }).appendTo(this.scale);
       }
+    } else {
+      throw new Error('wrong parameters')
     }
   }
 

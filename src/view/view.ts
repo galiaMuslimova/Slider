@@ -59,9 +59,10 @@ export class View {
   }
 
   initValues(values: number[]) {
-    this.values = values;
+    this.values = values;    
     this.settings.initValues(values);
   }
+
 
   moveByHandle(x: number, handle: JQuery<HTMLElement>) {
     let handleX = this.handles.moveByHandle(x, handle);
