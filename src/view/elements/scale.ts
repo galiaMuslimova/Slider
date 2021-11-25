@@ -14,28 +14,18 @@ export default class Scale {
     }).appendTo(this.slider);
     this.scale = this.slider.find(".slider__scale");
     this.sliderWidth = this.slider.width();
-    this.initScaleValues()
   }
 
-  initScaleValues() {
-    if (this.config.max && this.config.min && this.config.step) {
-      for (let i = this.config.min; i <= this.config.max; i += this.config.step) {
-        jQuery('<div>', {
-          class: 'slider__value',
-          data_value: i,
-          text: i,          
-        }).appendTo(this.scale);
-      }
-    } else {
-      throw new Error('wrong parameters')
-    }
+  initValuesPosition(positionsArr: { value: number, x: number }[]){
+    this.scale.empty()
+    positionsArr.map(item => {
+      let value = jQuery('<div>', {
+        class: 'slider__value',
+        data_value: item.value,
+        text: item.value,
+        style: `left: ${item.x}px`
+      }).appendTo(this.scale);
+    })
   }
-
-  changeScale(settings: ISettings) {
-    this.config = $.extend(this.config, settings);
-    $(this.scale).find('.slider__value').each(function () {
-      this.remove()
-    });
-    this.initScaleValues();
-  }
+  
 }

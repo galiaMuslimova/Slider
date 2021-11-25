@@ -44,7 +44,6 @@ export class View {
   }
 
   changeSettings(settings: ISettings) {
-    this.scale.changeScale(settings)
     this.observer.notify('settings', settings);
   }
 
@@ -63,6 +62,9 @@ export class View {
     this.settings.initValues(values);
   }
 
+  initValuesPosition(positionsArr: { value: number, x: number }[]){
+    this.scale.initValuesPosition(positionsArr);
+  }
 
   moveByHandle(x: number, handle: JQuery<HTMLElement>) {
     let handleX = this.handles.moveByHandle(x, handle);

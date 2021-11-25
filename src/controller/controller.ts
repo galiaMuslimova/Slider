@@ -28,6 +28,8 @@ export class Controller {
 
   init() {
     this.changeSettings(null);
+    let positionsArr = this.model.getPositionsArr();
+    this.view.initValuesPosition(positionsArr);
 
     this.view.observer.subscribe({ key: 'mousemove', observer: this.moveHandle.bind(this) });
     this.view.observer.subscribe({ key: 'click', observer: this.clickValue.bind(this) });
@@ -36,17 +38,16 @@ export class Controller {
   }
 
   changeSettings(settings: ISettings | null) {
-    let data: { handleX: number[], values: number[] } = this.model.changeSettings(settings);
+    let data: { handleX: number[], values: number[], positionsArr: { value: number, x: number }[] } = this.model.changeSettings(settings);
     this.view.initHandles(data.handleX);
     this.view.initValues(data.values);
+    this.view.initValuesPosition(data.positionsArr)
   }
 
   moveHandle(data: { event: MouseEvent, handle: JQuery<HTMLElement> }) {
     let x = this.model.takeXByEvent(data.event);
     if (x != undefined) {
       this.view.moveByHandle(x, data.handle)
-    } else {
-      throw new Error('error in taking position of handle')
     }
   }
 

@@ -30,41 +30,37 @@ export default class Model {
   }
 
   init() {
-    if (this.config.min && this.config.max && this.config.step && this.sliderWidth) {
-      this.stepLength = this.sliderWidth / (this.config.max - this.config.min) * this.config.step;
-    } else {
-      throw new Error('wrong parameters')
-    }
-    this.initValues();
     this.initPositionsArr();
+    this.initValues();
     this.initPosition();
   }
 
-  initValues() {
-    if (this.config.min && this.config.max && this.config.step) {
+  initPositionsArr() {
+    if (this.config.min && this.config.max && this.config.step  && this.sliderWidth) {
+      let start = this.config.min;
+      let step = this.config.step;
+      let stepLength = (this.sliderWidth - 30) / (this.config.max - this.config.min) * this.config.step;
+      this.stepLength = stepLength;
       this.stepsCount = Math.floor((this.config.max - this.config.min) / this.config.step);
+      let positionsArr: { value: number, x: number }[] = [];
+      let valuesArr = Array.from(Array(this.stepsCount + 1), (_, i) => (start + step * i));
+      valuesArr.map((el, index) => positionsArr.push({ value: el, x: stepLength * index }));
+      this.positionsArr = positionsArr;
+    } else {
+      throw new Error('wrong parameters')
+    }
+  }
+
+  initValues() {
+    if (this.config.min && this.config.step && this.stepsCount) {
       switch (this.config.handleCount) {
         case 1:
           this.values = [this.config.min + Math.round(this.stepsCount / 2) * this.config.step];
           break;
         case 2:
-          this.values = [this.config.min + this.config.step, this.config.max - this.config.step];
+          this.values = [this.positionsArr[1].value, this.positionsArr[this.positionsArr.length - 1].value];
           break;
       }
-    } else {
-      throw new Error('wrong parameters')
-    }
-  }
-
-  initPositionsArr() {
-    if (this.config.min && this.config.step && this.stepsCount && this.stepLength) {
-      let start = this.config.min;
-      let step = this.config.step;
-      let stepLength = this.stepLength;
-      let positionsArr: { value: number, x: number }[] = [];
-      let valuesArr = Array.from(Array(this.stepsCount + 1), (_, i) => (start + step * i));      
-      valuesArr.map((el, index) => positionsArr.push({ value: el, x: stepLength * index }));
-      this.positionsArr = positionsArr;
     } else {
       throw new Error('wrong parameters')
     }
@@ -75,6 +71,10 @@ export default class Model {
     this.values.forEach(item => {
       this.handleX.push(this.takeXByValue(item));
     });
+  }
+
+  getPositionsArr() {
+    return this.positionsArr
   }
 
   takeXByValue(val: number) {
@@ -89,7 +89,8 @@ export default class Model {
     this.init();
     return {
       handleX: this.handleX,
-      values: this.values
+      values: this.values,
+      positionsArr: this.positionsArr
     }
   }
 
