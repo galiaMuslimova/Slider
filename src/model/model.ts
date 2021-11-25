@@ -24,11 +24,7 @@ export default class Model {
     this.values = [];
     this.sliderLeft = Number(this.slider.position().left);
     this.sliderWidth = this.slider.width();
-    if (this.config.min && this.config.max && this.config.step) {
-      this.stepsCount = Math.floor((this.config.max - this.config.min) / this.config.step);
-    } else {
-      throw new Error('wrong parameters')
-    }
+    this.stepsCount;
     this.init();
   }
 
@@ -39,7 +35,8 @@ export default class Model {
   }
 
   initValues() {
-    if (this.config.min && this.config.max && this.config.step && this.stepsCount) {
+    if (this.config.min && this.config.max && this.config.step) {
+      this.stepsCount = Math.floor((this.config.max - this.config.min) / this.config.step);
       switch (this.config.handleCount) {
         case 1:
           this.values = [this.config.min + Math.round(this.stepsCount / 2) * this.config.step];
@@ -89,7 +86,8 @@ export default class Model {
 
   changeSettings(settings: ISettings) {
     this.config = $.extend({}, this.config, settings)
-    this.init();    
+    this.init();
+    return this.handleX
   }
 
   takeXByEvent(event: MouseEvent) {
@@ -100,7 +98,7 @@ export default class Model {
       let isInScale = passedSteps >= 0 && passedSteps <= this.stepsCount;
       if (isInScale) {
         let x = this.positionsArr[passedSteps].x;
-        return x;       
+        return x;
       }
     } else {
       throw new Error('wrong parameters of slider')

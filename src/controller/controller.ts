@@ -39,7 +39,8 @@ export class Controller {
   }
 
   changeSettings(settings: ISettings) {
-    this.model.changeSettings(settings)
+    let handleX: number[] = this.model.changeSettings(settings);
+    this.view.initHandles(handleX);
   }
 
   moveHandle(data: { event: MouseEvent, handle: JQuery<HTMLElement> }) {
