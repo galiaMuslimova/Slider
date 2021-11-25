@@ -8,6 +8,8 @@ interface IConfig {
   vertical?: boolean
 }
 
+type configKeys = keyof IConfig;
+
 interface ISettings {
   [index: string]: number;
 }
@@ -15,4 +17,5 @@ interface ISettings {
 export {
   IConfig,
   ISettings,
+  configKeys
 }

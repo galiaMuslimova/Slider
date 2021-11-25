@@ -13,22 +13,23 @@ export default class Settings {
     this.slider = slider;
     this.config = config;
     this.observer = new Observer();
+    let container: JQuery<HTMLElement> = $(this.slider).closest('.container');
+    container.append(settingsTemplate);
     this.settings = $(this.slider).closest('.container').find(".settings");
     this.init();
   }
 
   init() {
-    let observer = this.observer;
-    let container: JQuery<HTMLElement> | null = $(this.slider).closest('.container');
-    container.append(settingsTemplate);
-    
+    let observer = this.observer;    
     let settingsArr: string[] = ['min', 'max', 'step', 'from', 'to'];
 
-    for (const [key, value] of Object.entries(this.config)) {
-      if (key in settingsArr) {
-        $(this.settings).find(`input[name='${key}']`).val(value);
-        $(this.settings).find(`input[name='${key}']`).on('change', function () {
-          let setting: ISettings = { key: value };
+    for (const [key, value] of Object.entries(this.config)) {  
+      if ($.inArray(key, settingsArr)) {
+        let input = this.settings.find(`input[name='${key}']`)
+        input.val(value);
+        input.on('change', function () {
+          let setting: ISettings = {};
+          setting[key] =  Number(input.val())
           observer.notify('settings', setting);
         });
       }

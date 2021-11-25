@@ -89,7 +89,7 @@ export default class Model {
 
   changeSettings(settings: ISettings) {
     this.config = $.extend({}, this.config, settings)
-    this.init();
+    this.init();    
   }
 
   takeXByEvent(event: MouseEvent) {
