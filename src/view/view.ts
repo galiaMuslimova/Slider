@@ -6,6 +6,7 @@ import Track from "./elements/track";
 import Scale from "./elements/scale";
 import Handle from "./elements/handle";
 import Interval from "./elements/interval";
+import Tip from "./elements/tip";
 
 export class View {
   config: IConfig;
@@ -19,6 +20,7 @@ export class View {
   handles: Handle;
   interval: Interval;
   scale: Scale;
+  tips: Tip;
 
   constructor(slider: JQuery<HTMLElement>, config: IConfig) {
     this.config = config;
@@ -32,6 +34,7 @@ export class View {
     this.handles = new Handle(this.slider, this.config);
     this.interval = new Interval(this.slider, this.config);
     this.scale = new Scale(this.slider, this.config);
+    this.tips = new Tip(this.slider, this.config);
 
     this.init();
     this.dragNDropHandle();

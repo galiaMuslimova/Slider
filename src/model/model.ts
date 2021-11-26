@@ -1,5 +1,6 @@
 import Observer from "../observer";
-import { IConfig, ISettings } from "../interfaces";
+import { IConfig, ISettings, IParameters} from "../interfaces";
+import { param } from "jquery";
 
 export default class Model {
   config: IConfig;
@@ -7,9 +8,8 @@ export default class Model {
   track: JQuery<HTMLElement>;
   observer: Observer;
   positionsArr: { value: number, x: number }[];
-  isTwoHandle: boolean;
-  handleX: number[];
-  values: number[];
+  stepsArr: number[];
+  parameters: IParameters;
   trackLeft: number | undefined;
   trackWidth: number | undefined;
   stepsCount: number | undefined;
@@ -21,10 +21,11 @@ export default class Model {
     this.slider = slider;
     this.track = this.slider.find('.slider__track')
     this.observer = new Observer();
+
     this.positionsArr = [];
-    this.isTwoHandle = this.config.handleCount == 2;
-    this.handleX = [];
-    this.values = [];
+    this.stepsArr = [];
+    this.parameters = {values:[], handleX:[]};
+    
     this.trackLeft = Number(this.track.position().left);
     this.trackWidth = this.track.width();
     this.stepsCount;
@@ -34,47 +35,57 @@ export default class Model {
   }
 
   init() {
-    this.initPositionsArr();
-    this.initValues();
-    this.initPosition();
-  }
-
-  initPositionsArr() {
     if (this.config.min && this.config.max && this.config.step && this.trackWidth) {
       let start = this.config.min;
+      let end = this.config.max;
+      let range = end - start;
+      let width = this.trackWidth;
       let step = this.config.step;
-      let stepLength = this.trackWidth / (this.config.max - this.config.min) * this.config.step;
+      let stepsCount = Math.floor(range / step);
+      let stepLength = width / range * step;
+      let isTwoHandle = this.config.handleCount == 2;
+
+      this.positionsArr = this.initPositionsArr(start, range, width);
+      this.stepsArr = this.initStepsArr(start, step, stepsCount);
+      this.parameters = this.initParameters(start, step, stepsCount)
+
+      this.stepsCount = stepsCount;
       this.stepLength = stepLength;
-      this.stepsCount = Math.floor((this.config.max - this.config.min) / this.config.step);
-      let positionsArr: { value: number, x: number }[] = [];
-      let valuesArr = Array.from(Array(this.stepsCount + 1), (_, i) => (start + step * i));
-      valuesArr.map((el, index) => positionsArr.push({ value: el, x: (stepLength * index - this.handleWidth / 2) }));
-      this.positionsArr = positionsArr;
-    } else {
-      throw new Error('wrong parameters')
     }
   }
 
-  initValues() {
-    if (this.config.min && this.config.step && this.stepsCount) {
-      switch (this.config.handleCount) {
-        case 1:
-          this.values = [this.config.min + Math.round(this.stepsCount / 2) * this.config.step];
-          break;
-        case 2:
-          this.values = [this.positionsArr[1].value, this.positionsArr[this.positionsArr.length - 1].value];
-          break;
-      }
-    } else {
-      throw new Error('wrong parameters')
-    }
+  initPositionsArr(start: number, range: number, width: number) {
+    let valueLength = Math.round(width / range);
+    let valuesArr = Array.from(Array(range + 1), (_, i) => (start + i));
+    let positionsArr: { value: number, x: number }[] = [];
+    valuesArr.map((el, index) => positionsArr.push({ value: el, x: (valueLength * index - this.handleWidth / 2) }));
+    return positionsArr;
   }
 
-  initPosition() {
-    this.handleX = [];
-    this.values.forEach(item => {
-      this.handleX.push(this.takeXByValue(item));
-    });
+  initStepsArr(start: number, step: number, stepsCount: number) {
+    let stepsArr = Array.from(Array(stepsCount + 1), (_, i) => (start + step * i));
+    return stepsArr
+  }
+
+  initParameters(start: number, step: number, stepsCount: number) {
+    let parameters: IParameters = {
+      values: [],
+      handleX: []
+    }
+    switch (this.config.handleCount) {
+      case 1:
+        let value = start + Math.round(stepsCount / 2) * step
+        parameters.values = [value];
+        parameters.handleX = [this.takeXByValue(value)]
+        break;
+      case 2:
+        let value1 = this.stepsArr[1];
+        let value2 = this.stepsArr[this.stepsArr.length - 1]
+        parameters.values = [value1, value2 ];
+        parameters.handleX = [this.takeXByValue(value1), this.takeXByValue(value2)]
+        break;
+    }
+    return parameters
   }
 
   getPositionsArr() {
@@ -92,8 +103,8 @@ export default class Model {
     }
     this.init();
     return {
-      handleX: this.handleX,
-      values: this.values,
+      handleX: this.parameters.handleX,
+      values: this.parameters.values,
       positionsArr: this.positionsArr
     }
   }

@@ -8,14 +8,17 @@ interface IConfig {
   vertical?: boolean
 }
 
-type configKeys = keyof IConfig;
-
 interface ISettings {
   [index: string]: number;
+}
+
+interface IParameters {
+  values: number[],
+  handleX: number[],
 }
 
 export {
   IConfig,
   ISettings,
-  configKeys
+  IParameters
 }
