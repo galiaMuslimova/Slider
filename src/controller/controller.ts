@@ -28,8 +28,6 @@ export class Controller {
 
   init() {
     this.changeSettings(null);
-    let positionsArr = this.model.getPositionsArr();
-    this.view.initValuesPosition(positionsArr);
 
     this.view.observer.subscribe({ key: 'mousemove', observer: this.moveHandle.bind(this) });
     this.view.observer.subscribe({ key: 'click', observer: this.clickValue.bind(this) });

@@ -4,16 +4,18 @@ export default class Scale {
   config: IConfig;
   slider: JQuery<HTMLElement>;
   scale: JQuery<HTMLElement>;
-  sliderWidth: number | undefined;
+  track: JQuery<HTMLElement>;
+  trackWidth: number | undefined;
 
   constructor(slider: JQuery<HTMLElement>, config: IConfig) {
     this.slider = slider;
     this.config = config;
+    this.track = this.slider.find(".slider__track");
     jQuery('<div>', {
       class: 'slider__scale',
     }).appendTo(this.slider);
     this.scale = this.slider.find(".slider__scale");
-    this.sliderWidth = this.slider.width();
+    this.trackWidth = this.slider.width();
   }
 
   initValuesPosition(positionsArr: { value: number, x: number }[]){

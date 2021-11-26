@@ -5,8 +5,7 @@
 }
 
 .slider {
-  width: 90%;
-  margin: 0px auto;
+  margin: 0px 15px;
   padding-top: 50px;
   &__track {
     -moz-user-select: -moz-none;
@@ -17,7 +16,7 @@
     position: relative;
     height: 10px;
     background-color: greenyellow;
-    margin: 0px auto;
+    width: 100%;
   }
 
   &__interval {
