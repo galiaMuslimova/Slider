@@ -17,8 +17,14 @@ interface IParameters {
   handleX: number[],
 }
 
+interface IPositions {
+  value: number, 
+  x: number 
+}
+
 export {
   IConfig,
   ISettings,
-  IParameters
+  IParameters,
+  IPositions
 }

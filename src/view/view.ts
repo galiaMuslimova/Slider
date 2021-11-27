@@ -1,6 +1,6 @@
 import Settings from "./settings/settings";
 import Observer from "../observer";
-import { IConfig, ISettings } from "../interfaces";
+import { IConfig, IParameters, IPositions, ISettings } from "../interfaces";
 
 import Track from "./elements/track";
 import Scale from "./elements/scale";
@@ -54,29 +54,21 @@ export class View {
     this.interval.moveInterval(handleX)
   }
 
-  initHandles(handleX: number[]) {
-    this.handleX = handleX;
+  initParameters(parameters:IParameters){
+    this.handles.initHandles(parameters.handleX);
+    this.interval.moveInterval(parameters.handleX);
+    this.settings.initValues(parameters.values);
+  }
+
+  initStepsPosition(stepsArr: IPositions[]){
+    this.scale.initStepsPosition(stepsArr);
+  }
+
+  moveByHandle(parameters: IParameters) {
+    let handleX = parameters.handleX
     this.handles.initHandles(handleX);
-    this.interval.moveInterval(handleX)
-  }
-
-  initValues(values: number[]) {
-    this.values = values;    
-    this.settings.initValues(values);
-  }
-
-  initValuesPosition(positionsArr: { value: number, x: number }[]){
-    this.scale.initValuesPosition(positionsArr);
-  }
-
-  moveByHandle(x: number, handle: JQuery<HTMLElement>) {
-    let handleX = this.handles.moveByHandle(x, handle);
-    if (handleX) {
-      this.handleX = handleX;
-      this.interval.moveInterval(handleX);
-    } else {
-      throw new Error('cant take handle(s) position')
-    }
+    this.handleX = handleX;
+    this.interval.moveInterval(handleX);
   }
 
   moveByX(x: number) {
@@ -89,9 +81,9 @@ export class View {
   dragNDropHandle() {
     let element = this;
     this.slider.on('mousedown', '.slider__handle', function () {
-      let handle = $(this);
+      let index = $(this).hasClass('slider__handle_right')?1:0;
       document.onmousemove = function (event) {
-        element.observer.notify('mousemove', { event, handle })
+        element.observer.notify('mousemove', { event, index })
       };
       document.onmouseup = function () {
         document.onmousemove = document.onmouseup = null;

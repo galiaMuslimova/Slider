@@ -33,7 +33,7 @@ export default class Interval {
     }
   }
 
-  setHandleWidth(handleWidth: number){
+  setHandleWidth(handleWidth: number) {
     this.handleWidth = handleWidth;
   }
 }

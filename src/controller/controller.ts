@@ -1,6 +1,6 @@
 import { View } from "../view/view";
 import Model from "../model/model";
-import { IConfig, ISettings } from "../interfaces";
+import { IConfig, ISettings, IParameters, IPositions } from "../interfaces";
 
 const defaults: IConfig = {
   min: 10,
@@ -36,16 +36,15 @@ export class Controller {
   }
 
   changeSettings(settings: ISettings | null) {
-    let data: { handleX: number[], values: number[], positionsArr: { value: number, x: number }[] } = this.model.changeSettings(settings);
-    this.view.initHandles(data.handleX);
-    this.view.initValues(data.values);
-    this.view.initValuesPosition(data.positionsArr)
+    let data: { parameters: IParameters, stepsArr: IPositions[]} = this.model.changeSettings(settings);
+    this.view.initParameters(data.parameters)
+    this.view.initStepsPosition(data.stepsArr)
   }
 
-  moveHandle(data: { event: MouseEvent, handle: JQuery<HTMLElement> }) {
-    let x = this.model.takeXByEvent(data.event);
-    if (x != undefined) {
-      this.view.moveByHandle(x, data.handle)
+  moveHandle(data: { event: MouseEvent, index: number }) {
+    let parameters = this.model.takeXByEvent(data.event, data.index);
+    if(parameters !=undefined) {
+      this.view.moveByHandle(parameters)
     }
   }
 

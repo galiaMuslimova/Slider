@@ -18,10 +18,10 @@ export default class Scale {
     this.trackWidth = this.slider.width();
   }
 
-  initValuesPosition(positionsArr: { value: number, x: number }[]){
+  initStepsPosition(stepsArr: { value: number, x: number }[]){
     this.scale.empty()
-    positionsArr.map(item => {
-      let value = jQuery('<div>', {
+    stepsArr.map(item => {
+      jQuery('<div>', {
         class: 'slider__value',
         data_value: item.value,
         text: item.value,
