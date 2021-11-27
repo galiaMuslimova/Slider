@@ -1,5 +1,6 @@
 import Observer from "../observer";
 import { IConfig, ISettings, IParameters, IPositions } from "../interfaces";
+import { param } from "jquery";
 
 export default class Model {
   config: IConfig;
@@ -103,6 +104,21 @@ export default class Model {
     }
   }
 
+  takeXByScale(value: number) {
+    switch (this.config.handleCount) {
+      case 1: {
+        this.parameters.values = [value];
+        this.parameters.handleX = [this.takeXByValue(value)];
+        return this.parameters;
+      }
+      case 2: {
+        for (i in this.values) {
+          let valueRange = values[i] - value
+        }
+      }
+    }
+  }
+
   takeXByEvent(event: MouseEvent, index: number) {
     if (this.trackWidth && this.trackLeft) {
       let position = Math.round(event.pageX - this.trackLeft);
@@ -111,10 +127,9 @@ export default class Model {
       if (isInScale) {
         let result = this.positionsArr.filter(el => el.x == position)
         if (result.length > 0) {
-          let parameters:IParameters = this.parameters;
-          parameters.values[index] = result[0].value;
-          parameters.handleX[index] = result[0].x
-          return parameters;
+          this.parameters.values[index] = result[0].value;
+          this.parameters.handleX[index] = result[0].x;
+          return this.parameters;
         }
       }
     } else {

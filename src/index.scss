@@ -57,4 +57,11 @@
     z-index: 10;
     top: -5px;
   }
+
+  &__tip {
+    background-color: lightgray;
+    font-size: 14px;
+    position: absolute;
+    bottom: 20px;
+  }
 }

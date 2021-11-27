@@ -30,7 +30,7 @@ export class Controller {
     this.changeSettings(null);
 
     this.view.observer.subscribe({ key: 'mousemove', observer: this.moveHandle.bind(this) });
-    this.view.observer.subscribe({ key: 'click', observer: this.clickValue.bind(this) });
+    this.view.observer.subscribe({ key: 'click', observer: this.clickOnScale.bind(this) });
     this.view.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) });
     //this.model.observer.subscribe({ key: 'changeValues', observer: this.changeValues.bind(this) });
   }
@@ -48,8 +48,8 @@ export class Controller {
     }
   }
 
-  clickValue(value: number) {
-    let x: number = this.model.takeXByValue(value);
+  clickOnScale(value: number) {
+    let data = this.model.takeXByScale(value);
     this.view.moveByX(x)
   }
 }

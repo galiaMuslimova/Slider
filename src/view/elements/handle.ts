@@ -40,14 +40,8 @@ export default class Handle {
   }
 
   initHandles(handleX: number[]) {
-    switch (this.handles.length) {
-      case 1:
-        this.handles[0].css("left", `${handleX[0]}px`);
-        break;
-      case 2:
-        this.handles[0].css("left", `${handleX[0]}px`);
-        this.handles[1].css("left", `${handleX[1]}px`);
-        break;
+    for (let i in this.handles){
+      this.handles[i].css("left", `${handleX[i]}px`);
     }
     this.handleX = handleX;
   }

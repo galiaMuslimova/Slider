@@ -56,6 +56,7 @@ export class View {
 
   initParameters(parameters:IParameters){
     this.handles.initHandles(parameters.handleX);
+    this.tips.initTips(parameters.values)
     this.interval.moveInterval(parameters.handleX);
     this.settings.initValues(parameters.values);
   }
@@ -65,10 +66,9 @@ export class View {
   }
 
   moveByHandle(parameters: IParameters) {
-    let handleX = parameters.handleX
-    this.handles.initHandles(handleX);
-    this.handleX = handleX;
-    this.interval.moveInterval(handleX);
+    this.handles.initHandles(parameters.handleX);
+    this.interval.moveInterval(parameters.handleX); 
+    this.tips.initTips(parameters.values)   
   }
 
   moveByX(x: number) {

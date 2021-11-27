@@ -4,19 +4,16 @@ import { IConfig } from "../../interfaces";
 export default class Handle {
   config: IConfig;
   slider: JQuery<HTMLElement>;
-  track: JQuery<HTMLElement>;
   observer: Observer;
   handles: JQuery<HTMLElement>[];
-  //tips: JQuery<HTMLElement>[];
-  handleX: [];
+  tips: JQuery<HTMLElement>[];
 
   constructor(slider: JQuery<HTMLElement>, config: IConfig) {
     this.slider = slider;
     this.config = config;
     this.observer = new Observer();
-    this.track = $(this.slider).find('.slider__track');
     this.handles = [];
-    this.handleX = [];
+    this.tips = [];
     this.init();
   }
 
@@ -28,9 +25,19 @@ export default class Handle {
     this.handles = handles;
   }
 
-  initTips(handleX: number[]) {
-    jQuery('<div>', {
-      class: 'slider__tip',
-    }).appendTo(this.handles[0]);
+  initTips(values: number[]) {
+    for (let i in values) {
+      let tip = jQuery('<div>', {
+        class: 'slider__tip',
+        text: values[i]
+      }).appendTo(this.handles[i]);
+      this.tips.push($(tip))
+    }
+  }
+
+  changeTips(values:number[]){
+    for (let i in this.tips) {
+      this.tips[i].html(`${values[i]}`)
+    }
   }
 }
