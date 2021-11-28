@@ -1,4 +1,4 @@
-import { IConfig, ISettings } from "../../interfaces";
+import { IConfig } from "../../interfaces";
 
 export default class Track {
   config: IConfig;

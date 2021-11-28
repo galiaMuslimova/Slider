@@ -5,7 +5,7 @@ interface IConfig {
   from?: number | null,
   to?: number | null,
   handleCount?: number | null,
-  vertical?: boolean
+  orientation?: 'vertical' | 'horizontal'
 }
 
 interface ISettings {

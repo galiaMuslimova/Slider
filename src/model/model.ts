@@ -14,9 +14,9 @@ export default class Model {
   trackWidth: number | undefined;
   handleWidth: number;
 
-  constructor(slider: JQuery<HTMLElement>, config: IConfig) {
+  constructor(root: JQuery<HTMLElement>, config: IConfig) {
     this.config = config;
-    this.slider = slider;
+    this.slider = root.find('.slider');
     this.track = this.slider.find('.slider__track')
     this.observer = new Observer();
 
@@ -37,9 +37,7 @@ export default class Model {
       let range = end - start;
       let width = this.trackWidth;
       let step = this.config.step;
-
-      let isTwoHandle = this.config.handleCount == 2;
-
+      
       this.positionsArr = this.initPositionsArr(start, range, width);
       this.stepsArr = this.initStepsArr(start, step, range, width);
       this.parameters = this.initParameters(start, range)
@@ -84,10 +82,6 @@ export default class Model {
     return parameters
   }
 
-  getPositionsArr() {
-    return this.positionsArr
-  }
-
   takeXByValue(val: number) {
     let result = this.positionsArr.filter(el => el.value == val);
     return result[0].x;
@@ -112,9 +106,13 @@ export default class Model {
         return this.parameters;
       }
       case 2: {
-        for (i in this.values) {
-          let valueRange = values[i] - value
-        }
+        let closest = this.parameters.values.reduce(function (prev, curr) {
+          return (Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev);
+        });
+        let index = this.parameters.values.indexOf(closest);
+        this.parameters.values[index] = value;
+        this.parameters.handleX[index] = this.takeXByValue(value);
+        return this.parameters        
       }
     }
   }

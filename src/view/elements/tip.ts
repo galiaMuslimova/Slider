@@ -23,13 +23,9 @@ export default class Handle {
       handles.push($(this))
     });
     this.handles = handles;
-  }
-
-  initTips(values: number[]) {
-    for (let i in values) {
+    for (let i in this.handles) {
       let tip = jQuery('<div>', {
         class: 'slider__tip',
-        text: values[i]
       }).appendTo(this.handles[i]);
       this.tips.push($(tip))
     }

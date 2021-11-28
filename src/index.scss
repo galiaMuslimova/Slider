@@ -1,67 +1,14 @@
-.container {
+.meta-slider {
+  display: grid;
   width: 500px;
   background-color: rgb(240, 241, 226);
   margin: 5em auto;
-}
 
-.slider {
-  margin: 0px 15px;
-  padding-top: 50px;
-  &__track {
-    -moz-user-select: -moz-none;
-    -o-user-select: none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-    user-select: none;
-    position: relative;
-    height: 10px;
-    background-color: greenyellow;
-    width: 100%;
+  &_horizontal {
+    grid-template-rows: min-content min-content;
   }
 
-  &__interval {
-    position: absolute;
-    z-index: 9;
-    height: 10px;
-    background-color: rgb(74, 122, 10);
-  }
-
-  &__scale {
-    -moz-user-select: -moz-none;
-    -o-user-select: none;
-    -khtml-user-select: none;
-    -webkit-user-select: none;
-    user-select: none;
-    width: 100%;
-    line-height: 20px;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    position: relative;
-    padding: 20px 0px;
-  }
-
-  &__value {
-    width: 1.5em;
-    position: absolute;
-    cursor: pointer;
-    text-align: center;
-  }
-
-  &__handle {
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background-color: green;
-    position: absolute;
-    z-index: 10;
-    top: -5px;
-  }
-
-  &__tip {
-    background-color: lightgray;
-    font-size: 14px;
-    position: absolute;
-    bottom: 20px;
+  &_vertical {
+    grid-template-columns: min-content min-content;
   }
 }

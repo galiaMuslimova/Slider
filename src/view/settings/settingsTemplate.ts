@@ -1,4 +1,4 @@
-export const settingsTemplate = `<div class="settings">
+export const settingsTemplate = `<div class="meta-slider__settings settings">
       <form>
         <label>
           <p>min</p>
@@ -29,11 +29,14 @@ export const settingsTemplate = `<div class="settings">
           <input class="settings__input" type="number" name="to" value="40" />
         </label>
       </form>
-      <div class="settings__button">
-        <div class="button">
-          <input type="checkbox" class="button__checkbox">
-          <div class="button__knobs"></div>
-          <div class="button__layer"></div>
-        </div>
-      </div>
+      <form>
+        <label>
+          <input type="radio" name="orientation" value="horizontal">
+          horizontal
+        </label>
+        <label>
+          <input type="radio" name="orientation" value="vertical">
+          vertical
+        </label>
+      </form>
     </div>`

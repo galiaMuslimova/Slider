@@ -25,8 +25,8 @@ export default class Interval {
         this.interval.css("left", `0px`);
         break;
       case 2:
-        let left = handleX[0] + this.handleWidth;
-        let width = handleX[1] - left;
+        let left = Math.min(handleX[0], handleX[1]) + this.handleWidth;
+        let width = Math.max(handleX[0], handleX[1]) - left;
         this.interval.width(`${width}px`);
         this.interval.css("left", `${left}px`);
         break;

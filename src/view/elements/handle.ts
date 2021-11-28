@@ -22,57 +22,27 @@ export default class Handle {
   init() {
     switch (this.config.handleCount) {
       case 1:
-        jQuery('<div>', {
+        let handle = jQuery('<div>', {
           class: 'slider__handle',
         }).appendTo(this.track);
-        this.handles.push($(this.slider).find('.slider__handle'));
+        this.handles.push(handle);
         break;
       case 2:
-        jQuery('<div>', {
+        let handle1 = jQuery('<div>', {
           class: 'slider__handle slider__handle_left',
         }).appendTo(this.track);
-        jQuery('<div>', {
+        let handle2 = jQuery('<div>', {
           class: 'slider__handle slider__handle_right',
         }).appendTo(this.track);
-        this.handles.push($(this.slider).find('.slider__handle_left'), $(this.slider).find('.slider__handle_right'));
+        this.handles.push(handle1, handle2);
         break;
     }
   }
 
-  initHandles(handleX: number[]) {
+  moveHandles(handleX: number[]) {
     for (let i in this.handles){
       this.handles[i].css("left", `${handleX[i]}px`);
     }
     this.handleX = handleX;
-  }
-
-  moveByHandle(x: number, handle: JQuery<HTMLElement>) {    
-    for (let i in this.handles) {
-      if (this.handles[i][0] == handle[0]) {
-        this.handles[i].css("left", `${x}px`);
-        this.handleX[i] = x;
-        
-        if (this.handleX[0] > this.handleX[1]) {
-          this.handleX = this.handleX.reverse();
-          this.handles = this.handles.reverse();
-        }
-        
-        return this.handleX;
-      }
-    }
-  }
-
-  moveByX(x: number) {
-    if (this.handles.length == 1) {
-      this.handles[0].css("left", `${x}px`);
-      this.handleX[0] = x;
-    } else {
-      let index = this.handleX.reduce(function (prev, curr) {
-        return (Math.abs(curr - x) < Math.abs(prev - x) ? 1 : 0);
-      });
-      this.handles[index].css("left", `${x}px`);
-      this.handleX[index] = x;
-    }
-    return this.handleX;
   }
 }

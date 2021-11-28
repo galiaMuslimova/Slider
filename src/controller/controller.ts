@@ -9,20 +9,20 @@ const defaults: IConfig = {
   from: 15,
   to: 45,
   handleCount: 2,
-  vertical: true
+  orientation: 'horizontal'
 }
 
 export class Controller {
   model: Model;
   view: View;
   config: IConfig;
-  slider: JQuery<HTMLElement>;
+  root: JQuery<HTMLElement>;
 
-  constructor(slider: JQuery<HTMLElement>, options: IConfig) {
+  constructor(root: JQuery<HTMLElement>, options: IConfig) {
     this.config = $.extend({}, defaults, options);
-    this.slider = slider;
-    this.view = new View(this.slider, this.config);
-    this.model = new Model(this.slider, this.config);
+    this.root = root;
+    this.view = new View(this.root, this.config);
+    this.model = new Model(this.root, this.config);
     this.init();
   }
 
@@ -36,21 +36,25 @@ export class Controller {
   }
 
   changeSettings(settings: ISettings | null) {
-    let data: { parameters: IParameters, stepsArr: IPositions[]} = this.model.changeSettings(settings);
-    this.view.initParameters(data.parameters)
-    this.view.initStepsPosition(data.stepsArr)
+    let data: { parameters: IParameters, stepsArr: IPositions[] } = this.model.changeSettings(settings);
+    this.view.changeParameters(data.parameters)
+    this.view.initScale(data.stepsArr)
   }
 
   moveHandle(data: { event: MouseEvent, index: number }) {
     let parameters = this.model.takeXByEvent(data.event, data.index);
-    if(parameters !=undefined) {
-      this.view.moveByHandle(parameters)
+    if (parameters != undefined) {
+      this.view.changeParameters(parameters)
     }
   }
 
   clickOnScale(value: number) {
-    let data = this.model.takeXByScale(value);
-    this.view.moveByX(x)
+    let parameters = this.model.takeXByScale(value);
+    if (parameters) {
+      this.view.changeParameters(parameters)
+    } else {
+      throw new Error('wrong parameters for scale')
+    }
   }
 }
 

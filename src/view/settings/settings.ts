@@ -5,26 +5,26 @@ import { IConfig, ISettings } from "../../interfaces";
 
 export default class Settings {
   config: IConfig;
-  slider: JQuery<HTMLElement>;
+  root: JQuery<HTMLElement>;
   observer: Observer;
   settings: JQuery<HTMLElement>;
 
-  constructor(slider: JQuery<HTMLElement>, config: IConfig) {
-    this.slider = slider;
+  constructor(root: JQuery<HTMLElement>, config: IConfig) {
+    this.root = root;
     this.config = config;
     this.observer = new Observer();
-    let container: JQuery<HTMLElement> = $(this.slider).closest('.container');
-    container.append(settingsTemplate);
-    this.settings = $(this.slider).closest('.container').find(".settings");
+    root.append(settingsTemplate);
+    this.settings = $(this.root).find(".settings");
     this.init();
   }
 
   init() {
     let observer = this.observer;    
-    let settingsArr: string[] = ['min', 'max', 'step', 'from', 'to'];
+    let numberInputs: string[] = ['min', 'max', 'step', 'from', 'to'];
+    let radioInputs: string[] = ['orientation']
 
     for (const [key, value] of Object.entries(this.config)) {  
-      if ($.inArray(key, settingsArr)) {
+      if ($.inArray(key, numberInputs)) {
         let input = this.settings.find(`input[name='${key}']`)
         input.val(value);
         input.on('change', function () {
@@ -32,6 +32,10 @@ export default class Settings {
           setting[key] =  Number(input.val())
           observer.notify('settings', setting);
         });
+      } else if ($.inArray(key, radioInputs)){
+        let input = this.settings.find(`input[name='${key}']`)
+      } else {
+        throw new Error('not such setting')
       }
     }
   }
