@@ -3,8 +3,8 @@ import Model from "../model/model";
 import { IConfig, ISettings, IParameters, IPositions } from "../interfaces";
 
 const defaults: IConfig = {
-  min: 10,
-  max: 50,
+  start: 10,
+  end: 50,
   step: 5,
   from: 15,
   to: 45,
@@ -20,6 +20,7 @@ export class Controller {
 
   constructor(root: JQuery<HTMLElement>, options: IConfig) {
     this.config = $.extend({}, defaults, options);
+    this.config.isVertical = this.config.orientation=='vertical'
     this.root = root;
     this.view = new View(this.root, this.config);
     this.model = new Model(this.root, this.config);

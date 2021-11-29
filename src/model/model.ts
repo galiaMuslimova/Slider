@@ -10,7 +10,7 @@ export default class Model {
   positionsArr: IPositions[];
   stepsArr: IPositions[];
   parameters: IParameters;
-  trackLeft: number | undefined;
+  trackStart: number | undefined;
   trackWidth: number | undefined;
   handleWidth: number;
 
@@ -24,20 +24,20 @@ export default class Model {
     this.stepsArr = [];
     this.parameters = { values: [], handleX: [] };
 
-    this.trackLeft = Number(this.track.position().left);
-    this.trackWidth = this.track.width();
+    this.trackStart = this.config.isVertical?Number(this.track.position().top):Number(this.track.position().left);
+    this.trackWidth = this.config.isVertical?this.track.height():this.track.width();
     this.handleWidth = 20;
     this.init();
   }
 
   init() {
-    if (this.config.min && this.config.max && this.config.step && this.trackWidth) {
-      let start = this.config.min;
-      let end = this.config.max;
+    if (this.config.start && this.config.end && this.config.step && this.trackWidth) {
+      let start = this.config.start;
+      let end = this.config.end;
       let range = end - start;
       let width = this.trackWidth;
       let step = this.config.step;
-      
+
       this.positionsArr = this.initPositionsArr(start, range, width);
       this.stepsArr = this.initStepsArr(start, step, range, width);
       this.parameters = this.initParameters(start, range)
@@ -118,8 +118,9 @@ export default class Model {
   }
 
   takeXByEvent(event: MouseEvent, index: number) {
-    if (this.trackWidth && this.trackLeft) {
-      let position = Math.round(event.pageX - this.trackLeft);
+    if (this.trackWidth && this.trackStart) {
+      let mousePosition = this.config.isVertical ? event.pageY : event.pageX
+      let position = Math.round(mousePosition - this.trackStart);
       let rightBound = position + this.trackWidth;
       let isInScale = position >= 0 && position <= rightBound;
       if (isInScale) {

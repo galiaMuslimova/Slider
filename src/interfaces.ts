@@ -1,11 +1,12 @@
 interface IConfig {
-  min?: number,
-  max?: number,
+  start?: number,
+  end?: number,
   step?: number,
   from?: number | null,
   to?: number | null,
   handleCount?: number | null,
   orientation?: 'vertical' | 'horizontal'
+  isVertical?: boolean
 }
 
 interface ISettings {

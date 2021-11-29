@@ -22,7 +22,7 @@ export default class Scale {
         class: 'slider__value',
         data_value: item.value,
         text: item.value,
-        style: `left: ${item.x}px`
+        style: this.config.isVertical?`top: ${item.x}px`:`left: ${item.x}px`
       }).appendTo(this.scale);
     })
   }

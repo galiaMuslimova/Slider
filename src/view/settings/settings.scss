@@ -2,7 +2,6 @@
   .settings {
     display: grid;
     grid-auto-flow: row;
-    grid-template: min-content / repeat(4, 1fr);
 
     form {
       width: min-content;

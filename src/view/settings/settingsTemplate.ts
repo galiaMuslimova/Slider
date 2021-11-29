@@ -1,14 +1,14 @@
 export const settingsTemplate = `<div class="meta-slider__settings settings">
       <form>
         <label>
-          <p>min</p>
-          <input class="settings__input" type="number" name="min" value="0" />
+          <p>start</p>
+          <input class="settings__input" type="number" name="start" value="0" />
         </label>
       </form>
       <form>
         <label>
-          <p>max</p>
-          <input class="settings__input" type="number" name="max" value="50" />
+          <p>end</p>
+          <input class="settings__input" type="number" name="end" value="50" />
         </label>
       </form>
       <form>

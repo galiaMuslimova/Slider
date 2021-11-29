@@ -19,16 +19,20 @@ export default class Interval {
   }
 
   moveInterval(handleX: number[]) {
+    let start: number;
+    let width: number;
     switch (handleX.length) {
       case 1:
-        this.interval.width(`${handleX[0]}px`);
-        this.interval.css("left", `0px`);
+        start = 0;
+        width = handleX[0];
+        this.config.isVertical ? this.interval.height(`${width}px`) : this.interval.width(`${width}px`);
+        this.config.isVertical ? this.interval.css("top", `${start}px`) : this.interval.css("left", `${start}px`);
         break;
       case 2:
-        let left = Math.min(handleX[0], handleX[1]) + this.handleWidth;
-        let width = Math.max(handleX[0], handleX[1]) - left;
-        this.interval.width(`${width}px`);
-        this.interval.css("left", `${left}px`);
+        start = Math.min(handleX[0], handleX[1]) + this.handleWidth;
+        width = Math.max(handleX[0], handleX[1]) - start;
+        this.config.isVertical ? this.interval.height(`${width}px`):this.interval.width(`${width}px`);
+        this.config.isVertical ? this.interval.css("top", `${start}px`) : this.interval.css("left", `${start}px`);
         break;
     }
   }

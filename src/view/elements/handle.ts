@@ -41,7 +41,7 @@ export default class Handle {
 
   moveHandles(handleX: number[]) {
     for (let i in this.handles){
-      this.handles[i].css("left", `${handleX[i]}px`);
+      this.handles[i].css(this.config.isVertical?"top":"left", `${handleX[i]}px`);
     }
     this.handleX = handleX;
   }

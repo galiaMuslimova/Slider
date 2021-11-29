@@ -20,11 +20,11 @@ export default class Settings {
 
   init() {
     let observer = this.observer;    
-    let numberInputs: string[] = ['min', 'max', 'step', 'from', 'to'];
-    let radioInputs: string[] = ['orientation']
+    let numberInputs: string[] = ['start', 'end', 'step', 'from', 'to'];
+    let radioInputs: string[] = ['orientation'];
 
-    for (const [key, value] of Object.entries(this.config)) {  
-      if ($.inArray(key, numberInputs)) {
+    for (const [key, value] of Object.entries(this.config)) { 
+      if ($.inArray(key, numberInputs) >= 0) {
         let input = this.settings.find(`input[name='${key}']`)
         input.val(value);
         input.on('change', function () {
@@ -32,10 +32,8 @@ export default class Settings {
           setting[key] =  Number(input.val())
           observer.notify('settings', setting);
         });
-      } else if ($.inArray(key, radioInputs)){
+      } else if ($.inArray(key, radioInputs) >= 0){
         let input = this.settings.find(`input[name='${key}']`)
-      } else {
-        throw new Error('not such setting')
       }
     }
   }
