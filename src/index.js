@@ -2,10 +2,11 @@ import './plugin'
 
 $(function () {
   $(".mySlider1").slider({    
-    start: 10,
+    start: 0,
     end: 100,
-    step: 8, 
-    handleCount: 2,
-    orientation: 'vertical'
+    step: 10, 
+    vertical: false,
+    tip: true,
+    range: true
   })
 })

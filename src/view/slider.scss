@@ -1,7 +1,8 @@
 .meta-slider {
   .slider {
-    margin: 30px;
+    margin: 10px;
     display: grid;
+    padding-top: 30px;
 
     &__track {
       -moz-user-select: -moz-none;
@@ -10,13 +11,13 @@
       -webkit-user-select: none;
       user-select: none;
       position: relative;
-      background-color: greenyellow;
+      background-color: #62B1D0;
     }
 
     &__interval {
       position: absolute;
       z-index: 9;
-      background-color: rgb(74, 122, 10);
+      background-color: #024C68;
     }
 
     &__scale {
@@ -44,14 +45,14 @@
       width: 20px;
       height: 20px;
       border-radius: 50%;
-      background-color: green;
-      position: absolute;
+      background-color: #226078;
+       position: absolute;
       z-index: 10;
     }
 
     &__tip {
-      background-color: lightgray;
-      font-size: 14px;
+      font-size: 16px;
+      font-weight: bold;
       position: absolute;
     }
   }

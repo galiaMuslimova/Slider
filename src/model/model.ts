@@ -24,60 +24,61 @@ export default class Model {
     this.stepsArr = [];
     this.parameters = { values: [], handleX: [] };
 
-    this.trackStart = this.config.isVertical?Number(this.track.position().top):Number(this.track.position().left);
-    this.trackWidth = this.config.isVertical?this.track.height():this.track.width();
+    this.trackStart = this.config.vertical ? Number(this.track.position().top) : Number(this.track.position().left);
+    this.trackWidth = this.config.vertical ? this.track.height() : this.track.width();
     this.handleWidth = 20;
     this.init();
   }
 
   init() {
-    if (this.config.start && this.config.end && this.config.step && this.trackWidth) {
+    if (this.config.start != undefined && this.config.end != undefined && this.config.step && this.trackWidth && this.config.from) {
       let start = this.config.start;
       let end = this.config.end;
       let range = end - start;
       let width = this.trackWidth;
       let step = this.config.step;
+      let from = this.config.from;
+      let to = this.config.to;
 
       this.positionsArr = this.initPositionsArr(start, range, width);
       this.stepsArr = this.initStepsArr(start, step, range, width);
-      this.parameters = this.initParameters(start, range)
+      this.parameters = this.initParameters(start, end, range, from, to);
     }
   }
 
   initPositionsArr(start: number, range: number, width: number) {
-    let valueLength = Math.round(width / range);
+    let valueLength = width / range
     let valuesArr = Array.from(Array(range + 1), (_, i) => (start + i));
     let positionsArr: IPositions[] = [];
-    valuesArr.map((el, index) => positionsArr.push({ value: el, x: (valueLength * index - this.handleWidth / 2) }));
+    valuesArr.map((el, index) => positionsArr.push({ value: el, x: Math.round(valueLength * index) }));
     return positionsArr;
   }
 
   initStepsArr(start: number, step: number, range: number, width: number) {
-    let stepLength = width / range * step;
+    let stepLength = width / range * step
     let stepsCount = Math.floor(range / step);
     let valuesArr = Array.from(Array(stepsCount + 1), (_, i) => (start + step * i));
     let stepsArr: IPositions[] = [];
-    valuesArr.map((el, index) => stepsArr.push({ value: el, x: (stepLength * index - this.handleWidth / 2) }));
+    valuesArr.map((el, index) => stepsArr.push({ value: el, x: Math.round(stepLength * index) }));
     return stepsArr
   }
 
-  initParameters(start: number, range: number) {
+  initParameters(start: number, end: number, range: number, from: number, to: number | undefined) {
     let parameters: IParameters = {
       values: [],
       handleX: []
     }
-    switch (this.config.handleCount) {
-      case 1:
-        let value = start + Math.round(range / 2)
-        parameters.values = [value];
-        parameters.handleX = [this.takeXByValue(value)]
-        break;
-      case 2:
-        let value1 = this.stepsArr[1].value;
-        let value2 = this.stepsArr[this.stepsArr.length - 1].value
-        parameters.values = [value1, value2];
-        parameters.handleX = [this.takeXByValue(value1), this.takeXByValue(value2)]
-        break;
+    if (this.config.range) {
+      if (from > start && from < end && to != undefined && to > start && to < end) {
+        parameters.values = [from, end]
+      } else {
+        parameters.values = [this.stepsArr[1].value, this.stepsArr[this.stepsArr.length - 1].value];
+      }
+    } else {
+      parameters.values = (from > start && from < end) ? [from] : [start + Math.round(range / 2)]
+    }
+    for (let i in parameters.values) {
+      parameters.handleX[i] = this.takeXByValue(parameters.values[i])
     }
     return parameters
   }
@@ -99,27 +100,24 @@ export default class Model {
   }
 
   takeXByScale(value: number) {
-    switch (this.config.handleCount) {
-      case 1: {
-        this.parameters.values = [value];
-        this.parameters.handleX = [this.takeXByValue(value)];
-        return this.parameters;
-      }
-      case 2: {
-        let closest = this.parameters.values.reduce(function (prev, curr) {
-          return (Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev);
-        });
-        let index = this.parameters.values.indexOf(closest);
-        this.parameters.values[index] = value;
-        this.parameters.handleX[index] = this.takeXByValue(value);
-        return this.parameters        
-      }
+    if (this.config.range) {
+      let closest = this.parameters.values.reduce(function (prev, curr) {
+        return (Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev);
+      });
+      let index = this.parameters.values.indexOf(closest);
+      this.parameters.values[index] = value;
+      this.parameters.handleX[index] = this.takeXByValue(value);
+      return this.parameters
+    } else {
+      this.parameters.values = [value];
+      this.parameters.handleX = [this.takeXByValue(value)];
+      return this.parameters;
     }
   }
 
   takeXByEvent(event: MouseEvent, index: number) {
     if (this.trackWidth && this.trackStart) {
-      let mousePosition = this.config.isVertical ? event.pageY : event.pageX
+      let mousePosition = this.config.vertical ? event.pageY : event.pageX
       let position = Math.round(mousePosition - this.trackStart);
       let rightBound = position + this.trackWidth;
       let isInScale = position >= 0 && position <= rightBound;

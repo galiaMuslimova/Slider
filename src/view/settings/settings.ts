@@ -21,19 +21,25 @@ export default class Settings {
   init() {
     let observer = this.observer;    
     let numberInputs: string[] = ['start', 'end', 'step', 'from', 'to'];
-    let radioInputs: string[] = ['orientation'];
+    let radioInputs: string[] = ['vertical', 'tip', 'range'];
 
-    for (const [key, value] of Object.entries(this.config)) { 
+    for (const [key, value] of Object.entries(this.config)) {
+      let setting: ISettings = {}; 
       if ($.inArray(key, numberInputs) >= 0) {
         let input = this.settings.find(`input[name='${key}']`)
         input.val(value);
         input.on('change', function () {
-          let setting: ISettings = {};
-          setting[key] =  Number(input.val())
+          setting[key] = Number(input.val())
           observer.notify('settings', setting);
         });
       } else if ($.inArray(key, radioInputs) >= 0){
         let input = this.settings.find(`input[name='${key}']`)
+        input.prop('checked', value);
+        console.log(value)
+        input.on('change', function () {
+          setting[key] = input.prop('checked')
+          observer.notify('settings', setting);
+        });
       }
     }
   }

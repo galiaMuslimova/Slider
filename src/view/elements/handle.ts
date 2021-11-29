@@ -20,28 +20,27 @@ export default class Handle {
   }
 
   init() {
-    switch (this.config.handleCount) {
-      case 1:
-        let handle = jQuery('<div>', {
-          class: 'slider__handle',
-        }).appendTo(this.track);
-        this.handles.push(handle);
-        break;
-      case 2:
-        let handle1 = jQuery('<div>', {
-          class: 'slider__handle slider__handle_left',
-        }).appendTo(this.track);
-        let handle2 = jQuery('<div>', {
-          class: 'slider__handle slider__handle_right',
-        }).appendTo(this.track);
-        this.handles.push(handle1, handle2);
-        break;
-    }
+    let handle = jQuery('<div>', {
+      class: 'slider__handle slider__handle_left',
+    }).appendTo(this.track);
+    this.handles.push(handle);
+    if (this.config.range) {
+      let handle2 = jQuery('<div>', {
+        class: 'slider__handle slider__handle_right',
+      }).appendTo(this.track);
+      this.handles.push(handle2);
+    } 
   }
 
   moveHandles(handleX: number[]) {
-    for (let i in this.handles){
-      this.handles[i].css(this.config.isVertical?"top":"left", `${handleX[i]}px`);
+    if(handleX.length == 1) {
+      this.handles[1].remove()
+    } else {
+      this.handles[1].appendTo(this.track);
+    }
+    let handleWidth = this.config.handleWidth ? this.config.handleWidth : 20;
+    for (let i in this.handles) {
+      this.handles[i].css(this.config.vertical ? "top" : "left", `${handleX[i] - handleWidth / 2}px`);
     }
     this.handleX = handleX;
   }

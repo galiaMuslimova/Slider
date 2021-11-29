@@ -1,9 +1,8 @@
 .meta-slider {
   display: grid;
-  width: 500px;
-  height: 500px;
-  background-color: rgb(240, 241, 226);
-  margin: 5em auto;
+  max-width: 500px;
+  max-height: 500px;
+  margin: 10px;
 
   &_horizontal {
     grid-template-rows: min-content min-content;
@@ -26,6 +25,7 @@
 
       &__interval {
         height: 10px;
+        margin: 0px 1px;
       }
 
       &__handle {
@@ -59,6 +59,7 @@
 
       &__interval {
         width: 10px;
+        margin: 1px 0px;
       }
 
       &__handle {

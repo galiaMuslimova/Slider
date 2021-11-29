@@ -2,15 +2,16 @@ interface IConfig {
   start?: number,
   end?: number,
   step?: number,
-  from?: number | null,
-  to?: number | null,
-  handleCount?: number | null,
-  orientation?: 'vertical' | 'horizontal'
-  isVertical?: boolean
+  from?: number,
+  to?: number | undefined,
+  vertical: boolean,
+  tip: boolean,
+  range: boolean,
+  handleWidth?: number
 }
 
 interface ISettings {
-  [index: string]: number;
+  [index: string]: number | boolean;
 }
 
 interface IParameters {

@@ -17,12 +17,13 @@ export default class Scale {
 
   initScale(stepsArr: { value: number, x: number }[]){
     this.scale.empty()
+    let handleWidth = this.config.handleWidth ? this.config.handleWidth : 20;
     stepsArr.map(item => {
       jQuery('<div>', {
         class: 'slider__value',
         data_value: item.value,
         text: item.value,
-        style: this.config.isVertical?`top: ${item.x}px`:`left: ${item.x}px`
+        style: this.config.vertical ? `top: ${item.x - handleWidth / 2}px`:`left: ${item.x - handleWidth/2}px`
       }).appendTo(this.scale);
     })
   }

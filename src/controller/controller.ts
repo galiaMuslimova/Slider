@@ -8,8 +8,9 @@ const defaults: IConfig = {
   step: 5,
   from: 15,
   to: 45,
-  handleCount: 2,
-  orientation: 'horizontal'
+  vertical: false,
+  tip: true,
+  range: true
 }
 
 export class Controller {
@@ -20,7 +21,7 @@ export class Controller {
 
   constructor(root: JQuery<HTMLElement>, options: IConfig) {
     this.config = $.extend({}, defaults, options);
-    this.config.isVertical = this.config.orientation=='vertical'
+    this.config.handleWidth = 20;
     this.root = root;
     this.view = new View(this.root, this.config);
     this.model = new Model(this.root, this.config);

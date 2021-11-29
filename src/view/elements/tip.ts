@@ -23,9 +23,11 @@ export default class Handle {
       handles.push($(this))
     });
     this.handles = handles;
+    let handleWidth = this.config.handleWidth ? this.config.handleWidth : 20;
     for (let i in this.handles) {
       let tip = jQuery('<div>', {
         class: 'slider__tip',
+        style: `line-height: ${handleWidth}px`
       }).appendTo(this.handles[i]);
       this.tips.push($(tip))
     }

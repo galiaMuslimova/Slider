@@ -26,7 +26,7 @@ export class View {
     this.config = config;
     this.root = root;
     this.container = jQuery('<div>', {
-      class: `meta-slider ${this.config.isVertical? 'meta-slider_vertical' : 'meta-slider_horizontal'}`,
+      class: `meta-slider ${this.config.vertical? 'meta-slider_vertical' : 'meta-slider_horizontal'}`,
     }).appendTo(this.root)
     this.slider = jQuery('<div>', {
       class: 'meta-slider__slider slider',

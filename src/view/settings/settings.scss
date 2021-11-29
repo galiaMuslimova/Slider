@@ -1,26 +1,72 @@
 .meta-slider {
+  color: #024C68;
+
   .settings {
+    margin: 10px;
     display: grid;
     grid-auto-flow: row;
+    grid-row-gap: 20px;
+    grid-column-gap: 20px;
 
-    form {
-      width: min-content;
+    .text {
+      font-size: 18px;
+      padding-right: 10px;
+      margin: 0px;
     }
 
-    label {
+    .box {
+      border: 1px solid #226078;
+      box-sizing: border-box;
+      border-radius: 5px;
+      width: 50px;
+      height: 25px;
+    }
+
+    .number {
       display: flex;
       height: 30px;
-      margin: 10px;
       align-items: center;
+
+      &__input {
+        color: #024C68;
+      }
     }
 
-    input[type=number] {
-      width: 40px;
-      margin: 0px 10px;
-    }
+    .toggle {
+      display: flex;
+      align-items: center;
 
-    &__button {
-      margin: 100px;
+      &__input {
+        visibility: hidden;
+        width: 0px;
+        margin: 0px;
+
+        &:checked+.toggle__box {
+          background-color: #0776A0;
+
+          &:before {
+            transform: translateX(25px);
+            background-color: #FFF;
+          }
+        }
+      }
+
+      &__box {
+        position: relative;
+        cursor: pointer;
+
+        &:before {
+          content: "";
+          display: block;
+          position: absolute;
+          width: 19px;
+          height: 19px;
+          background-color: #226078;
+          border-radius: 5px;
+          top: 2px;
+          left: 2px;
+        }
+      }
     }
   }
 }

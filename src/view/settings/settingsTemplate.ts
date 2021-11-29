@@ -1,42 +1,53 @@
 export const settingsTemplate = `<div class="meta-slider__settings settings">
       <form>
-        <label>
-          <p>start</p>
-          <input class="settings__input" type="number" name="start" value="0" />
+        <label class="number">
+          <p class="text number__text">start</p>
+          <input class="box number__input" type="number" name="start" value="0" />
         </label>
       </form>
       <form>
-        <label>
-          <p>end</p>
-          <input class="settings__input" type="number" name="end" value="50" />
+        <label class="number">
+          <p class="text number__text">end</p>
+          <input class="box number__input" type="number" name="end" value="50" />
         </label>
       </form>
       <form>
-        <label>
-          <p>step</p>
-          <input class="settings__input" type="number" name="step" value="5" />
+        <label class="number">
+          <p class="text number__text">step</p>
+          <input class="box number__input" type="number" name="step" value="5" />
         </label>
       </form>
       <form>
-        <label>
-          <p>from</p>
-          <input class="settings__input" type="number" name="from" value="10" />
+        <label class="number">
+          <p class="text number__text">from</p>
+          <input class="box number__input" type="number" name="from" value="10" />
         </label>
       </form>
       <form>
-        <label>
-          <p>to</p>
-          <input class="settings__input" type="number" name="to" value="40" />
+        <label class="number">
+          <p class="text number__text">to</p>
+          <input class="box number__input" type="number" name="to" value="40" />
         </label>
       </form>
       <form>
-        <label>
-          <input type="radio" name="orientation" value="horizontal">
-          horizontal
-        </label>
-        <label>
-          <input type="radio" name="orientation" value="vertical">
-          vertical
-        </label>
+        <label class="toggle">
+          <p class="text toggle__text">vertical</p>
+          <input class="toggle__input" type="checkbox" name="vertical">
+          <span class="box toggle__box"></span>          
+        </label> 
+      </form>
+      <form>
+        <label class="toggle">
+          <p class="text toggle__text">tip</p>
+          <input class="toggle__input" type="checkbox" name="tip">
+          <span class="box toggle__box"></span>          
+        </label>        
+      </form>
+      <form>
+        <label class="toggle">
+          <p class="text toggle__text">range</p>
+          <input class="toggle__input" type="checkbox" name="range">
+          <span class="box toggle__box"></span>          
+        </label>        
       </form>
     </div>`
