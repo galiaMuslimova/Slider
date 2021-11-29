@@ -31,18 +31,17 @@ export class View {
     this.slider = jQuery('<div>', {
       class: 'meta-slider__slider slider',
     }).appendTo(this.container);
-    this.observer = new Observer();
+    this.observer = new Observer(); 
     this.settings = new Settings(this.container, this.config);
     this.track = new Track(this.slider, this.config);
     this.handles = new Handle(this.slider, this.config);
     this.interval = new Interval(this.slider, this.config);
     this.scale = new Scale(this.slider, this.config);
-    this.tips = new Tip(this.slider, this.config);
+    this.tips = new Tip(this.slider, this.config);   
     this.init();
   }
 
-  init() {
-    
+  init() {    
     this.moveHandle();
     this.clickOnScale();
     this.settings.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) })    
@@ -61,6 +60,10 @@ export class View {
     this.tips.changeTips(parameters.values) 
     this.interval.moveInterval(parameters.handleX);  
     this.settings.initValues(parameters.values);     
+  }
+
+  changeConfig(config: IConfig){
+    this.config = config;
   }
 
   /*when user move handle by drag*/

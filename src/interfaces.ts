@@ -3,7 +3,7 @@ interface IConfig {
   end?: number,
   step?: number,
   from?: number,
-  to?: number | undefined,
+  to?: number ,
   vertical: boolean,
   tip: boolean,
   range: boolean,

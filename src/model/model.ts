@@ -31,7 +31,7 @@ export default class Model {
   }
 
   init() {
-    if (this.config.start != undefined && this.config.end != undefined && this.config.step && this.trackWidth && this.config.from) {
+    if (this.config.start != undefined && this.config.end != undefined && this.config.step && this.trackWidth && this.config.from && this.config.to) {
       let start = this.config.start;
       let end = this.config.end;
       let range = end - start;
@@ -63,14 +63,14 @@ export default class Model {
     return stepsArr
   }
 
-  initParameters(start: number, end: number, range: number, from: number, to: number | undefined) {
+  initParameters(start: number, end: number, range: number, from: number, to: number) {
     let parameters: IParameters = {
       values: [],
       handleX: []
     }
     if (this.config.range) {
-      if (from > start && from < end && to != undefined && to > start && to < end) {
-        parameters.values = [from, end]
+      if (from > start && from < end && to > start && to < end) {
+        parameters.values = [from, to]
       } else {
         parameters.values = [this.stepsArr[1].value, this.stepsArr[this.stepsArr.length - 1].value];
       }
@@ -95,7 +95,8 @@ export default class Model {
     this.init();
     return {
       parameters: this.parameters,
-      stepsArr: this.stepsArr
+      stepsArr: this.stepsArr,
+      config: this.config
     }
   }
 

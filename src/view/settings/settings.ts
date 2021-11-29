@@ -19,12 +19,16 @@ export default class Settings {
   }
 
   init() {
-    let observer = this.observer;    
+    let observer = this.observer;
     let numberInputs: string[] = ['start', 'end', 'step', 'from', 'to'];
     let radioInputs: string[] = ['vertical', 'tip', 'range'];
 
+    if (!this.config.range) {
+      this.settings.find(`input[name='to']`).prop('disabled', true)
+    }
+
     for (const [key, value] of Object.entries(this.config)) {
-      let setting: ISettings = {}; 
+      let setting: ISettings = {};
       if ($.inArray(key, numberInputs) >= 0) {
         let input = this.settings.find(`input[name='${key}']`)
         input.val(value);
@@ -32,10 +36,9 @@ export default class Settings {
           setting[key] = Number(input.val())
           observer.notify('settings', setting);
         });
-      } else if ($.inArray(key, radioInputs) >= 0){
+      }  else if ($.inArray(key, radioInputs) >= 0) {
         let input = this.settings.find(`input[name='${key}']`)
         input.prop('checked', value);
-        console.log(value)
         input.on('change', function () {
           setting[key] = input.prop('checked')
           observer.notify('settings', setting);
@@ -45,7 +48,12 @@ export default class Settings {
   }
 
   initValues(values: number[]) {
-    (this.settings).find(`input[name='from']`).val(values[0]);
-    (this.settings).find(`input[name='to']`).val(values[1]);
+    if(values.length == 1) {
+      this.settings.find(`input[name='to']`).prop('disabled', true);
+      (this.settings).find(`input[name='from']`).val(values[0]);
+    } else {
+      this.settings.find(`input[name='to']`).prop('disabled', false);
+      (this.settings).find(`input[name='to']`).val(values[1]);
+    }    
   }
 }

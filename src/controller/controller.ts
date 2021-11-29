@@ -38,9 +38,10 @@ export class Controller {
   }
 
   changeSettings(settings: ISettings | null) {
-    let data: { parameters: IParameters, stepsArr: IPositions[] } = this.model.changeSettings(settings);
+    let data: { parameters: IParameters, stepsArr: IPositions[], config: IConfig } = this.model.changeSettings(settings);
     this.view.changeParameters(data.parameters)
     this.view.initScale(data.stepsArr)
+    this.view.changeConfig(data.config)
   }
 
   moveHandle(data: { event: MouseEvent, index: number }) {

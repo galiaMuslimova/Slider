@@ -29,6 +29,10 @@
 
       &__input {
         color: #024C68;
+
+        &:disabled {
+          opacity: 0.2;
+        }
       }
     }
 
