@@ -34,7 +34,6 @@ export class Controller {
     this.view.observer.subscribe({ key: 'mousemove', observer: this.moveHandle.bind(this) });
     this.view.observer.subscribe({ key: 'click', observer: this.clickOnScale.bind(this) });
     this.view.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) });
-    //this.model.observer.subscribe({ key: 'changeValues', observer: this.changeValues.bind(this) });
   }
 
   changeSettings(settings: ISettings | null) {
@@ -64,5 +63,6 @@ export class Controller {
       throw new Error('wrong parameters for scale')
     }
   }
+
 }
 

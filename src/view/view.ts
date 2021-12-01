@@ -57,12 +57,18 @@ export class View {
     this.container = jQuery('<div>', {
       class: `meta-slider ${this.config.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal'}`,
     }).appendTo(this.root)
+    
     this.slider = jQuery('<div>', {
       class: 'meta-slider__slider slider',
     }).appendTo(this.container);
     this.settings = new Settings(this.container, this.config);
+    this.settings.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) })
     this.track = new Track(this.slider, this.config);
     this.scale = new Scale(this.slider, this.config);
+    this.handles = new Handle(this.slider, this.config);
+    this.interval = new Interval(this.slider, this.config);
+    this.tips = new Tip(this.slider, this.config);
+    this.init();    
   }
 
   initScale(stepsArr: IPositions[]) {
@@ -80,6 +86,9 @@ export class View {
         this.handles.initHandles(this.config.range)
         this.tips.initTips(this.config.tip)
       }
+      else if (key == 'vertical') {
+        this.initSlider()
+      }
       this.observer.notify('settings', settings)
     }
   }
@@ -94,11 +103,11 @@ export class View {
 
   /*when user move handle by drag*/
   moveHandle() {
-    let element = this;
+    let observer = this.observer
     this.slider.on('mousedown', '.slider__handle', function () {
       let index = $(this).hasClass('slider__handle_right') ? 1 : 0;
       document.onmousemove = function (event) {
-        element.observer.notify('mousemove', { event, index })
+        observer.notify('mousemove', { event, index })
       };
       document.onmouseup = function () {
         document.onmousemove = document.onmouseup = null;
@@ -111,10 +120,10 @@ export class View {
 
   /*when user click on value */
   clickOnScale() {
-    let element = this;
+    let observer = this.observer
     this.slider.on('click', '.slider__value', function () {
       let currentValue = Number($(this).attr('data_value'));
-      element.observer.notify('click', currentValue);
+      observer.notify('click', currentValue);
     })
   }
 }

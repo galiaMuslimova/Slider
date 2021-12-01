@@ -1,4 +1,5 @@
 import './plugin'
+import "./index.scss";
 
 $(function () {
   $(".mySlider1").slider({    

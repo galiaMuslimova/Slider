@@ -1,4 +1,4 @@
-import "./index.scss";
+import "./plugin.scss";
 import { Controller } from "./controller/controller";
 import { IConfig } from "./interfaces";
 
