@@ -16,15 +16,17 @@ export default class Handle {
     this.track = $(this.slider).find('.slider__track');
     this.handles = [];
     this.handleX = [];
-    this.init();
+    this.initHandles();
   }
 
-  init() {
+  initHandles(range = this.config.range) {
+    this.handles = []
+    this.slider.find('.slider__handle').remove()
     let handle = jQuery('<div>', {
       class: 'slider__handle slider__handle_left',
     }).appendTo(this.track);
     this.handles.push(handle);
-    if (this.config.range) {
+    if (range) {
       let handle2 = jQuery('<div>', {
         class: 'slider__handle slider__handle_right',
       }).appendTo(this.track);
@@ -33,11 +35,6 @@ export default class Handle {
   }
 
   moveHandles(handleX: number[]) {
-    if(handleX.length == 1) {
-      this.handles[1].remove()
-    } else {
-      this.handles[1].appendTo(this.track);
-    }
     let handleWidth = this.config.handleWidth ? this.config.handleWidth : 20;
     for (let i in this.handles) {
       this.handles[i].css(this.config.vertical ? "top" : "left", `${handleX[i] - handleWidth / 2}px`);

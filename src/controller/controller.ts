@@ -38,15 +38,20 @@ export class Controller {
   }
 
   changeSettings(settings: ISettings | null) {
-    let data: { parameters: IParameters, stepsArr: IPositions[], config: IConfig } = this.model.changeSettings(settings);
-    this.view.changeParameters(data.parameters)
-    this.view.initScale(data.stepsArr)
-    this.view.changeConfig(data.config)
+    let data = this.model.changeSettings(settings);
+    if (data) {
+      if (data.parameters) {
+        this.view.changeParameters(data.parameters)
+      } 
+       if (data.stepsArr) {
+        this.view.initScale(data.stepsArr)
+      }
+    }
   }
 
   moveHandle(data: { event: MouseEvent, index: number }) {
     let parameters = this.model.takeXByEvent(data.event, data.index);
-    if (parameters != undefined) {
+    if (parameters) {
       this.view.changeParameters(parameters)
     }
   }

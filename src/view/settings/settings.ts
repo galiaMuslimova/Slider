@@ -48,12 +48,11 @@ export default class Settings {
   }
 
   initValues(values: number[]) {
+    (this.settings).find(`input[name='from']`).val(values[0]);
     if(values.length == 1) {
-      this.settings.find(`input[name='to']`).prop('disabled', true);
-      (this.settings).find(`input[name='from']`).val(values[0]);
+      this.settings.find(`input[name='to']`).prop('disabled', true);      
     } else {
-      this.settings.find(`input[name='to']`).prop('disabled', false);
-      (this.settings).find(`input[name='to']`).val(values[1]);
+      this.settings.find(`input[name='to']`).prop('disabled', false).val(values[1]);
     }    
   }
 }

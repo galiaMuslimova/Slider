@@ -31,18 +31,19 @@ export default class Model {
   }
 
   init() {
-    if (this.config.start != undefined && this.config.end != undefined && this.config.step && this.trackWidth && this.config.from && this.config.to) {
+    this.initScale()
+    this.initParameters();
+  }
+
+  initScale() {
+    if (this.config.start != undefined && this.config.end != undefined && this.config.step && this.trackWidth) {
       let start = this.config.start;
       let end = this.config.end;
+      let step = this.config.step;
       let range = end - start;
       let width = this.trackWidth;
-      let step = this.config.step;
-      let from = this.config.from;
-      let to = this.config.to;
-
       this.positionsArr = this.initPositionsArr(start, range, width);
       this.stepsArr = this.initStepsArr(start, step, range, width);
-      this.parameters = this.initParameters(start, end, range, from, to);
     }
   }
 
@@ -63,24 +64,26 @@ export default class Model {
     return stepsArr
   }
 
-  initParameters(start: number, end: number, range: number, from: number, to: number) {
-    let parameters: IParameters = {
-      values: [],
-      handleX: []
-    }
-    if (this.config.range) {
-      if (from > start && from < end && to > start && to < end) {
-        parameters.values = [from, to]
-      } else {
-        parameters.values = [this.stepsArr[1].value, this.stepsArr[this.stepsArr.length - 1].value];
+  initParameters() {
+    //console.log(this.config.to)
+    if (this.config.start != undefined && this.config.end != undefined && this.config.from && this.config.to) {
+      let start = this.config.start;
+      let end = this.config.end;
+      let range = end - start;
+      let from = this.config.from;
+      let to = this.config.to;
+      let parameters: IParameters = { values: [], handleX: [] }
+
+      parameters.values[0] = (from > start && from < end) ? from : (start + Math.round(range / 3))
+      if (this.config.range) {
+        parameters.values[1] = (to > start && to < end) ? to : (start + Math.round(range * 2 / 3))
       }
-    } else {
-      parameters.values = (from > start && from < end) ? [from] : [start + Math.round(range / 2)]
+
+      for (let i in parameters.values) {
+        parameters.handleX[i] = this.takeXByValue(parameters.values[i])
+      }
+      this.parameters = parameters
     }
-    for (let i in parameters.values) {
-      parameters.handleX[i] = this.takeXByValue(parameters.values[i])
-    }
-    return parameters
   }
 
   takeXByValue(val: number) {
@@ -91,12 +94,20 @@ export default class Model {
   changeSettings(settings: ISettings | null) {
     if (settings) {
       this.config = $.extend({}, this.config, settings)
-    }
-    this.init();
-    return {
-      parameters: this.parameters,
-      stepsArr: this.stepsArr,
-      config: this.config
+      let key = Object.keys(settings)[0]
+      if ($.inArray(key, ['start', 'end', 'step']) >= 0) {
+        this.initScale()
+        return { stepsArr: this.stepsArr }
+      } else if ($.inArray(key, ['from', 'to', 'range', 'tip']) >= 0) {
+        this.initParameters()
+        return { parameters: this.parameters }
+      } else {
+        this.init()
+        return { stepsArr: this.stepsArr, parameters: this.parameters }
+      }
+    } else {
+      this.init()
+      return { stepsArr: this.stepsArr, parameters: this.parameters }
     }
   }
 
@@ -127,6 +138,8 @@ export default class Model {
         if (result.length > 0) {
           this.parameters.values[index] = result[0].value;
           this.parameters.handleX[index] = result[0].x;
+          this.config.from = this.parameters.values[0];
+          this.config.to = this.parameters.values[1] ? this.parameters.values[1] : this.config.to;
           return this.parameters;
         }
       }

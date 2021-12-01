@@ -7,33 +7,37 @@ export default class Handle {
   observer: Observer;
   handles: JQuery<HTMLElement>[];
   tips: JQuery<HTMLElement>[];
+  tip: JQuery<HTMLElement>;
+  handleWidth: number;
 
   constructor(slider: JQuery<HTMLElement>, config: IConfig) {
     this.slider = slider;
     this.config = config;
     this.observer = new Observer();
     this.handles = [];
-    this.tips = [];
-    this.init();
+    this.tips = []
+    this.handleWidth = this.config.handleWidth ? this.config.handleWidth : 20;
+    this.tip = jQuery('<div>', {
+      class: 'slider__tip',
+      style: `line-height: ${this.handleWidth}px`
+    })
+    this.initTips()
   }
 
-  init() {
-    let handles: JQuery<HTMLElement>[] = [];
-    $(this.slider).find('.slider__handle').each(function () {
-      handles.push($(this))
-    });
-    this.handles = handles;
-    let handleWidth = this.config.handleWidth ? this.config.handleWidth : 20;
-    for (let i in this.handles) {
-      let tip = jQuery('<div>', {
-        class: 'slider__tip',
-        style: `line-height: ${handleWidth}px`
-      }).appendTo(this.handles[i]);
-      this.tips.push($(tip))
+  initTips(tip = this.config.tip) {
+    this.slider.find('.slider__tip').remove();
+    this.tips = [];
+    let handles = this.slider.find('.slider__handle');
+    if (tip) {
+      for (let i = 0; i < handles.length; i++) {
+        let tip = this.tip.clone();
+        tip.appendTo($(handles[i]));
+        this.tips.push(tip)
+      }
     }
   }
 
-  changeTips(values:number[]){
+  changeTips(values: number[]) {
     for (let i in this.tips) {
       this.tips[i].html(`${values[i]}`)
     }
