@@ -35,7 +35,7 @@ export class View {
       class: `meta-slider ${this.config.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal'}`,
     }).appendTo(this.root);
     this.slider = jQuery('<div>', {
-      class: 'meta-slider__slider slider',
+      class: 'meta-slider__slider',
     }).appendTo(this.container);
     this.settings = new Settings(this.container, this.config);
     this.settings.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) })
@@ -59,7 +59,7 @@ export class View {
     }).appendTo(this.root)
 
     this.slider = jQuery('<div>', {
-      class: 'meta-slider__slider slider',
+      class: 'meta-slider__slider',
     }).appendTo(this.container);
     this.settings = new Settings(this.container, this.config);
     this.settings.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) })
@@ -84,6 +84,8 @@ export class View {
       } else if (key == 'range') {
         this.handles.initHandles(this.config.range)
         this.tips.initTips(this.config.tip)
+      } else if (key == 'start' || key == 'end') {
+        this.settings.changeBounds(this.config)
       }
       else if (key == 'vertical') {
         this.initSlider()
@@ -103,8 +105,8 @@ export class View {
   /*when user move handle by drag*/
   moveHandle() {
     let observer = this.observer
-    this.slider.on('mousedown touchstart', '.slider__handle', function () {
-      let index = $(this).hasClass('slider__handle_right') ? 1 : 0;
+    this.slider.on('mousedown touchstart', '.meta-slider__handle', function () {
+      let index = $(this).hasClass('meta-slider__handle_right') ? 1 : 0;
       $(document).on('mousemove', function (event) {
         let eventPosition = {pageX: event.pageX, pageY: event.pageY}
         observer.notify('mousemove', { eventPosition, index })
@@ -128,7 +130,7 @@ export class View {
   /*when user click on value */
   clickOnScale() {
     let observer = this.observer
-    this.slider.on('click touchstart', '.slider__value', function () {
+    this.slider.on('click touchstart', '.meta-slider__value', function () {
       let currentValue = Number($(this).attr('data_value'));
       observer.notify('click', currentValue);
     })

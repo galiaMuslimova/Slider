@@ -10,9 +10,9 @@ export default class Scale {
     this.slider = slider;
     this.config = config;
     jQuery('<div>', {
-      class: 'slider__scale',
+      class: 'meta-slider__scale',
     }).appendTo(this.slider);
-    this.scale = this.slider.find(".slider__scale");    
+    this.scale = this.slider.find(".meta-slider__scale");    
   }
 
   initScale(stepsArr: { value: number, x: number }[]){
@@ -20,7 +20,7 @@ export default class Scale {
     let handleWidth = this.config.handleWidth ? this.config.handleWidth : 20;
     stepsArr.map(item => {
       jQuery('<div>', {
-        class: 'slider__value',
+        class: 'meta-slider__value',
         data_value: item.value,
         text: item.value,
         style: this.config.vertical ? `top: ${item.x - handleWidth / 2}px`:`left: ${item.x - handleWidth/2}px`

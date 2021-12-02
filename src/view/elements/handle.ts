@@ -13,7 +13,7 @@ export default class Handle {
     this.slider = slider;
     this.config = config;
     this.observer = new Observer();
-    this.track = $(this.slider).find('.slider__track');
+    this.track = $(this.slider).find('.meta-slider__track');
     this.handles = [];
     this.handleX = [];
     this.initHandles();
@@ -21,14 +21,14 @@ export default class Handle {
 
   initHandles(range = this.config.range) {
     this.handles = []
-    this.slider.find('.slider__handle').remove()
+    this.slider.find('.meta-slider__handle').remove()
     let handle = jQuery('<div>', {
-      class: 'slider__handle slider__handle_left',
+      class: 'meta-slider__handle meta-slider__handle_left',
     }).appendTo(this.track);
     this.handles.push(handle);
     if (range) {
       let handle2 = jQuery('<div>', {
-        class: 'slider__handle slider__handle_right',
+        class: 'meta-slider__handle meta-slider__handle_right',
       }).appendTo(this.track);
       this.handles.push(handle2);
     } 

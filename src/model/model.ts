@@ -16,8 +16,8 @@ export default class Model {
 
   constructor(root: JQuery<HTMLElement>, config: IConfig) {
     this.config = config;
-    this.slider = root.find('.slider');
-    this.track = this.slider.find('.slider__track')
+    this.slider = root.find('.meta-slider');
+    this.track = this.slider.find('.meta-slider__track')
     this.observer = new Observer();
 
     this.positionsArr = [];
@@ -42,6 +42,7 @@ export default class Model {
       let step = this.config.step;
       let range = end - start;
       let width = this.trackWidth;
+     
       this.positionsArr = this.initPositionsArr(start, range, width);
       this.stepsArr = this.initStepsArr(start, step, range, width);
     }
@@ -65,7 +66,6 @@ export default class Model {
   }
 
   initParameters() {
-    //console.log(this.config.to)
     if (this.config.start != undefined && this.config.end != undefined && this.config.from && this.config.to) {
       let start = this.config.start;
       let end = this.config.end;

@@ -12,7 +12,7 @@ export default class Track {
 
   init(){
     jQuery('<div>', {
-      class: 'slider__track',
+      class: 'meta-slider__track',
     }).appendTo(this.slider);
   }
 }

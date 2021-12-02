@@ -9,11 +9,11 @@ export default class Interval {
   constructor(slider: JQuery<HTMLElement>, config: IConfig) {
     this.slider = slider;
     this.config = config;
-    this.track = $(this.slider).find('.slider__track');
+    this.track = $(this.slider).find('.meta-slider__track');
     jQuery('<div>', {
-      class: 'slider__interval',
+      class: 'meta-slider__interval',
     }).appendTo(this.track);
-    this.interval = this.slider.find(".slider__interval");
+    this.interval = this.slider.find(".meta-slider__interval");
   }
 
   moveInterval(handleX: number[]) {
