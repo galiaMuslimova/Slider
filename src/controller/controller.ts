@@ -30,7 +30,6 @@ export class Controller {
 
   init() {
     this.changeSettings(null);
-
     this.view.observer.subscribe({ key: 'mousemove', observer: this.moveHandle.bind(this) });
     this.view.observer.subscribe({ key: 'click', observer: this.clickOnScale.bind(this) });
     this.view.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) });
@@ -48,8 +47,8 @@ export class Controller {
     }
   }
 
-  moveHandle(data: { event: MouseEvent, index: number }) {
-    let parameters = this.model.takeXByEvent(data.event, data.index);
+  moveHandle(data: { eventPosition: { pageX: number, pageY: number }, index: number }) {
+    let parameters = this.model.takeXByEvent(data.eventPosition, data.index);
     if (parameters) {
       this.view.changeParameters(parameters)
     }

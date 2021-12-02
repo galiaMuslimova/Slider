@@ -57,7 +57,7 @@ export class View {
     this.container = jQuery('<div>', {
       class: `meta-slider ${this.config.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal'}`,
     }).appendTo(this.root)
-    
+
     this.slider = jQuery('<div>', {
       class: 'meta-slider__slider slider',
     }).appendTo(this.container);
@@ -68,13 +68,12 @@ export class View {
     this.handles = new Handle(this.slider, this.config);
     this.interval = new Interval(this.slider, this.config);
     this.tips = new Tip(this.slider, this.config);
-    this.init();    
+    this.init();
   }
 
   initScale(stepsArr: IPositions[]) {
     this.scale.initScale(stepsArr);
   }
-
 
   changeSettings(settings: ISettings) {
     if (settings) {
@@ -104,14 +103,22 @@ export class View {
   /*when user move handle by drag*/
   moveHandle() {
     let observer = this.observer
-    this.slider.on('mousedown', '.slider__handle', function () {
+    this.slider.on('mousedown touchstart', '.slider__handle', function () {
       let index = $(this).hasClass('slider__handle_right') ? 1 : 0;
-      document.onmousemove = function (event) {
-        observer.notify('mousemove', { event, index })
-      };
-      document.onmouseup = function () {
-        document.onmousemove = document.onmouseup = null;
-      };
+      $(document).on('mousemove', function (event) {
+        let eventPosition = {pageX: event.pageX, pageY: event.pageY}
+        observer.notify('mousemove', { eventPosition, index })
+      });
+      $(document).on('touchmove', function (event) {
+        if (event && event.originalEvent && event.originalEvent.touches && event.originalEvent.touches[0]) {
+          let touch =  event.originalEvent.touches[0]
+          let eventPosition = { pageX: touch.pageX, pageY: touch.pageY }
+          observer.notify('mousemove', { eventPosition, index }) 
+        }    
+      });
+      $(document).on('mouseup touchend', function () {
+        $(document).off('mousemove mouseup touchmove touchend')
+      });
       this.ondragstart = function () {
         return false;
       };
@@ -121,7 +128,7 @@ export class View {
   /*when user click on value */
   clickOnScale() {
     let observer = this.observer
-    this.slider.on('click', '.slider__value', function () {
+    this.slider.on('click touchstart', '.slider__value', function () {
       let currentValue = Number($(this).attr('data_value'));
       observer.notify('click', currentValue);
     })

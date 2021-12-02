@@ -127,9 +127,9 @@ export default class Model {
     }
   }
 
-  takeXByEvent(event: MouseEvent, index: number) {
+  takeXByEvent(eventPosition: {pageX: number, pageY: number} , index: number) {   
     if (this.trackWidth && this.trackStart) {
-      let mousePosition = this.config.vertical ? event.pageY : event.pageX
+      let mousePosition = this.config.vertical ? eventPosition.pageY : eventPosition.pageX
       let position = Math.round(mousePosition - this.trackStart);
       let rightBound = position + this.trackWidth;
       let isInScale = position >= 0 && position <= rightBound;
