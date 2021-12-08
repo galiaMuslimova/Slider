@@ -1,6 +1,6 @@
 interface IConfig {
-  start?: number,
-  end?: number,
+  min?: number,
+  max?: number,
   step?: number,
   from?: number,
   to?: number ,

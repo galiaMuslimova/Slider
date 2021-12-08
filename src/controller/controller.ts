@@ -3,11 +3,11 @@ import Model from "../model/model";
 import { IConfig, ISettings, IParameters, IPositions } from "../interfaces";
 
 const defaults: IConfig = {
-  start: 10,
-  end: 50,
-  step: 5,
-  from: 15,
-  to: 45,
+  min: 10,
+  max: 40,
+  step: 4,
+  from: 8,
+  to: 24,
   vertical: false,
   tip: true,
   range: true
@@ -21,10 +21,16 @@ export class Controller {
 
   constructor(root: JQuery<HTMLElement>, options: IConfig) {
     this.config = $.extend({}, defaults, options);
-    this.config.handleWidth = 20;
+    console.log(this.config)
     this.root = root;
     this.view = new View(this.root, this.config);
-    this.model = new Model(this.root, this.config);
+    let trackStart = this.view.initTrackStart();
+    let trackWidth = this.view.initTrackWidth()
+    if(trackWidth){
+      this.model = new Model(this.config, trackStart, trackWidth)
+    } else {
+      throw new Error('wrong track width')
+    }    
     this.init();
   }
 

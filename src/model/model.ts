@@ -1,11 +1,10 @@
 import Observer from "../observer";
 import { IConfig, ISettings, IParameters, IPositions } from "../interfaces";
-import { param } from "jquery";
+
+
 
 export default class Model {
   config: IConfig;
-  slider: JQuery<HTMLElement>;
-  track: JQuery<HTMLElement>;
   observer: Observer;
   positionsArr: IPositions[];
   stepsArr: IPositions[];
@@ -14,19 +13,16 @@ export default class Model {
   trackWidth: number | undefined;
   handleWidth: number;
 
-  constructor(root: JQuery<HTMLElement>, config: IConfig) {
+  constructor(config: IConfig, trackStart: number, trackWidth: number) {
     this.config = config;
-    this.slider = root.find('.meta-slider');
-    this.track = this.slider.find('.meta-slider__track')
-    this.observer = new Observer();
+    this.trackStart = trackStart;
+    this.trackWidth = trackWidth;
+    this.handleWidth = 20;
 
+    this.observer = new Observer();    
     this.positionsArr = [];
     this.stepsArr = [];
     this.parameters = { values: [], handleX: [] };
-
-    this.trackStart = this.config.vertical ? Number(this.track.position().top) : Number(this.track.position().left);
-    this.trackWidth = this.config.vertical ? this.track.height() : this.track.width();
-    this.handleWidth = 20;
     this.init();
   }
 
@@ -36,47 +32,47 @@ export default class Model {
   }
 
   initScale() {
-    if (this.config.start != undefined && this.config.end != undefined && this.config.step && this.trackWidth) {
-      let start = this.config.start;
-      let end = this.config.end;
+    if (this.config.min != undefined && this.config.max != undefined && this.config.step && this.trackWidth) {
+      let min = this.config.min;
+      let max = this.config.max;
       let step = this.config.step;
-      let range = end - start;
+      let range = max - min;
       let width = this.trackWidth;
-     
-      this.positionsArr = this.initPositionsArr(start, range, width);
-      this.stepsArr = this.initStepsArr(start, step, range, width);
+
+      this.positionsArr = this.initPositionsArr(min, range, width);
+      this.stepsArr = this.initStepsArr(min, step, range, width);
     }
   }
 
-  initPositionsArr(start: number, range: number, width: number) {
+  initPositionsArr(min: number, range: number, width: number) {
     let valueLength = width / range
-    let valuesArr = Array.from(Array(range + 1), (_, i) => (start + i));
+    let valuesArr = Array.from(Array(range + 1), (_, i) => (min + i));
     let positionsArr: IPositions[] = [];
     valuesArr.map((el, index) => positionsArr.push({ value: el, x: Math.round(valueLength * index) }));
     return positionsArr;
   }
 
-  initStepsArr(start: number, step: number, range: number, width: number) {
+  initStepsArr(min: number, step: number, range: number, width: number) {
     let stepLength = width / range * step
     let stepsCount = Math.floor(range / step);
-    let valuesArr = Array.from(Array(stepsCount + 1), (_, i) => (start + step * i));
+    let valuesArr = Array.from(Array(stepsCount + 1), (_, i) => (min + step * i));
     let stepsArr: IPositions[] = [];
     valuesArr.map((el, index) => stepsArr.push({ value: el, x: Math.round(stepLength * index) }));
     return stepsArr
   }
 
   initParameters() {
-    if (this.config.start != undefined && this.config.end != undefined && this.config.from && this.config.to) {
-      let start = this.config.start;
-      let end = this.config.end;
-      let range = end - start;
+    if (this.config.min != undefined && this.config.max != undefined && this.config.from && this.config.to) {
+      let min = this.config.min;
+      let max = this.config.max;
+      let range = max - min;
       let from = this.config.from;
       let to = this.config.to;
       let parameters: IParameters = { values: [], handleX: [] }
 
-      parameters.values[0] = (from > start && from < end) ? from : (start + Math.round(range / 3))
+      parameters.values[0] = (from > min && from < max) ? from : (min + Math.round(range / 3))
       if (this.config.range) {
-        parameters.values[1] = (to > start && to < end) ? to : (start + Math.round(range * 2 / 3))
+        parameters.values[1] = (to > min && to < max) ? to : (min + Math.round(range * 2 / 3))
       }
 
       for (let i in parameters.values) {
@@ -95,7 +91,7 @@ export default class Model {
     if (settings) {
       this.config = $.extend({}, this.config, settings)
       let key = Object.keys(settings)[0]
-      if ($.inArray(key, ['start', 'end', 'step']) >= 0) {
+      if ($.inArray(key, ['min', 'max', 'step']) >= 0) {
         this.initScale()
         return { stepsArr: this.stepsArr }
       } else if ($.inArray(key, ['from', 'to', 'range', 'tip']) >= 0) {
@@ -127,7 +123,7 @@ export default class Model {
     }
   }
 
-  takeXByEvent(eventPosition: {pageX: number, pageY: number} , index: number) {   
+  takeXByEvent(eventPosition: { pageX: number, pageY: number }, index: number) {
     if (this.trackWidth && this.trackStart) {
       let mousePosition = this.config.vertical ? eventPosition.pageY : eventPosition.pageX
       let position = Math.round(mousePosition - this.trackStart);

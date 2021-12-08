@@ -7,10 +7,12 @@
     width: 100%;
     grid-template-rows: min-content max-content;
 
-    .slider {
-      grid-template-rows: min-content min-content;
-      padding-top: 30px;
-      max-width: 100%;
+    .meta-slider {
+      &__slider {
+        grid-template-rows: min-content min-content;
+        padding-top: 30px;
+        max-width: 100%;
+      }
 
       &__track {
         width: 100%;
@@ -36,15 +38,18 @@
     }
   }
 
-  &_vertical {    
+  &_vertical {
     height: 100%;
     grid-template-columns: min-content 1fr;
     grid-template-rows: 1fr;
 
-    .slider {
-      grid-template-columns: max-content max-content;
-      height: 100%;
-      padding: 0px 25px;
+    .meta-slider {
+
+      &__slider {
+        grid-template-columns: max-content max-content;
+        height: 100%;
+        padding: 0px 25px;
+      }
 
       &__track {
         width: 10px;

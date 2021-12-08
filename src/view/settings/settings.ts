@@ -24,8 +24,8 @@ export default class Settings {
       this.settings.find(`input[name='to']`).prop('disabled', true)
     }
 
-    /*if (key == 'step' && this.config.start && this.config.end) {
-      let range = this.config.end - this.config.start
+    /*if (key == 'step' && this.config.min && this.config.max) {
+      let range = this.config.max - this.config.min
       if (value > range) {
         this.config.step = Math.round(range / 10)
       }
@@ -52,16 +52,16 @@ export default class Settings {
   }
 
   checkSetting(key: string, value: number | boolean) {
-    if (this.config.start != undefined && this.config.end != undefined && this.config.step) {      
-      let end = this.config.end;
-      let start = this.config.start;
-      let range = end - start;
+    if (this.config.min != undefined && this.config.max != undefined && this.config.step) {      
+      let max = this.config.max;
+      let min = this.config.min;
+      let range = max - min;
       let step = this.config.step
-      if (key == 'start' && value > end) {
-        return start
+      if (key == 'min' && value > max) {
+        return min
       }
-      if (key == 'end' && value < start) {
-        return end
+      if (key == 'max' && value < min) {
+        return max
       }
       if (key == 'step' && step > range) {
         
@@ -80,7 +80,7 @@ export default class Settings {
   }
 
   changeBounds(config = this.config) {
-    this.settings.find(`input[name='from']`).prop('min', config.start).prop('max', config.end);
-    this.settings.find(`input[name='to']`).prop('min', config.start).prop('max', config.end);
+    this.settings.find(`input[name='from']`).prop('min', config.min).prop('max', config.max);
+    this.settings.find(`input[name='to']`).prop('min', config.min).prop('max', config.max);
   }
 }

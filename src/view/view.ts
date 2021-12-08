@@ -75,6 +75,18 @@ export class View {
     this.scale.initScale(stepsArr);
   }
 
+  initTrackStart(){
+    let track = this.slider.find('.meta-slider__track')
+    let trackStart = this.config.vertical ? Number(track.position().top) : Number(track.position().left);
+    return trackStart
+  }
+
+  initTrackWidth(){
+    let track = this.slider.find('.meta-slider__track')
+    let trackWidth = this.config.vertical ? track.height() : track.width();
+    return trackWidth 
+  }
+
   changeSettings(settings: ISettings) {
     if (settings) {
       this.config = $.extend({}, this.config, settings)
@@ -84,7 +96,7 @@ export class View {
       } else if (key == 'range') {
         this.handles.initHandles(this.config.range)
         this.tips.initTips(this.config.tip)
-      } else if (key == 'start' || key == 'end') {
+      } else if (key == 'min' || key == 'max') {
         this.settings.changeBounds(this.config)
       }
       else if (key == 'vertical') {

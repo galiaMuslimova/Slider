@@ -17,21 +17,21 @@ export default class Interval {
   }
 
   moveInterval(handleX: number[]) {
-    let start: number;
+    let min: number;
     let width: number;
     let handleWidth = this.config.handleWidth ? this.config.handleWidth : 20;
     if (handleX.length == 1) {
-      start = 0;
+      min = 0;
       width = handleX[0] - 2 - handleWidth / 2;
     } else if (handleX.length == 2) {
       let minHandle = Math.min(handleX[0], handleX[1]);
       let maxHandle = Math.max(handleX[0], handleX[1]);
-      start = minHandle + handleWidth/2;
+      min = minHandle + handleWidth/2;
       width = maxHandle - minHandle - handleWidth - 2;
     } else {
       throw new Error('wrong number of handles')
     }
     this.config.vertical ? this.interval.height(`${width}px`) : this.interval.width(`${width}px`);
-    this.config.vertical ? this.interval.css("top", `${start}px`) : this.interval.css("left", `${start}px`);
+    this.config.vertical ? this.interval.css("top", `${min}px`) : this.interval.css("left", `${min}px`);
   }
 }

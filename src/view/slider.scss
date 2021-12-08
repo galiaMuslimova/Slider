@@ -1,59 +1,59 @@
 .meta-slider {
-  .slider {
+  &__slider {
     padding: 10px;
     box-sizing: border-box;
-    display: grid;    
+    display: grid;
+  }
 
-    &__track {
-      -moz-user-select: -moz-none;
-      -o-user-select: none;
-      -khtml-user-select: none;
-      -webkit-user-select: none;
-      user-select: none;
-      position: relative;
-      background-color: #62B1D0;
-    }
+  &__track {
+    -moz-user-select: -moz-none;
+    -o-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    position: relative;
+    background-color: #62B1D0;
+  }
 
-    &__interval {
-      position: absolute;
-      z-index: 9;
-      background-color: #024C68;
-    }
+  &__interval {
+    position: absolute;
+    z-index: 9;
+    background-color: #024C68;
+  }
 
-    &__scale {
-      -moz-user-select: -moz-none;
-      -o-user-select: none;
-      -khtml-user-select: none;
-      -webkit-user-select: none;
-      user-select: none;
-      line-height: 20px;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-      position: relative;
-      padding: 20px;
-    }
+  &__scale {
+    -moz-user-select: -moz-none;
+    -o-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    line-height: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: relative;
+    padding: 20px;
+  }
 
-    &__value {
-      width: 1.5em;
-      position: absolute;
-      cursor: pointer;
-      text-align: center;
-    }
+  &__value {
+    width: 1.5em;
+    position: absolute;
+    cursor: pointer;
+    text-align: center;
+  }
 
-    &__handle {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background-color: #226078;
-      position: absolute;
-      z-index: 10;
-    }
+  &__handle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #226078;
+    position: absolute;
+    z-index: 10;
+  }
 
-    &__tip {
-      font-size: 16px;
-      font-weight: bold;
-      position: absolute;
-    }
+  &__tip {
+    font-size: 16px;
+    font-weight: bold;
+    position: absolute;
   }
 }

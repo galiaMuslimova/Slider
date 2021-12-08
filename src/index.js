@@ -3,21 +3,21 @@ import "./index.scss";
 
 $(function () {
   $(".mySlider1").slider({    
-    start: 0,
-    end: 90,
+    min: 0,
+    max: undefined,
     step: 10, 
     from: 10,
     to: 70,
-    vertical: false,
+    vertical: undefined,
     tip: true,
     range: true
   })
 
   $(".mySlider2").slider({
-    start: -10,
-    end: 10,
+    min: -10,
+    max: 10,
     step: 2,
-    from: -15,
+    from: undefined,
     to: 5,
     vertical: false,
     tip: true,
@@ -25,11 +25,11 @@ $(function () {
   })
 
   $(".mySlider3").slider({
-    start: 1,
-    end: 1000,
+    min: 1,
+    max: 1000,
     step: 200,
     from: 100,
-    to: 900,
+    to: undefined,
     vertical: true,
     tip: false,
     range: true
