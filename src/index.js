@@ -8,17 +8,14 @@ $(function () {
     step: 10, 
     from: 10,
     to: 70,
-    vertical: undefined,
     tip: true,
     range: true
   })
 
   $(".mySlider2").slider({
-    min: -10,
-    max: 10,
-    step: 2,
-    from: undefined,
-    to: 5,
+    min: 1,
+    max: 6,
+    step: 1,
     vertical: false,
     tip: true,
     range: false
@@ -27,11 +24,9 @@ $(function () {
   $(".mySlider3").slider({
     min: 1,
     max: 1000,
-    step: 200,
     from: 100,
     to: undefined,
     vertical: true,
-    tip: false,
-    range: true
+    tip: false
   })
 })

@@ -1,12 +1,23 @@
 interface IConfig {
+  min: number,
+  max: number,
+  step: number,
+  from: number,
+  to: number ,
+  vertical: boolean,
+  tip: boolean,
+  range: boolean
+}
+
+interface IOptions {
   min?: number,
   max?: number,
   step?: number,
   from?: number,
-  to?: number ,
-  vertical: boolean,
-  tip: boolean,
-  range: boolean,
+  to?: number,
+  vertical?: boolean,
+  tip?: boolean,
+  range?: boolean,
   handleWidth?: number
 }
 
@@ -25,6 +36,7 @@ interface IPositions {
 }
 
 export {
+  IOptions,
   IConfig,
   ISettings,
   IParameters,

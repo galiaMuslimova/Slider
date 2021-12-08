@@ -1,40 +1,31 @@
-import { View } from "../view/view";
+import View  from "../view/view";
 import Model from "../model/model";
 import { IConfig, ISettings, IParameters, IPositions } from "../interfaces";
-
-const defaults: IConfig = {
-  min: 10,
-  max: 40,
-  step: 4,
-  from: 8,
-  to: 24,
-  vertical: false,
-  tip: true,
-  range: true
-}
 
 export class Controller {
   model: Model;
   view: View;
-  config: IConfig;
+  options: IConfig;
   root: JQuery<HTMLElement>;
 
   constructor(root: JQuery<HTMLElement>, options: IConfig) {
-    this.config = $.extend({}, defaults, options);
-    console.log(this.config)
+    this.options = options
     this.root = root;
-    this.view = new View(this.root, this.config);
-    let trackStart = this.view.initTrackStart();
-    let trackWidth = this.view.initTrackWidth()
-    if(trackWidth){
-      this.model = new Model(this.config, trackStart, trackWidth)
-    } else {
-      throw new Error('wrong track width')
-    }    
+    this.model = new Model(this.options);    
+    const correctConfig = this.model.correctConfig();
+    this.view = new View(this.root, correctConfig.vertical);
     this.init();
   }
 
   init() {
+    let { trackStart, trackWidth } = this.view.getTrackParameters();
+    this.model.setTrackParameters( trackStart, trackWidth )
+    
+    let stepsArr = this.model.initStepsArr();
+    this.view.initScale(stepsArr)
+  }
+
+  /*init() {
     this.changeSettings(null);
     this.view.observer.subscribe({ key: 'mousemove', observer: this.moveHandle.bind(this) });
     this.view.observer.subscribe({ key: 'click', observer: this.clickOnScale.bind(this) });
@@ -46,8 +37,8 @@ export class Controller {
     if (data) {
       if (data.parameters) {
         this.view.changeParameters(data.parameters)
-      } 
-       if (data.stepsArr) {
+      }
+      if (data.stepsArr) {
         this.view.initScale(data.stepsArr)
       }
     }
@@ -67,7 +58,7 @@ export class Controller {
     } else {
       throw new Error('wrong parameters for scale')
     }
-  }
+  }*/
 
 }
 

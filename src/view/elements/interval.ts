@@ -19,7 +19,7 @@ export default class Interval {
   moveInterval(handleX: number[]) {
     let min: number;
     let width: number;
-    let handleWidth = this.config.handleWidth ? this.config.handleWidth : 20;
+    let handleWidth = 20;
     if (handleX.length == 1) {
       min = 0;
       width = handleX[0] - 2 - handleWidth / 2;

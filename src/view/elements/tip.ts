@@ -16,7 +16,7 @@ export default class Handle {
     this.observer = new Observer();
     this.handles = [];
     this.tips = []
-    this.handleWidth = this.config.handleWidth ? this.config.handleWidth : 20;
+    this.handleWidth = 20;
     this.tip = jQuery('<div>', {
       class: 'meta-slider__tip',
       style: `line-height: ${this.handleWidth}px`

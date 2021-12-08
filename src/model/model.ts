@@ -1,50 +1,78 @@
 import Observer from "../observer";
-import { IConfig, ISettings, IParameters, IPositions } from "../interfaces";
+import { IConfig, IOptions, ISettings, IParameters, IPositions } from "../interfaces";
 
-
+const defaults: IConfig = {
+  min: 10,
+  max: 40,
+  step: 4,
+  from: 8,
+  to: 24,
+  vertical: false,
+  tip: true,
+  range: true
+}
 
 export default class Model {
   config: IConfig;
   observer: Observer;
-  positionsArr: IPositions[];
-  stepsArr: IPositions[];
-  parameters: IParameters;
-  trackStart: number | undefined;
-  trackWidth: number | undefined;
-  handleWidth: number;
+  //positionsArr: IPositions[];
+  //stepsArr: IPositions[];
+  //parameters: IParameters;
+  trackStart: number;
+  trackWidth: number;
+  range: number;
+  //handleWidth: number;
 
-  constructor(config: IConfig, trackStart: number, trackWidth: number) {
-    this.config = config;
-    this.trackStart = trackStart;
-    this.trackWidth = trackWidth;
-    this.handleWidth = 20;
+  constructor(options: IOptions) {
+    this.config = $.extend({}, defaults, options);
+    this.observer = new Observer();
+    this.config = this.correctConfig(this.config);
+    this.trackStart = 0;
+    this.trackWidth = 500;
+    this.range = this.config.max - this.config.min;
+  }
 
-    this.observer = new Observer();    
-    this.positionsArr = [];
-    this.stepsArr = [];
-    this.parameters = { values: [], handleX: [] };
-    this.init();
+  correctConfig(config: IConfig = this.config) {
+    let checkedConfig = Object.assign({}, config);
+    let range = config.max - config.min;
+    checkedConfig.max = (config.max > config.min) ? config.max : config.min;
+    checkedConfig.min = (config.max > config.min) ? config.min : config.max;
+    checkedConfig.step = (config.step * 2 < range && config.step * 20 > range) ? config.step : Math.round(range / 10);
+    checkedConfig.from = (config.from < config.max && config.from >= config.min && config.from < config.to) ? config.from : (config.min + config.step);
+    checkedConfig.to = (config.to <= config.max && config.to > config.min && config.from < config.to) ? config.to : (config.max - config.step);
+    return checkedConfig;
   }
 
   init() {
-    this.initScale()
-    this.initParameters();
+
+    /*this.positionsArr = [];
+    this.parameters = { values: [], handleX: [] };*/
   }
 
-  initScale() {
-    if (this.config.min != undefined && this.config.max != undefined && this.config.step && this.trackWidth) {
-      let min = this.config.min;
-      let max = this.config.max;
-      let step = this.config.step;
-      let range = max - min;
-      let width = this.trackWidth;
+  setTrackParameters(trackStart: number, trackWidth: number) {
+    if (trackStart && trackWidth) {
+      this.trackStart = trackStart;
+      this.trackWidth = trackWidth;
+    } else {
+      throw new Error('wrong parameters of track')
+    }    
+  }
 
+  initStepsArr() {
+    let stepLength = this.trackWidth / this.range * this.config.step
+    let stepsCount = Math.floor(this.range / this.config.step);
+    let valuesArr = Array.from(Array(stepsCount + 1), (_, i) => (this.config.min + this.config.step * i));
+    let stepsArr: IPositions[] = [];
+    valuesArr.map((el, index) => stepsArr.push({ value: el, x: Math.round(stepLength * index) }));
+    return stepsArr
+  }
+
+  /*initScale() {
       this.positionsArr = this.initPositionsArr(min, range, width);
       this.stepsArr = this.initStepsArr(min, step, range, width);
-    }
   }
 
-  initPositionsArr(min: number, range: number, width: number) {
+  initPositionsArr(this.config.min: number, range: number, width: number) {
     let valueLength = width / range
     let valuesArr = Array.from(Array(range + 1), (_, i) => (min + i));
     let positionsArr: IPositions[] = [];
@@ -52,13 +80,7 @@ export default class Model {
     return positionsArr;
   }
 
-  initStepsArr(min: number, step: number, range: number, width: number) {
-    let stepLength = width / range * step
-    let stepsCount = Math.floor(range / step);
-    let valuesArr = Array.from(Array(stepsCount + 1), (_, i) => (min + step * i));
-    let stepsArr: IPositions[] = [];
-    valuesArr.map((el, index) => stepsArr.push({ value: el, x: Math.round(stepLength * index) }));
-    return stepsArr
+  /*
   }
 
   initParameters() {
@@ -142,5 +164,5 @@ export default class Model {
     } else {
       throw new Error('wrong parameters of slider')
     }
-  }
+  }*/
 }

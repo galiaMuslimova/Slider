@@ -3,56 +3,60 @@ import Settings from "./settings/settings";
 import Observer from "../observer";
 import { IConfig, IParameters, IPositions, ISettings } from "../interfaces";
 
-import Track from "./elements/track";
+import Track from "./elements/track/track";
 import Scale from "./elements/scale";
 import Handle from "./elements/handle";
 import Interval from "./elements/interval";
 import Tip from "./elements/tip";
 
-export class View {
-  config: IConfig;
-  parameters: IParameters;
+export default class View {
+  vertical: boolean;
   observer: Observer;
   root: JQuery<HTMLElement>;
   container: JQuery<HTMLElement>;
   slider: JQuery<HTMLElement>;
-  settings: Settings;
+  //settings: Settings;
   track: Track;
-  scale: Scale;
-  handles: Handle;
-  interval: Interval;
-  tips: Tip;
+  //scale: Scale;
+  //handles: Handle;
+  //interval: Interval;
+  //tips: Tip;
 
-  constructor(root: JQuery<HTMLElement>, config: IConfig) {
-    this.config = config;
-    this.parameters = {
-      values: [],
-      handleX: []
-    };
-    this.observer = new Observer();
-    this.root = root;
+  constructor(root: JQuery<HTMLElement>, vertical: boolean) {
+    this.root = root; 
+    this.vertical = vertical;
+    this.observer = new Observer();    
     this.container = jQuery('<div>', {
-      class: `meta-slider ${this.config.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal'}`,
+      class: `meta-slider ${this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal'}`,
     }).appendTo(this.root);
     this.slider = jQuery('<div>', {
       class: 'meta-slider__slider',
     }).appendTo(this.container);
+    this.track = new Track(this.slider);
+  }
+
+  getTrackParameters(){
+    return this.track.getTrackParameters(this.vertical)
+  }
+
+  initScale(stepsArr: IPositions[]) {
+    let scale = new Scale(this.slider);
+    scale.initScale(stepsArr, this.vertical);
+  }
+
+  /*init() {
     this.settings = new Settings(this.container, this.config);
     this.settings.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) })
-    this.track = new Track(this.slider, this.config);
+
     this.scale = new Scale(this.slider, this.config);
     this.handles = new Handle(this.slider, this.config);
     this.interval = new Interval(this.slider, this.config);
     this.tips = new Tip(this.slider, this.config);
-    this.init();
-  }
-
-  init() {
     this.moveHandle();
     this.clickOnScale();
-  }
+  }*/
 
-  initSlider() {
+ /* initSlider() {
     this.root.find('.meta-slider').remove();
     this.container = jQuery('<div>', {
       class: `meta-slider ${this.config.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal'}`,
@@ -73,18 +77,6 @@ export class View {
 
   initScale(stepsArr: IPositions[]) {
     this.scale.initScale(stepsArr);
-  }
-
-  initTrackStart(){
-    let track = this.slider.find('.meta-slider__track')
-    let trackStart = this.config.vertical ? Number(track.position().top) : Number(track.position().left);
-    return trackStart
-  }
-
-  initTrackWidth(){
-    let track = this.slider.find('.meta-slider__track')
-    let trackWidth = this.config.vertical ? track.height() : track.width();
-    return trackWidth 
   }
 
   changeSettings(settings: ISettings) {
@@ -114,7 +106,7 @@ export class View {
     this.settings.initValues(parameters.values);
   }
 
-  /*when user move handle by drag*/
+  
   moveHandle() {
     let observer = this.observer
     this.slider.on('mousedown touchstart', '.meta-slider__handle', function () {
@@ -139,12 +131,12 @@ export class View {
     })
   }
 
-  /*when user click on value */
+  
   clickOnScale() {
     let observer = this.observer
     this.slider.on('click touchstart', '.meta-slider__value', function () {
       let currentValue = Number($(this).attr('data_value'));
       observer.notify('click', currentValue);
     })
-  }
+  }*/
 }
