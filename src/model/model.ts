@@ -15,7 +15,7 @@ const defaults: IConfig = {
 export default class Model {
   config: IConfig;
   observer: Observer;
-  //positionsArr: IPositions[];
+  positionsArr: IPositions[];
   //stepsArr: IPositions[];
   //parameters: IParameters;
   trackStart: number;
@@ -23,13 +23,14 @@ export default class Model {
   range: number;
   //handleWidth: number;
 
-  constructor(options: IOptions) {
+  constructor(options: IOptions,  trackStart: number = 0, trackWidth: number = 500 ) {
     this.config = $.extend({}, defaults, options);
     this.observer = new Observer();
     this.config = this.correctConfig(this.config);
-    this.trackStart = 0;
-    this.trackWidth = 500;
+    this.trackStart = trackStart;
+    this.trackWidth = trackWidth;
     this.range = this.config.max - this.config.min;
+    this.positionsArr = this.initPositionsArr()
   }
 
   correctConfig(config: IConfig = this.config) {
@@ -43,21 +44,6 @@ export default class Model {
     return checkedConfig;
   }
 
-  init() {
-
-    /*this.positionsArr = [];
-    this.parameters = { values: [], handleX: [] };*/
-  }
-
-  setTrackParameters(trackStart: number, trackWidth: number) {
-    if (trackStart && trackWidth) {
-      this.trackStart = trackStart;
-      this.trackWidth = trackWidth;
-    } else {
-      throw new Error('wrong parameters of track')
-    }    
-  }
-
   initStepsArr() {
     let stepLength = this.trackWidth / this.range * this.config.step
     let stepsCount = Math.floor(this.range / this.config.step);
@@ -67,41 +53,24 @@ export default class Model {
     return stepsArr
   }
 
-  /*initScale() {
-      this.positionsArr = this.initPositionsArr(min, range, width);
-      this.stepsArr = this.initStepsArr(min, step, range, width);
-  }
-
-  initPositionsArr(this.config.min: number, range: number, width: number) {
-    let valueLength = width / range
-    let valuesArr = Array.from(Array(range + 1), (_, i) => (min + i));
+  initPositionsArr() {
+    let valueLength = this.trackWidth / this.range
+    let valuesArr = Array.from(Array(this.range + 1), (_, i) => (this.config.min + i));
     let positionsArr: IPositions[] = [];
     valuesArr.map((el, index) => positionsArr.push({ value: el, x: Math.round(valueLength * index) }));
     return positionsArr;
   }
 
-  /*
-  }
-
   initParameters() {
-    if (this.config.min != undefined && this.config.max != undefined && this.config.from && this.config.to) {
-      let min = this.config.min;
-      let max = this.config.max;
-      let range = max - min;
-      let from = this.config.from;
-      let to = this.config.to;
-      let parameters: IParameters = { values: [], handleX: [] }
-
-      parameters.values[0] = (from > min && from < max) ? from : (min + Math.round(range / 3))
-      if (this.config.range) {
-        parameters.values[1] = (to > min && to < max) ? to : (min + Math.round(range * 2 / 3))
-      }
-
-      for (let i in parameters.values) {
-        parameters.handleX[i] = this.takeXByValue(parameters.values[i])
-      }
-      this.parameters = parameters
+    let parameters: IParameters = { values: [], handleX: [] }
+    parameters.values[0] = this.config.from
+    if (this.config.range) {
+      parameters.values[1] = this.config.to
     }
+    for (let i in parameters.values) {
+      parameters.handleX[i] = this.takeXByValue(parameters.values[i])
+    }
+    return parameters
   }
 
   takeXByValue(val: number) {
@@ -109,6 +78,8 @@ export default class Model {
     return result[0].x;
   }
 
+
+  /*
   changeSettings(settings: ISettings | null) {
     if (settings) {
       this.config = $.extend({}, this.config, settings)

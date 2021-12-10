@@ -88,9 +88,8 @@ describe('Model', () => {
   });
 
   it('установить параметры трека', () => {
-    const model = new Model({});
-    model.setTrackParameters(10, 300)
-    expect(model.trackStart).to.equal(10);
+    const model = new Model({}, 100, 300);
+    expect(model.trackStart).to.equal(100);
     expect(model.trackWidth).to.equal(300);
   });
 
@@ -100,7 +99,47 @@ describe('Model', () => {
       max: 6,
       step: 1
     });    
-    model.trackWidth = 460;
-    expect(model.initStepsArr()).to.deep.equal([{ value: 1, x: 0 }, { value: 2, x: 92 }, { value: 3, x: 184 }, { value: 4, x: 276 }, { value: 5, x: 368 }, { value: 6, x: 460}]);
+    expect(model.initStepsArr()).to.deep.equal([{ value: 1, x: 0 }, { value: 2, x: 100 }, { value: 3, x: 200 }, { value: 4, x: 300 }, { value: 5, x: 400 }, { value: 6, x: 500}]);
   });
+
+  it('сделать массив всех позиций', () => {
+    const model = new Model({
+      min: 0,
+      max: 10,
+      step: 1
+    });
+    expect(model.initPositionsArr()).to.deep.equal([{ value: 0, x: 0 }, { value: 1, x: 50 }, { value: 2, x: 100 }, { value: 3, x: 150 }, { value: 4, x: 200 }, { value: 5, x: 250 }, { value: 6, x: 300 }, { value: 7, x: 350 }, { value: 8, x: 400 }, { value: 9, x: 450 }, { value: 10, x: 500 }]);
+  });
+
+  it('инициализировать параметры', () => {
+    const model = new Model({
+      min: 0,
+      max: 10,
+      step: 1,
+      from: 3,
+      to: 10
+    });
+    expect(model.initParameters()).to.deep.equal({ values: [3, 10], handleX: [150, 500] });
+  });
+
+  it('инициализировать параметры с неправильными from и  to', () => {
+    const model = new Model({
+      min: 0,
+      max: 10,
+      step: 1,
+      from: 13,
+      to: 19
+    });
+    expect(model.initParameters()).to.deep.equal({ values: [1, 9], handleX: [50, 450] });
+  });
+
+  it('получить позицию x по значению value', () => {
+    const model = new Model({
+      min: 0,
+      max: 10,
+      step: 1
+    });
+    expect(model.takeXByValue(5)).to.deep.equal(250);
+  });
+
 })

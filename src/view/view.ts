@@ -4,10 +4,10 @@ import Observer from "../observer";
 import { IConfig, IParameters, IPositions, ISettings } from "../interfaces";
 
 import Track from "./elements/track/track";
-import Scale from "./elements/scale";
-import Handle from "./elements/handle";
-import Interval from "./elements/interval";
-import Tip from "./elements/tip";
+import Scale from "./elements/scale/scale";
+import Handle from "./elements/handle/handle";
+import Interval from "./elements/interval/interval";
+import Tip from "./elements/tip/tip";
 
 export default class View {
   vertical: boolean;
@@ -17,10 +17,10 @@ export default class View {
   slider: JQuery<HTMLElement>;
   //settings: Settings;
   track: Track;
-  //scale: Scale;
-  //handles: Handle;
-  //interval: Interval;
-  //tips: Tip;
+  scale: Scale;
+  handles: Handle;
+  interval: Interval;
+  tips: Tip;
 
   constructor(root: JQuery<HTMLElement>, vertical: boolean) {
     this.root = root; 
@@ -33,6 +33,10 @@ export default class View {
       class: 'meta-slider__slider',
     }).appendTo(this.container);
     this.track = new Track(this.slider);
+    this.scale = new Scale(this.slider);
+    this.handles = new Handle(this.slider);
+    this.tips = new Tip(this.slider);
+    this.interval = new Interval(this.slider);
   }
 
   getTrackParameters(){
@@ -40,8 +44,23 @@ export default class View {
   }
 
   initScale(stepsArr: IPositions[]) {
-    let scale = new Scale(this.slider);
-    scale.initScale(stepsArr, this.vertical);
+    this.scale.initScale(stepsArr, this.vertical);
+  }
+
+  initHandles(range:boolean){
+    this.handles.initHandles(range)
+  }
+
+  initTips(tip: boolean) {
+    this.tips.initTips(tip)
+  }
+
+  setParameters(parameters: IParameters) {
+    //this.parameters = parameters;
+    this.handles.moveHandles(parameters.handleX, this.vertical);
+    this.tips.changeTips(parameters.values)
+    this.interval.moveInterval(parameters.handleX, this.vertical);
+    //this.settings.initValues(parameters.values);
   }
 
   /*init() {
@@ -49,9 +68,9 @@ export default class View {
     this.settings.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) })
 
     this.scale = new Scale(this.slider, this.config);
-    this.handles = new Handle(this.slider, this.config);
+    
     this.interval = new Interval(this.slider, this.config);
-    this.tips = new Tip(this.slider, this.config);
+    
     this.moveHandle();
     this.clickOnScale();
   }*/
@@ -73,10 +92,6 @@ export default class View {
     this.interval = new Interval(this.slider, this.config);
     this.tips = new Tip(this.slider, this.config);
     this.init();
-  }
-
-  initScale(stepsArr: IPositions[]) {
-    this.scale.initScale(stepsArr);
   }
 
   changeSettings(settings: ISettings) {

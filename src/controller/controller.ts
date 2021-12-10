@@ -7,22 +7,27 @@ export class Controller {
   view: View;
   options: IConfig;
   root: JQuery<HTMLElement>;
+  vertical: boolean;
 
   constructor(root: JQuery<HTMLElement>, options: IConfig) {
     this.options = options
     this.root = root;
-    this.model = new Model(this.options);    
-    const correctConfig = this.model.correctConfig();
-    this.view = new View(this.root, correctConfig.vertical);
+    this.vertical = (options.vertical != undefined) ? options.vertical : false;
+    this.view = new View(this.root, this.vertical);
+    let { trackStart, trackWidth } = this.view.getTrackParameters();
+    this.model = new Model(this.options, trackStart, trackWidth); 
     this.init();
   }
 
-  init() {
-    let { trackStart, trackWidth } = this.view.getTrackParameters();
-    this.model.setTrackParameters( trackStart, trackWidth )
-    
+  init() {    
     let stepsArr = this.model.initStepsArr();
-    this.view.initScale(stepsArr)
+    this.view.initScale(stepsArr);
+    let range = this.model.config.range;
+    this.view.initHandles(range)
+    let tip = this.model.config.tip;
+    this.view.initTips(tip)
+    let parameters = this.model.initParameters();
+    this.view.setParameters(parameters)
   }
 
   /*init() {

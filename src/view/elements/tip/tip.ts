@@ -1,30 +1,19 @@
-import Observer from "../../observer";
-import { IConfig } from "../../interfaces";
-
 export default class Handle {
-  config: IConfig;
   slider: JQuery<HTMLElement>;
-  observer: Observer;
   handles: JQuery<HTMLElement>[];
   tips: JQuery<HTMLElement>[];
   tip: JQuery<HTMLElement>;
-  handleWidth: number;
 
-  constructor(slider: JQuery<HTMLElement>, config: IConfig) {
+  constructor(slider: JQuery<HTMLElement>) {
     this.slider = slider;
-    this.config = config;
-    this.observer = new Observer();
     this.handles = [];
     this.tips = []
-    this.handleWidth = 20;
     this.tip = jQuery('<div>', {
       class: 'meta-slider__tip',
-      style: `line-height: ${this.handleWidth}px`
     })
-    this.initTips()
   }
 
-  initTips(tip = this.config.tip) {
+  initTips(tip = true) {
     this.slider.find('.meta-slider__tip').remove();
     this.tips = [];
     let handles = this.slider.find('.meta-slider__handle');

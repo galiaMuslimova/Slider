@@ -1,4 +1,4 @@
-import { IConfig, IPositions, ISettings } from "../../interfaces";
+import { IConfig, IPositions, ISettings } from "../../../interfaces";
 
 export default class Scale {
   slider: JQuery<HTMLElement>;
@@ -11,7 +11,7 @@ export default class Scale {
     }).appendTo(this.slider); 
   }
 
-  initScale(stepsArr: { value: number, x: number }[], vertical:boolean){
+  initScale(stepsArr: { value: number, x: number }[], vertical:boolean = false){
     this.scale.empty()
     let handleWidth = 20;
     stepsArr.map(item => {
