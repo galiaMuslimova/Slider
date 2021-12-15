@@ -1,5 +1,5 @@
 import Observer from "../observer";
-import { IConfig, IOptions, ISettings, IParameters, IPositions } from "../interfaces";
+import { IConfig, IOptions, ISettings, IParameters, IPositions, IResult } from "../interfaces";
 
 const defaults: IConfig = {
   min: 10,
@@ -16,31 +16,31 @@ export default class Model {
   config: IConfig;
   observer: Observer;
   positionsArr: IPositions[];
-  //stepsArr: IPositions[];
-  //parameters: IParameters;
+  parameters: IParameters;
   trackStart: number;
   trackWidth: number;
   range: number;
-  //handleWidth: number;
 
-  constructor(options: IOptions,  trackStart: number = 0, trackWidth: number = 500 ) {
-    this.config = $.extend({}, defaults, options);
+  constructor(options: IOptions, trackStart: number = 0, trackWidth: number = 500) {
     this.observer = new Observer();
-    this.config = this.correctConfig(this.config);
+    this.config = this.correctConfig($.extend({}, defaults, options));
     this.trackStart = trackStart;
     this.trackWidth = trackWidth;
     this.range = this.config.max - this.config.min;
-    this.positionsArr = this.initPositionsArr()
+    this.positionsArr = this.initPositionsArr();
+    this.parameters = this.initParameters()
   }
 
   correctConfig(config: IConfig = this.config) {
     let checkedConfig = Object.assign({}, config);
-    let range = config.max - config.min;
     checkedConfig.max = (config.max > config.min) ? config.max : config.min;
     checkedConfig.min = (config.max > config.min) ? config.min : config.max;
+    let range = this.range = checkedConfig.max - checkedConfig.min;
     checkedConfig.step = (config.step * 2 < range && config.step * 20 > range) ? config.step : Math.round(range / 10);
-    checkedConfig.from = (config.from < config.max && config.from >= config.min && config.from < config.to) ? config.from : (config.min + config.step);
-    checkedConfig.to = (config.to <= config.max && config.to > config.min && config.from < config.to) ? config.to : (config.max - config.step);
+    let from = (config.from < checkedConfig.max && config.from >= checkedConfig.min) ? config.from : (checkedConfig.min + checkedConfig.step);
+    let to = (config.to <= checkedConfig.max && config.to > checkedConfig.min) ? config.to : (checkedConfig.max - checkedConfig.step);
+    checkedConfig.from = from < to ? from : to;    
+    checkedConfig.to = from < to ? to : from;
     return checkedConfig;
   }
 
@@ -70,33 +70,32 @@ export default class Model {
     for (let i in parameters.values) {
       parameters.handleX[i] = this.takeXByValue(parameters.values[i])
     }
+    this.parameters = parameters;
     return parameters
   }
 
   takeXByValue(val: number) {
-    let result = this.positionsArr.filter(el => el.value == val);
-    return result[0].x;
+    let result = this.positionsArr.find(el => el.value == val);
+    if (result) {
+      return result.x;
+    } else {
+      throw new Error('position for this value is not consist')
+    }
   }
 
-
-  /*
-  changeSettings(settings: ISettings | null) {
-    if (settings) {
-      this.config = $.extend({}, this.config, settings)
-      let key = Object.keys(settings)[0]
-      if ($.inArray(key, ['min', 'max', 'step']) >= 0) {
-        this.initScale()
-        return { stepsArr: this.stepsArr }
-      } else if ($.inArray(key, ['from', 'to', 'range', 'tip']) >= 0) {
-        this.initParameters()
-        return { parameters: this.parameters }
-      } else {
-        this.init()
-        return { stepsArr: this.stepsArr, parameters: this.parameters }
+  takeParamByEvent(eventPosition: { pageX: number, pageY: number }, index: number) {
+    let mousePosition = this.config.vertical ? eventPosition.pageY : eventPosition.pageX
+    let position = Math.round(mousePosition - this.trackStart);
+    let isInScale = position >= 0 && position <= this.trackWidth;
+    if (isInScale) {
+      let result = this.positionsArr.find(el => el.x == position)
+      if (result) {
+        this.parameters.values[index] = result.value;
+        this.parameters.handleX[index] = result.x;
+        this.config.from = this.parameters.values[0];
+        this.config.to = this.parameters.values[1] ? this.parameters.values[1] : this.config.to;
+        return this.parameters;
       }
-    } else {
-      this.init()
-      return { stepsArr: this.stepsArr, parameters: this.parameters }
     }
   }
 
@@ -115,25 +114,4 @@ export default class Model {
       return this.parameters;
     }
   }
-
-  takeXByEvent(eventPosition: { pageX: number, pageY: number }, index: number) {
-    if (this.trackWidth && this.trackStart) {
-      let mousePosition = this.config.vertical ? eventPosition.pageY : eventPosition.pageX
-      let position = Math.round(mousePosition - this.trackStart);
-      let rightBound = position + this.trackWidth;
-      let isInScale = position >= 0 && position <= rightBound;
-      if (isInScale) {
-        let result = this.positionsArr.filter(el => el.x == position)
-        if (result.length > 0) {
-          this.parameters.values[index] = result[0].value;
-          this.parameters.handleX[index] = result[0].x;
-          this.config.from = this.parameters.values[0];
-          this.config.to = this.parameters.values[1] ? this.parameters.values[1] : this.config.to;
-          return this.parameters;
-        }
-      }
-    } else {
-      throw new Error('wrong parameters of slider')
-    }
-  }*/
 }

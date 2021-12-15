@@ -11,7 +11,7 @@ describe('View', () => {
   let root: JQuery<HTMLElement>;
 
   before(function () {
-    root = $(document).find('.testSlider') as JQuery<HTMLElement>
+    root = $(document).find('.testSlider')
   })
 
   it('проверяет класс вертикальный', () => {
@@ -37,5 +37,4 @@ describe('View', () => {
     let container = view.container;
     expect(container.hasClass('meta-slider_horizontal')).to.equal(false);
   });
-
 })

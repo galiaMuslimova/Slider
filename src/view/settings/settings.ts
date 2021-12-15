@@ -1,86 +1,108 @@
-import "./settings.scss";
+import "./settings_styles.scss";
 import Observer from "../../observer";
 import { settingsTemplate } from "./settingsTemplate";
 import { IConfig, ISettings } from "../../interfaces";
 
 export default class Settings {
-  config: IConfig;
   root: JQuery<HTMLElement>;
   observer: Observer;
   settings: JQuery<HTMLElement>;
 
-  constructor(root: JQuery<HTMLElement>, config: IConfig) {
+  constructor(root: JQuery<HTMLElement>) {
     this.root = root;
-    this.config = config;
     this.observer = new Observer();
     root.append(settingsTemplate);
-    this.settings = $(this.root).find(".settings");
-    this.init();
-    this.changeBounds()
+    this.settings = $(this.root).find(".meta-slider__settings");
   }
 
-  init() {
-    if (!this.config.range) {
-      this.settings.find(`input[name='to']`).prop('disabled', true)
-    }
-
-    /*if (key == 'step' && this.config.min && this.config.max) {
-      let range = this.config.max - this.config.min
-      if (value > range) {
-        this.config.step = Math.round(range / 10)
-      }
-    }*/
-
-    for (const [key, value] of Object.entries(this.config)) {
-      this.initSetting(key, value)
-    }
-  }
-
-  initSetting(key: string, value: number | boolean) {
+  initSettings(config: IConfig) {
     let element = this;
-    let observer = this.observer;
-    let setting: ISettings = {};
-    let input = this.settings.find(`input[name='${key}']`);
-    (typeof value == 'number') ? input.val(value) : input.prop('checked', value);
-    input.on('change', function () {
+    for (const [key, value] of Object.entries(config)) {
+      let input = this.settings.find(`input[name='${key}']`);
+      let observer = this.observer;      
+      let setting: ISettings = {};
+      setting[key] = value;
       
-      let checkedValue = element.checkSetting(key, value)
-      if (checkedValue) { value = checkedValue }
-      setting[key] = (typeof value == 'number') ? Number(input.val()) : input.prop('checked')
-      observer.notify('settings', setting);
-    });
-  }
+      switch (key) {
+        case 'min':
+        case 'max':
+        case 'step':
+        case 'from':
+        case 'to':          
+          input.val(value);          
+          input.on('change', function () { 
+            setting[key] = Number(input.val())             
+            observer.notify('settings', setting);
+          });
+          break;
+        case 'vertical':
+        case 'tip':
+        case 'range':
+          input.prop('checked', value)
+          input.on('change', function () { 
+            setting[key] = input.prop('checked') 
+            observer.notify('settings', setting);
+          });
+          break;
+      };      
 
-  checkSetting(key: string, value: number | boolean) {
-    if (this.config.min != undefined && this.config.max != undefined && this.config.step) {      
-      let max = this.config.max;
-      let min = this.config.min;
-      let range = max - min;
-      let step = this.config.step
-      if (key == 'min' && value > max) {
-        return min
-      }
-      if (key == 'max' && value < min) {
-        return max
-      }
-      if (key == 'step' && step > range) {
-        
-        return Math.round(range/10)
+      switch (key) {
+        case 'min':
+        case 'max':
+        case 'from':
+        case 'to':
+        case 'range':
+          element.changeBounds(setting)
+          input.on('change', function () { 
+            element.changeBounds(setting);
+          });
+          break;
+        case 'step':
+          input.prop('min', 0)
       }
     }
   }
 
   initValues(values: number[]) {
-    (this.settings).find(`input[name='from']`).val(values[0]);
-    if (values.length == 1) {
-      this.settings.find(`input[name='to']`).prop('disabled', true);
-    } else {
-      this.settings.find(`input[name='to']`).prop('disabled', false).val(values[1]);
+    switch(values.length) {
+      case 1:
+        let max = this.settings.find(`input[name='max']`).val()
+        this.settings.find(`input[name='from']`).val(values[0]).prop('max', max);
+      case 2:
+        this.settings.find(`input[name='from']`).val(values[0]).prop('max', values[1]);
+        this.settings.find(`input[name='to']`).val(values[1]).prop('min', values[0]);
     }
   }
 
-  changeBounds(config = this.config) {
-    this.settings.find(`input[name='from']`).prop('min', config.min).prop('max', config.max);
-    this.settings.find(`input[name='to']`).prop('min', config.min).prop('max', config.max);
+  changeBounds(set: ISettings) {
+    let key = Object.keys(set)[0];
+    let value = Object.values(set)[0];
+    let maxMinRange;
+    
+    switch (key) {
+      case 'min':
+        this.settings.find(`input[name='max']`).prop('min', value);
+        
+        this.settings.find(`input[name='from']`).prop('min', value);
+        maxMinRange = Number(this.settings.find(`input[name='max']`).val()) - (value as number);
+        this.settings.find(`input[name='step']`).prop('max', maxMinRange);
+        break;     
+      case 'max':
+        this.settings.find(`input[name='min']`).prop('max', value);
+        this.settings.find(`input[name='to']`).prop('max', value);
+        maxMinRange = (value as number) - Number(this.settings.find(`input[name='min']`).val());
+        this.settings.find(`input[name='step']`).prop('max', maxMinRange);
+        break; 
+      case 'from':
+        this.settings.find(`input[name='to']`).prop('min', value);
+        break; 
+      case 'to':
+        this.settings.find(`input[name='from']`).prop('max', value);
+        break; 
+      case 'range':
+        let max = value ? this.settings.find(`input[name='to']`).val() : this.settings.find(`input[name='max']`).val();
+        this.settings.find(`input[name='to']`).prop('disabled', !value)
+        this.settings.find(`input[name='from']`).prop('max', max);
+    }
   }
 }

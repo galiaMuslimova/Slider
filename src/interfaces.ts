@@ -35,10 +35,16 @@ interface IPositions {
   x: number 
 }
 
+interface IResult {
+  stepsArr: IPositions[],
+  parameters: IParameters
+}
+
 export {
   IOptions,
   IConfig,
   ISettings,
   IParameters,
-  IPositions
+  IPositions,
+  IResult
 }

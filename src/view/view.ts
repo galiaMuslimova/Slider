@@ -15,7 +15,7 @@ export default class View {
   root: JQuery<HTMLElement>;
   container: JQuery<HTMLElement>;
   slider: JQuery<HTMLElement>;
-  //settings: Settings;
+  settings: Settings;
   track: Track;
   scale: Scale;
   handles: Handle;
@@ -37,6 +37,10 @@ export default class View {
     this.handles = new Handle(this.slider);
     this.tips = new Tip(this.slider);
     this.interval = new Interval(this.slider);
+    this.settings = new Settings(this.container);
+    this.settings.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) })
+    this.moveHandle();
+    this.clickOnScale();
   }
 
   getTrackParameters(){
@@ -56,86 +60,30 @@ export default class View {
   }
 
   setParameters(parameters: IParameters) {
-    //this.parameters = parameters;
     this.handles.moveHandles(parameters.handleX, this.vertical);
     this.tips.changeTips(parameters.values)
     this.interval.moveInterval(parameters.handleX, this.vertical);
-    //this.settings.initValues(parameters.values);
-  }
-
-  /*init() {
-    this.settings = new Settings(this.container, this.config);
-    this.settings.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) })
-
-    this.scale = new Scale(this.slider, this.config);
-    
-    this.interval = new Interval(this.slider, this.config);
-    
-    this.moveHandle();
-    this.clickOnScale();
-  }*/
-
- /* initSlider() {
-    this.root.find('.meta-slider').remove();
-    this.container = jQuery('<div>', {
-      class: `meta-slider ${this.config.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal'}`,
-    }).appendTo(this.root)
-
-    this.slider = jQuery('<div>', {
-      class: 'meta-slider__slider',
-    }).appendTo(this.container);
-    this.settings = new Settings(this.container, this.config);
-    this.settings.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) })
-    this.track = new Track(this.slider, this.config);
-    this.scale = new Scale(this.slider, this.config);
-    this.handles = new Handle(this.slider, this.config);
-    this.interval = new Interval(this.slider, this.config);
-    this.tips = new Tip(this.slider, this.config);
-    this.init();
-  }
-
-  changeSettings(settings: ISettings) {
-    if (settings) {
-      this.config = $.extend({}, this.config, settings)
-      let key = Object.keys(settings)[0]
-      if (key == 'tip') {
-        this.tips.initTips(this.config.tip)
-      } else if (key == 'range') {
-        this.handles.initHandles(this.config.range)
-        this.tips.initTips(this.config.tip)
-      } else if (key == 'min' || key == 'max') {
-        this.settings.changeBounds(this.config)
-      }
-      else if (key == 'vertical') {
-        this.initSlider()
-      }
-      this.observer.notify('settings', settings)
-    }
-  }
-
-  changeParameters(parameters: IParameters) {
-    this.parameters = parameters;
-    this.handles.moveHandles(parameters.handleX);
-    this.tips.changeTips(parameters.values)
-    this.interval.moveInterval(parameters.handleX);
     this.settings.initValues(parameters.values);
   }
 
-  
+  initSettings(config:IConfig){
+    this.settings.initSettings(config);
+  }
+
   moveHandle() {
     let observer = this.observer
     this.slider.on('mousedown touchstart', '.meta-slider__handle', function () {
       let index = $(this).hasClass('meta-slider__handle_right') ? 1 : 0;
       $(document).on('mousemove', function (event) {
-        let eventPosition = {pageX: event.pageX, pageY: event.pageY}
+        let eventPosition = { pageX: event.pageX, pageY: event.pageY }
         observer.notify('mousemove', { eventPosition, index })
       });
       $(document).on('touchmove', function (event) {
         if (event && event.originalEvent && event.originalEvent.touches && event.originalEvent.touches[0]) {
-          let touch =  event.originalEvent.touches[0]
+          let touch = event.originalEvent.touches[0]
           let eventPosition = { pageX: touch.pageX, pageY: touch.pageY }
-          observer.notify('mousemove', { eventPosition, index }) 
-        }    
+          observer.notify('mousemove', { eventPosition, index })
+        }
       });
       $(document).on('mouseup touchend', function () {
         $(document).off('mousemove mouseup touchmove touchend')
@@ -146,12 +94,17 @@ export default class View {
     })
   }
 
-  
   clickOnScale() {
     let observer = this.observer
     this.slider.on('click touchstart', '.meta-slider__value', function () {
       let currentValue = Number($(this).attr('data_value'));
       observer.notify('click', currentValue);
     })
-  }*/
+  }
+
+  changeSettings(settings: ISettings){
+    this.observer.notify('settings', settings);    
+  }
 }
+
+ 
