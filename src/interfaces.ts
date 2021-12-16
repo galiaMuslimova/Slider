@@ -3,7 +3,7 @@ interface IConfig {
   max: number,
   step: number,
   from: number,
-  to: number ,
+  to: number,
   vertical: boolean,
   tip: boolean,
   range: boolean
@@ -31,8 +31,8 @@ interface IParameters {
 }
 
 interface IPositions {
-  value: number, 
-  x: number 
+  value: number,
+  x: number
 }
 
 interface IResult {
@@ -46,5 +46,5 @@ export {
   ISettings,
   IParameters,
   IPositions,
-  IResult
-}
+  IResult,
+};

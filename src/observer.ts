@@ -10,13 +10,13 @@ export default class Observer {
   }
 
   unsubscribe(fn: { key: string, observer: (data: any) => void }) {
-    this.observers = this.observers.filter(item => item !== fn)
+    this.observers = this.observers.filter((item) => item !== fn);
   }
 
   notify(key: string, data: any) {
-    this.observers.forEach(item => {
-      if (item.key == key) {
-        item.observer(data)
+    this.observers.forEach((item) => {
+      if (item.key === key) {
+        item.observer(data);
       }
     });
   }

@@ -1,7 +1,8 @@
-import "./plugin.scss";
-import { Controller } from "./controller/controller";
-import { IConfig } from "./interfaces";
+import './plugin.scss';
 import jQuery from 'jquery';
+import Controller from './controller/controller';
+import { IConfig } from './interfaces';
+
 
 declare global {
   interface JQuery {
@@ -10,11 +11,8 @@ declare global {
 }
 
 (function ($) {
-  $.fn.slider = function (options: IConfig) {
+  $.fn.slider =  (options: IConfig) => {
     new Controller(this, options)
     return this;
   }
 })(jQuery);
-
-
-
