@@ -57,7 +57,7 @@ export default class Model {
   }
 
   initStepsArr() {
-    const stepLength = this.trackWidth / (this.range * this.config.step);
+    const stepLength = (this.trackWidth / this.range) * this.config.step;
     const stepsCount = Math.floor(this.range / this.config.step);
     const emptyArr = Array(stepsCount + 1);
     const valuesArr = Array.from(emptyArr, (_, i) => (this.config.min + this.config.step * i));
@@ -76,11 +76,13 @@ export default class Model {
 
   initParameters() {
     const parameters: IParameters = { values: [], handleX: [] };
+    const element = this;
     parameters.values[0] = this.config.from;
     if (this.config.range) {
       parameters.values[1] = this.config.to;
     }
-    parameters.handleX = parameters.values.map(this.takeXByValue);
+
+    parameters.handleX = parameters.values.map((x) => element.takeXByValue(x));
     this.parameters = parameters;
     return parameters;
   }
@@ -90,6 +92,7 @@ export default class Model {
     if (result) {
       return result.x;
     }
+
     throw new Error('position for this value is not consist');
   }
 
@@ -99,14 +102,20 @@ export default class Model {
     const isInScale = position >= 0 && position <= this.trackWidth;
     if (isInScale) {
       const result = this.positionsArr.find((el) => el.x === position);
+
       if (result) {
         this.parameters.values[index] = result.value;
         this.parameters.handleX[index] = result.x;
-        this.config.from = this.parameters.values[0];
+        const value = this.parameters.values[0];
+        this.config.from = value;
         this.config.to = this.parameters.values[1] ? this.parameters.values[1] : this.config.to;
         return this.parameters;
       }
+
+      return false;
     }
+
+    return false;
   }
 
   takeXByScale(value: number) {
@@ -115,11 +124,13 @@ export default class Model {
         const result = Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev;
         return result;
       });
+
       const index = this.parameters.values.indexOf(closest);
       this.parameters.values[index] = value;
       this.parameters.handleX[index] = this.takeXByValue(value);
       return this.parameters;
     }
+
     this.parameters.values = [value];
     this.parameters.handleX = [this.takeXByValue(value)];
     return this.parameters;

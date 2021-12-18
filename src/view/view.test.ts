@@ -1,40 +1,43 @@
 import { expect } from 'chai';
 import View from './view';
 
-const JSDOM = require('jsdom').JSDOM;
-const dom = new JSDOM(`<!DOCTYPE html><body><div class='testSlider'></div></body>`);
+const { JSDOM } = require('jsdom');
+
+const dom = new JSDOM('<!DOCTYPE html><body><div class=\'testSlider\'></div></body>');
 global.window = dom.window;
-global.$ = global.jQuery = require('jquery');
-const document = dom.window.document;
+global.$ = require('jquery');
+global.jQuery = require('jquery');
+
+const { document } = dom.window;
 
 describe('View', () => {
-  let root: JQuery<HTMLElement>;
+  let $root: JQuery<HTMLElement>;
 
-  before(function () {
-    root = $(document).find('.testSlider')
-  })
+  before(() => {
+    $root = $(document).find('.testSlider');
+  });
 
   it('проверяет класс вертикальный', () => {
-    let view = new View(root, true);
-    let container = view.container;
-    expect(container.hasClass('meta-slider_vertical')).to.equal(true);
+    const view = new View($root, true);
+    const { $container } = view;
+    expect($container.hasClass('meta-slider_vertical')).to.equal(true);
   });
 
   it('проверяет класс горизонтальный', () => {
-    let view = new View(root, false);
-    let container = view.container;
-    expect(container.hasClass('meta-slider_horizontal')).to.equal(true);
+    const view = new View($root, false);
+    const { $container } = view;
+    expect($container.hasClass('meta-slider_horizontal')).to.equal(true);
   });
 
   it('проверяет класс не вертикальный', () => {
-    let view = new View(root, false);
-    let container = view.container;
-    expect(container.hasClass('meta-slider_vertical')).to.equal(false);
+    const view = new View($root, false);
+    const { $container } = view;
+    expect($container.hasClass('meta-slider_vertical')).to.equal(false);
   });
 
   it('проверяет класс не горизонтальный', () => {
-    let view = new View(root, true);
-    let container = view.container;
-    expect(container.hasClass('meta-slider_horizontal')).to.equal(false);
+    const view = new View($root, true);
+    const { $container } = view;
+    expect($container.hasClass('meta-slider_horizontal')).to.equal(false);
   });
-})
+});

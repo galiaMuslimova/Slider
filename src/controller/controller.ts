@@ -9,18 +9,17 @@ export default class Controller {
 
   options: IConfig;
 
-  root: JQuery<HTMLElement>;
+  $root: JQuery<HTMLElement>;
 
   vertical: boolean;
 
   constructor(root: JQuery<HTMLElement>, options: IConfig) {
     this.options = options;
-    this.root = root;
+    this.$root = root;
     this.vertical = (options.vertical !== undefined) ? options.vertical : false;
-    this.view = new View(this.root, this.vertical);
+    this.view = new View(this.$root, this.vertical);
     const { trackStart, trackWidth } = this.view.getTrackParameters();
     this.model = new Model(this.options, trackStart, trackWidth);
-    this.init();
   }
 
   init() {
@@ -61,6 +60,7 @@ export default class Controller {
       case 'max':
       case 'step': {
         this.view.initScale(this.model.initStepsArr());
+        this.model.positionsArr = this.model.initPositionsArr();
         this.view.setParameters(this.model.initParameters());
         break;
       }
@@ -77,14 +77,14 @@ export default class Controller {
       }
       case 'tip': {
         this.view.initTips(value as boolean);
-        this.view.setParameters(this.model.initParameters());
+        this.view.changeTips(this.model.parameters.values);
         break;
       }
       case 'vertical': {
         this.options.vertical = !this.vertical;
         this.vertical = !this.vertical;
-        this.root.find('.meta-slider').remove();
-        this.view = new View(this.root, this.vertical);
+        this.$root.find('.meta-slider').remove();
+        this.view = new View(this.$root, this.vertical);
         const { trackStart, trackWidth } = this.view.getTrackParameters();
         this.model = new Model(this.options, trackStart, trackWidth);
         this.init();

@@ -1,4 +1,4 @@
-export const settingsTemplate = `<div class="meta-slider__settings">
+const settingsTemplate = `<div class="meta-slider__settings">
       <form>
         <label class="number">
           <p class="text number__text">min</p>
@@ -50,4 +50,6 @@ export const settingsTemplate = `<div class="meta-slider__settings">
           <span class="box toggle__box"></span>          
         </label>        
       </form>
-    </div>`
+    </div>`;
+
+export default settingsTemplate;

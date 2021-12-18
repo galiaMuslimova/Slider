@@ -1,17 +1,18 @@
 export default class Interval {
-  slider: JQuery<HTMLElement>;
+  $slider: JQuery<HTMLElement>;
 
-  interval: JQuery<HTMLElement>;
+  $interval: JQuery<HTMLElement>;
 
-  track: JQuery<HTMLElement>;
+  $track: JQuery<HTMLElement>;
 
   constructor(slider: JQuery<HTMLElement>) {
-    this.slider = slider;
-    this.track = $(this.slider).find('.meta-slider__track');
+    this.$slider = slider;
+    this.$track = $(this.$slider).find('.meta-slider__track');
     jQuery('<div>', {
       class: 'meta-slider__interval',
-    }).appendTo(this.track);
-    this.interval = this.slider.find('.meta-slider__interval');
+    }).appendTo(this.$track);
+
+    this.$interval = this.$slider.find('.meta-slider__interval');
   }
 
   moveInterval(handleX: number[], vertical: boolean) {
@@ -30,8 +31,9 @@ export default class Interval {
     } else {
       throw new Error('wrong number of handles');
     }
+
     width = (width > 0) ? width : 0;
-    this.interval.css(vertical ? 'height' : 'width', `${width}px`);
-    this.interval.css(vertical ? 'top' : 'left', `${min}px`);
+    this.$interval.css(vertical ? 'height' : 'width', `${width}px`);
+    this.$interval.css(vertical ? 'top' : 'left', `${min}px`);
   }
 }

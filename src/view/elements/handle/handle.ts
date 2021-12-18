@@ -1,27 +1,30 @@
 export default class Handle {
-  slider: JQuery<HTMLElement>;
+  $slider: JQuery<HTMLElement>;
 
   handles: JQuery<HTMLElement>[];
 
   constructor(slider: JQuery<HTMLElement>) {
-    this.slider = slider;
+    this.$slider = slider;
     this.handles = [];
   }
 
   initHandles(range:boolean = true) {
     this.handles = [];
-    this.slider.find('.meta-slider__handle').remove();
+    const $handles = this.$slider.find('.meta-slider__handle');
+    $handles.remove();
 
-    const track = $(this.slider).find('.meta-slider__track');
-    const handle = jQuery('<div>', {
+    const $track = $(this.$slider).find('.meta-slider__track');
+    const $handle = jQuery('<div>', {
       class: 'meta-slider__handle meta-slider__handle_left',
-    }).appendTo(track);
-    this.handles.push(handle);
+    }).appendTo($track);
+
+    this.handles.push($handle);
     if (range) {
-      const handle2 = jQuery('<div>', {
+      const $handle2 = jQuery('<div>', {
         class: 'meta-slider__handle meta-slider__handle_right',
-      }).appendTo(track);
-      this.handles.push(handle2);
+      }).appendTo($track);
+
+      this.handles.push($handle2);
     }
   }
 

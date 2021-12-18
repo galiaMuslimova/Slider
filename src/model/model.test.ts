@@ -11,7 +11,7 @@ describe('Model', () => {
       to: 20,
       vertical: false,
       tip: true,
-      range: true
+      range: true,
     });
     expect(model.config.min).to.equal(15);
     expect(model.config.max).to.equal(25);
@@ -72,7 +72,7 @@ describe('Model', () => {
       min: 10,
       max: 25,
       step: 5,
-      from: 5
+      from: 5,
     });
     expect(model.config.from).to.equal(15);
   });
@@ -82,7 +82,7 @@ describe('Model', () => {
       min: 10,
       max: 25,
       step: 5,
-      to: 5
+      to: 5,
     });
     expect(model.config.to).to.equal(20);
   });
@@ -97,18 +97,37 @@ describe('Model', () => {
     const model = new Model({
       min: 1,
       max: 6,
-      step: 1
+      step: 1,
     });
-    expect(model.initStepsArr()).to.deep.equal([{ value: 1, x: 0 }, { value: 2, x: 100 }, { value: 3, x: 200 }, { value: 4, x: 300 }, { value: 5, x: 400 }, { value: 6, x: 500 }]);
+    const stepsArr = [
+      { value: 1, x: 0 },
+      { value: 2, x: 100 },
+      { value: 3, x: 200 },
+      { value: 4, x: 300 },
+      { value: 5, x: 400 },
+      { value: 6, x: 500 }];
+    expect(model.initStepsArr()).to.deep.equal(stepsArr);
   });
 
   it('сделать массив всех позиций', () => {
     const model = new Model({
       min: 0,
       max: 10,
-      step: 1
+      step: 1,
     });
-    expect(model.initPositionsArr()).to.deep.equal([{ value: 0, x: 0 }, { value: 1, x: 50 }, { value: 2, x: 100 }, { value: 3, x: 150 }, { value: 4, x: 200 }, { value: 5, x: 250 }, { value: 6, x: 300 }, { value: 7, x: 350 }, { value: 8, x: 400 }, { value: 9, x: 450 }, { value: 10, x: 500 }]);
+    const positionsArr = [
+      { value: 0, x: 0 },
+      { value: 1, x: 50 },
+      { value: 2, x: 100 },
+      { value: 3, x: 150 },
+      { value: 4, x: 200 },
+      { value: 5, x: 250 },
+      { value: 6, x: 300 },
+      { value: 7, x: 350 },
+      { value: 8, x: 400 },
+      { value: 9, x: 450 },
+      { value: 10, x: 500 }];
+    expect(model.initPositionsArr()).to.deep.equal(positionsArr);
   });
 
   it('инициализировать параметры', () => {
@@ -117,7 +136,7 @@ describe('Model', () => {
       max: 10,
       step: 1,
       from: 3,
-      to: 10
+      to: 10,
     });
     expect(model.initParameters()).to.deep.equal({ values: [3, 10], handleX: [150, 500] });
   });
@@ -128,7 +147,7 @@ describe('Model', () => {
       max: 10,
       step: 1,
       from: 13,
-      to: 19
+      to: 19,
     });
     expect(model.initParameters()).to.deep.equal({ values: [1, 9], handleX: [50, 450] });
   });
@@ -137,7 +156,7 @@ describe('Model', () => {
     const model = new Model({
       min: 0,
       max: 10,
-      step: 1
+      step: 1,
     });
     expect(model.takeXByValue(5)).to.deep.equal(250);
   });
@@ -150,7 +169,12 @@ describe('Model', () => {
       from: 100,
       to: 400,
     });
-    expect(model.takeParamByEvent({ pageX: 130, pageY: 50 }, 0)).to.deep.equal({ values: [130, 400], handleX: [130, 400] })
+    const pagePositions = { pageX: 130, pageY: 50 };
+    const parameters = {
+      values: [130, 400],
+      handleX: [130, 400],
+    };
+    expect(model.takeParamByEvent(pagePositions, 0)).to.deep.equal(parameters);
   });
 
   it('получить параметры при движении handle 2', () => {
@@ -161,7 +185,12 @@ describe('Model', () => {
       from: 10,
       to: 40,
     });
-    expect(model.takeParamByEvent({ pageX: 130, pageY: 50 }, 1)).to.deep.equal({ values: [10, 13], handleX: [100, 130] })
+    const pagePositions = { pageX: 130, pageY: 50 };
+    const parameters = {
+      values: [10, 13],
+      handleX: [100, 130],
+    };
+    expect(model.takeParamByEvent(pagePositions, 1)).to.deep.equal(parameters);
   });
 
   it('получить параметры при клике на шкалу, меняется handle 2', () => {
@@ -171,7 +200,7 @@ describe('Model', () => {
       from: 10,
       to: 40,
     });
-    expect(model.takeXByScale(49)).to.deep.equal({ values: [10, 49], handleX: [100, 490] })
+    expect(model.takeXByScale(49)).to.deep.equal({ values: [10, 49], handleX: [100, 490] });
   });
 
   it('получить параметры при клике на шкалу, меняется handle 1', () => {
@@ -181,7 +210,7 @@ describe('Model', () => {
       from: 10,
       to: 40,
     });
-    expect(model.takeXByScale(18)).to.deep.equal({ values: [18, 40], handleX: [180, 400] })
+    expect(model.takeXByScale(18)).to.deep.equal({ values: [18, 40], handleX: [180, 400] });
   });
 
   it('получить параметры при клике на шкалу, при range=false', () => {
@@ -190,8 +219,8 @@ describe('Model', () => {
       max: 50,
       from: 10,
       to: 40,
-      range: false
+      range: false,
     });
-    expect(model.takeXByScale(5)).to.deep.equal({ values: [5], handleX: [50] })
-  }); 
-})
+    expect(model.takeXByScale(5)).to.deep.equal({ values: [5], handleX: [50] });
+  });
+});

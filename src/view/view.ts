@@ -16,11 +16,11 @@ export default class View {
 
   observer: Observer;
 
-  root: JQuery<HTMLElement>;
+  $root: JQuery<HTMLElement>;
 
-  container: JQuery<HTMLElement>;
+  $container: JQuery<HTMLElement>;
 
-  slider: JQuery<HTMLElement>;
+  $slider: JQuery<HTMLElement>;
 
   settings: Settings;
 
@@ -35,21 +35,23 @@ export default class View {
   tips: Tip;
 
   constructor(root: JQuery<HTMLElement>, vertical: boolean) {
-    this.root = root;
+    this.$root = root;
     this.vertical = vertical;
     this.observer = new Observer();
-    this.container = jQuery('<div>', {
+    this.$container = jQuery('<div>', {
       class: `meta-slider ${this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal'}`,
-    }).appendTo(this.root);
-    this.slider = jQuery('<div>', {
+    }).appendTo(this.$root);
+
+    this.$slider = jQuery('<div>', {
       class: 'meta-slider__slider',
-    }).appendTo(this.container);
-    this.track = new Track(this.slider);
-    this.scale = new Scale(this.slider);
-    this.handles = new Handle(this.slider);
-    this.tips = new Tip(this.slider);
-    this.interval = new Interval(this.slider);
-    this.settings = new Settings(this.container);
+    }).appendTo(this.$container);
+
+    this.track = new Track(this.$slider);
+    this.scale = new Scale(this.$slider);
+    this.handles = new Handle(this.$slider);
+    this.tips = new Tip(this.$slider);
+    this.interval = new Interval(this.$slider);
+    this.settings = new Settings(this.$container);
     this.settings.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) });
     this.moveHandle();
     this.clickOnScale();
@@ -71,6 +73,10 @@ export default class View {
     this.tips.initTips(tip);
   }
 
+  changeTips(values: number[]) {
+    this.tips.changeTips(values);
+  }
+
   setParameters(parameters: IParameters) {
     this.handles.moveHandles(parameters.handleX, this.vertical);
     this.tips.changeTips(parameters.values);
@@ -83,13 +89,15 @@ export default class View {
   }
 
   moveHandle() {
-    const { observer } = this;
-    this.slider.on('mousedown touchstart', '.meta-slider__handle', () => {
-      const index = $(this).hasClass('meta-slider__handle_right') ? 1 : 0;
-      $(document).on('mousemove', (event) => {
-        const eventPosition = { pageX: event.pageX, pageY: event.pageY };
+    const element = this;
+    const { observer } = element;
+    this.$slider.on('mousedown touchstart', '.meta-slider__handle', (event) => {
+      const index = $(event.currentTarget).hasClass('meta-slider__handle_right') ? 1 : 0;
+      $(document).on('mousemove', (e) => {
+        const eventPosition = { pageX: e.pageX, pageY: e.pageY };
         observer.notify('mousemove', { eventPosition, index });
       });
+
       $(document).on('touchmove', (e) => {
         if (e && e.originalEvent && e.originalEvent.touches && e.originalEvent.touches[0]) {
           const touch = e.originalEvent.touches[0];
@@ -97,18 +105,19 @@ export default class View {
           observer.notify('mousemove', { eventPosition, index });
         }
       });
+
       $(document).on('mouseup touchend', () => {
         $(document).off('mousemove mouseup touchmove touchend');
       });
+
       $(document).on('dragstart', () => false);
-      // this.ondragstart = () => false;
     });
   }
 
   clickOnScale() {
     const { observer } = this;
-    this.slider.on('click touchstart', '.meta-slider__value', () => {
-      const currentValue = Number($(this).attr('data_value'));
+    this.$slider.on('click touchstart', '.meta-slider__value', (event) => {
+      const currentValue = Number($(event.currentTarget).attr('data_value'));
       observer.notify('click', currentValue);
     });
   }
