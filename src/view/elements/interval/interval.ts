@@ -1,4 +1,4 @@
-export default class Interval {
+class Interval {
   $slider: JQuery<HTMLElement>;
 
   $interval: JQuery<HTMLElement>;
@@ -37,3 +37,5 @@ export default class Interval {
     this.$interval.css(vertical ? 'top' : 'left', `${min}px`);
   }
 }
+
+export default Interval;

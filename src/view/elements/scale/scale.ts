@@ -1,4 +1,4 @@
-export default class Scale {
+class Scale {
   $slider: JQuery<HTMLElement>;
 
   $scale: JQuery<HTMLElement>;
@@ -23,3 +23,5 @@ export default class Scale {
     });
   }
 }
+
+export default Scale;

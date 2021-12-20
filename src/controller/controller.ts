@@ -2,7 +2,7 @@ import View from '../view/view';
 import Model from '../model/model';
 import { IConfig, ISettings } from '../interfaces';
 
-export default class Controller {
+class Controller {
   model: Model;
 
   view: View;
@@ -37,15 +37,15 @@ export default class Controller {
     this.view.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) });
   }
 
-  moveHandle(data: { eventPosition: { pageX: number, pageY: number }, index: number }) {
-    const parameters = this.model.takeParamByEvent(data.eventPosition, data.index);
+  moveHandle(options: { eventPosition: { pageX: number, pageY: number }, index: number }) {
+    const parameters = this.model.takeParamHandleMove(options);
     if (parameters) {
       this.view.setParameters(parameters);
     }
   }
 
   clickOnScale(value: number) {
-    const parameters = this.model.takeXByScale(value);
+    const parameters = this.model.takeParamScaleClick(value);
     if (parameters) {
       this.view.setParameters(parameters);
     }
@@ -96,3 +96,5 @@ export default class Controller {
     }
   }
 }
+
+export default Controller;

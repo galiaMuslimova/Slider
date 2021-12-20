@@ -1,4 +1,4 @@
-export default class Handle {
+class Tip {
   $slider: JQuery<HTMLElement>;
 
   $handles: JQuery<HTMLElement>[];
@@ -35,3 +35,5 @@ export default class Handle {
     });
   }
 }
+
+export default Tip;

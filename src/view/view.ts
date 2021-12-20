@@ -11,7 +11,7 @@ import Handle from './elements/handle/handle';
 import Interval from './elements/interval/interval';
 import Tip from './elements/tip/tip';
 
-export default class View {
+class View {
   vertical: boolean;
 
   observer: Observer;
@@ -53,8 +53,8 @@ export default class View {
     this.interval = new Interval(this.$slider);
     this.settings = new Settings(this.$container);
     this.settings.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) });
-    this.moveHandle();
-    this.clickOnScale();
+    this.handleMove();
+    this.scaleClick();
   }
 
   getTrackParameters() {
@@ -88,23 +88,12 @@ export default class View {
     this.settings.initSettings(config);
   }
 
-  moveHandle() {
-    const element = this;
-    const { observer } = element;
+  handleMove() {
+    const { observer } = this;
     this.$slider.on('mousedown touchstart', '.meta-slider__handle', (event) => {
       const index = $(event.currentTarget).hasClass('meta-slider__handle_right') ? 1 : 0;
-      $(document).on('mousemove', (e) => {
-        const eventPosition = { pageX: e.pageX, pageY: e.pageY };
-        observer.notify('mousemove', { eventPosition, index });
-      });
-
-      $(document).on('touchmove', (e) => {
-        if (e && e.originalEvent && e.originalEvent.touches && e.originalEvent.touches[0]) {
-          const touch = e.originalEvent.touches[0];
-          const eventPosition = { pageX: touch.pageX, pageY: touch.pageY };
-          observer.notify('mousemove', { eventPosition, index });
-        }
-      });
+      $(document).on('mousemove', { index, observer }, View.sendMouseMoveOptions);
+      $(document).on('touchmove', { index, observer }, View.sendTouchMoveOptions);
 
       $(document).on('mouseup touchend', () => {
         $(document).off('mousemove mouseup touchmove touchend');
@@ -114,15 +103,50 @@ export default class View {
     });
   }
 
-  clickOnScale() {
+  static sendMouseMoveOptions(e: {
+    pageX: number;
+    pageY: number;
+    data: { index: number, observer: Observer }
+  }) {
+    const { index } = e.data;
+    const { observer } = e.data;
+    const eventPosition = { pageX: e.pageX, pageY: e.pageY };
+    const options = { eventPosition, index };
+    observer.notify('mousemove', options);
+  }
+
+  static sendTouchMoveOptions(e: {
+    data: { index: number; observer: Observer };
+    originalEvent: any;
+  }) {
+    const { index } = e.data;
+    const { observer } = e.data;
+    const { originalEvent } = e;
+    if (originalEvent !== undefined) {
+      const { touches } = originalEvent;
+      if (touches !== undefined) {
+        const touch = touches[0];
+        const eventPosition = { pageX: touch.pageX, pageY: touch.pageY };
+        const options = { eventPosition, index };
+        observer.notify('mousemove', options);
+      }
+    }
+  }
+
+  scaleClick() {
     const { observer } = this;
-    this.$slider.on('click touchstart', '.meta-slider__value', (event) => {
-      const currentValue = Number($(event.currentTarget).attr('data_value'));
-      observer.notify('click', currentValue);
-    });
+    this.$slider.on('click touchstart', '.meta-slider__value', { observer }, View.sendScaleClickValue);
+  }
+
+  static sendScaleClickValue(e: { currentTarget: HTMLElement; data: { observer: Observer } }) {
+    const { observer } = e.data;
+    const currentValue = Number($(e.currentTarget).attr('data_value'));
+    observer.notify('click', currentValue);
   }
 
   changeSettings(settings: ISettings) {
     this.observer.notify('settings', settings);
   }
 }
+
+export default View;

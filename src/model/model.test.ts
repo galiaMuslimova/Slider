@@ -170,11 +170,12 @@ describe('Model', () => {
       to: 400,
     });
     const pagePositions = { pageX: 130, pageY: 50 };
+    const options = { eventPosition: pagePositions, index: 0 };
     const parameters = {
       values: [130, 400],
       handleX: [130, 400],
     };
-    expect(model.takeParamByEvent(pagePositions, 0)).to.deep.equal(parameters);
+    expect(model.takeParamHandleMove(options)).to.deep.equal(parameters);
   });
 
   it('получить параметры при движении handle 2', () => {
@@ -186,11 +187,12 @@ describe('Model', () => {
       to: 40,
     });
     const pagePositions = { pageX: 130, pageY: 50 };
+    const options = { eventPosition: pagePositions, index: 1 };
     const parameters = {
       values: [10, 13],
       handleX: [100, 130],
     };
-    expect(model.takeParamByEvent(pagePositions, 1)).to.deep.equal(parameters);
+    expect(model.takeParamHandleMove(options)).to.deep.equal(parameters);
   });
 
   it('получить параметры при клике на шкалу, меняется handle 2', () => {
@@ -200,7 +202,7 @@ describe('Model', () => {
       from: 10,
       to: 40,
     });
-    expect(model.takeXByScale(49)).to.deep.equal({ values: [10, 49], handleX: [100, 490] });
+    expect(model.takeParamScaleClick(49)).to.deep.equal({ values: [10, 49], handleX: [100, 490] });
   });
 
   it('получить параметры при клике на шкалу, меняется handle 1', () => {
@@ -210,7 +212,7 @@ describe('Model', () => {
       from: 10,
       to: 40,
     });
-    expect(model.takeXByScale(18)).to.deep.equal({ values: [18, 40], handleX: [180, 400] });
+    expect(model.takeParamScaleClick(18)).to.deep.equal({ values: [18, 40], handleX: [180, 400] });
   });
 
   it('получить параметры при клике на шкалу, при range=false', () => {
@@ -221,6 +223,6 @@ describe('Model', () => {
       to: 40,
       range: false,
     });
-    expect(model.takeXByScale(5)).to.deep.equal({ values: [5], handleX: [50] });
+    expect(model.takeParamScaleClick(5)).to.deep.equal({ values: [5], handleX: [50] });
   });
 });

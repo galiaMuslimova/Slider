@@ -1,4 +1,3 @@
-import Observer from '../observer';
 import {
   IConfig, IOptions, IParameters, IPositions,
 } from '../interfaces';
@@ -14,10 +13,8 @@ const defaults: IConfig = {
   range: true,
 };
 
-export default class Model {
+class Model {
   config: IConfig;
-
-  observer: Observer;
 
   positionsArr: IPositions[];
 
@@ -30,7 +27,6 @@ export default class Model {
   range: number;
 
   constructor(options: IOptions, trackStart: number = 0, trackWidth: number = 500) {
-    this.observer = new Observer();
     this.config = this.correctConfig($.extend({}, defaults, options));
     this.trackStart = trackStart;
     this.trackWidth = trackWidth;
@@ -88,24 +84,27 @@ export default class Model {
   }
 
   takeXByValue(val: number) {
-    const result = this.positionsArr.find((el) => el.value === val);
-    if (result) {
-      return result.x;
+    const position = this.positionsArr.find((el) => el.value === val);
+    if (position) {
+      return position.x;
     }
 
     throw new Error('position for this value is not consist');
   }
 
-  takeParamByEvent(eventPosition: { pageX: number, pageY: number }, index: number) {
-    const mousePosition = this.config.vertical ? eventPosition.pageY : eventPosition.pageX;
+  takeParamHandleMove(options: { eventPosition: { pageX: number, pageY: number }, index: number }) {
+    const { pageX } = options.eventPosition;
+    const { pageY } = options.eventPosition;
+    const { index } = options;
+    const mousePosition = this.config.vertical ? pageY : pageX;
     const position = Math.round(mousePosition - this.trackStart);
-    const isInScale = position >= 0 && position <= this.trackWidth;
+    const isInScale = (position >= 0) && (position <= this.trackWidth);
     if (isInScale) {
-      const result = this.positionsArr.find((el) => el.x === position);
+      const positionParameters = this.positionsArr.find((el) => el.x === position);
 
-      if (result) {
-        this.parameters.values[index] = result.value;
-        this.parameters.handleX[index] = result.x;
+      if (positionParameters) {
+        this.parameters.values[index] = positionParameters.value;
+        this.parameters.handleX[index] = positionParameters.x;
         const value = this.parameters.values[0];
         this.config.from = value;
         this.config.to = this.parameters.values[1] ? this.parameters.values[1] : this.config.to;
@@ -118,11 +117,11 @@ export default class Model {
     return false;
   }
 
-  takeXByScale(value: number) {
+  takeParamScaleClick(value: number) {
     if (this.config.range) {
       const closest = this.parameters.values.reduce((prev, curr) => {
-        const result = Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev;
-        return result;
+        const closestValue = Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev;
+        return closestValue;
       });
 
       const index = this.parameters.values.indexOf(closest);
@@ -136,3 +135,5 @@ export default class Model {
     return this.parameters;
   }
 }
+
+export default Model;

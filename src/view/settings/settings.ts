@@ -3,7 +3,7 @@ import Observer from '../../observer';
 import settingsTemplate from './settingsTemplate';
 import { IConfig, ISettings } from '../../interfaces';
 
-export default class Settings {
+class Settings {
   $root: JQuery<HTMLElement>;
 
   observer: Observer;
@@ -150,3 +150,5 @@ export default class Settings {
     }
   }
 }
+
+export default Settings;

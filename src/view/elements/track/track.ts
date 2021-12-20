@@ -1,4 +1,4 @@
-export default class Track {
+class Track {
   $slider: JQuery<HTMLElement>;
 
   $track: JQuery<HTMLElement>;
@@ -16,9 +16,12 @@ export default class Track {
   getTrackParameters(vertical: boolean) {
     const trackStart = vertical ? Number(this.position.top) : Number(this.position.left);
     const trackWidth = vertical ? this.$track.height() : this.$track.width();
-    if (trackStart && trackWidth) {
+    const hasTrackParameters = trackStart && trackWidth;
+    if (hasTrackParameters) {
       return { trackStart, trackWidth };
     }
     throw new Error('wrong track position');
   }
 }
+
+export default Track;

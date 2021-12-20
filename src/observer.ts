@@ -1,4 +1,4 @@
-export default class Observer {
+class Observer {
   observers: { key: string, observer: (data: any) => void }[];
 
   constructor() {
@@ -21,3 +21,5 @@ export default class Observer {
     });
   }
 }
+
+export default Observer;
