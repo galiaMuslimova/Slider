@@ -17,16 +17,7 @@ var config = {
     port: 5000
   },
   devtool: "source-map",
-  plugins: [
-    new MiniCssExtractPlugin({
-      filename: '[name].[contenthash].css'
-    }),
-    new CleanWebpackPlugin(),
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-    }),
-  ],
+  
   module: {
     rules: [
       {
@@ -77,6 +68,14 @@ var docs = Object.assign({}, config, {
       template: './index.html',
       filename: 'index.html'
     }),
+    new MiniCssExtractPlugin({
+      filename: '[name].[contenthash].css'
+    }),
+    new CleanWebpackPlugin(),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+    }),
   ],
 });
 
@@ -86,7 +85,17 @@ var dist = Object.assign({}, config, {
   output: {
     filename: '[name].[contenthash].js',
     path: path.resolve(__dirname, 'dist')
-  }  
+  },
+  plugins: [
+    new MiniCssExtractPlugin({
+      filename: '[name].[contenthash].css'
+    }),
+    new CleanWebpackPlugin(),
+    new webpack.ProvidePlugin({
+      $: 'jquery',
+      jQuery: 'jquery',
+    }),
+  ], 
 });
 
 
