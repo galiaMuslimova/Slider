@@ -117,6 +117,8 @@ class View {
 
   static sendTouchMoveOptions(e: {
     data: { index: number; observer: Observer };
+
+    // use type any cause event can be any type
     originalEvent: any;
   }) {
     const { index } = e.data;

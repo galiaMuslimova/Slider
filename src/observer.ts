@@ -5,6 +5,8 @@ class Observer {
     this.observers = [];
   }
 
+  // use type any, cause any can subscribe
+
   subscribe(fn: { key: string, observer: (data: any) => void }) {
     this.observers.push(fn);
   }
