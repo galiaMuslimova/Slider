@@ -4,14 +4,9 @@ const HTMLWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-module.exports = {
+var config = {
   context: path.resolve(__dirname, 'src'),
   mode: 'development',
-  entry: './index.js',
-  output: {
-    filename: '[name].[contenthash].js',
-    path: path.resolve(__dirname, 'docs')
-  },
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     alias: {
@@ -30,10 +25,6 @@ module.exports = {
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
-    }),
-    new HTMLWebpackPlugin({
-      template: './index.html',
-      filename: 'index.html'
     }),
   ],
   module: {
@@ -72,4 +63,31 @@ module.exports = {
       }
     ]
   }
-}
+};
+
+var docs = Object.assign({}, config, {
+  name: "docs",
+  entry: './demo.js',
+  output: {
+    filename: '[name].[contenthash].js',
+    path: path.resolve(__dirname, 'docs')
+  },
+  plugins: [
+    new HTMLWebpackPlugin({
+      template: './index.html',
+      filename: 'index.html'
+    }),
+  ],
+});
+
+var dist = Object.assign({}, config, {
+  name: "dist",
+  entry: './index.js',
+  output: {
+    filename: '[name].[contenthash].js',
+    path: path.resolve(__dirname, 'dist')
+  }  
+});
+
+
+module.exports = [docs, dist];
