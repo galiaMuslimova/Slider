@@ -17,4 +17,4 @@ class MetaSlider {
   }
 }
 
-export default MetaSlider;
+module.exports = MetaSlider;
