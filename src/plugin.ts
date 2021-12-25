@@ -1,20 +1,19 @@
 import './plugin.scss';
 import Controller from './controller/controller';
-import { IConfig } from './interfaces';
+import { IOptions } from './interfaces';
 
 declare global {
   interface JQuery {
-    slider(options: IConfig): void;
+    slider(options: IOptions): void;
   }
 }
 
 class MetaSlider {
   controller: Controller;
-
-  constructor(element: JQuery<HTMLElement>, options:IConfig) {
+  constructor(element: JQuery<HTMLElement>, options: IOptions) {
     this.controller = new Controller(element, options);
     this.controller.init();
   }
 }
 
-module.exports = MetaSlider;
+export default MetaSlider;

@@ -1,19 +1,19 @@
 import View from '../view/view';
 import Model from '../model/model';
-import { IConfig, ISettings } from '../interfaces';
+import { IOptions, ISettings } from '../interfaces';
 
 class Controller {
   model: Model;
 
   view: View;
 
-  options: IConfig;
+  options: IOptions;
 
   $root: JQuery<HTMLElement>;
 
   vertical: boolean;
 
-  constructor(root: JQuery<HTMLElement>, options: IConfig) {
+  constructor(root: JQuery<HTMLElement>, options: IOptions) {
     this.options = options;
     this.$root = root;
     this.vertical = (options.vertical !== undefined) ? options.vertical : false;
