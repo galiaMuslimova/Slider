@@ -3,31 +3,46 @@ const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-const isProduction = process.env.NODE_ENV === 'production';
+
+const isDev = process.env.NODE_ENV === 'development';
+const isProd = process.env.NODE_ENV === 'production';
 
 var config = {
   context: path.resolve(__dirname, 'src'),
-  mode: isProduction? 'production' : 'development',
+  mode: isProd? 'production' : 'development',
   resolve: {
-    extensions: ['.tsx', '.ts', '.js'],
+    extensions: ['.ts', '.js'],
     alias: {
       '@': path.resolve(__dirname, 'src'),
     }
-  },    
+  },  
+  devServer: {
+    port: 4000,
+    hot: isDev
+  }, 
+  devTool: isDev ? 'source-map' : '', 
   module: {
     rules: [
       {
-        test: /\.tsx?$/,
-        use: 'ts-loader',
+        test: /\.ts$/,
         exclude: /node_modules/,
-      },
-      {
-        test: /\.js$/,
-        include: path.resolve(__dirname, 'src'),
         use: {
           loader: 'babel-loader',
           options: {
-            "presets": ["@babel/preset-typescript"]
+            "presets": [
+              "@babel/preset-env",
+              "@babel/preset-typescript"
+            ]
+          }
+        }
+      },
+      {
+        test: /\.js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            "presets": ["@babel/preset-env"]
           }
         }
       },
@@ -83,9 +98,7 @@ var dist = Object.assign({}, config, {
     path: path.resolve(__dirname, 'dist'),
     library: 'MetaSlider'
   },
-  devServer: {
-    port: 4000
-  },
+  
   plugins: [
     new MiniCssExtractPlugin({
       filename: '[name].[contenthash].css'
