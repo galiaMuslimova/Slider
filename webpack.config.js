@@ -20,7 +20,7 @@ var config = {
     port: 4000,
     hot: isDev
   }, 
-  devTool: isDev ? 'source-map' : '', 
+  devtool: isDev? 'source-map' : false, 
   module: {
     rules: [
       {
@@ -92,11 +92,10 @@ var docs = Object.assign({}, config, {
 
 var dist = Object.assign({}, config, {
   name: "dist",
-  entry: './index.js',
+  entry: './plugin.ts',
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, 'dist'),
-    library: 'MetaSlider'
   },
   
   plugins: [
