@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
-    "outDir": "./docs/",
+    "outDir": "./dist/",
     "target": "es6",
     "allowJs": true,
     "moduleResolution": "node",
+    "declaration": true,
     "strict": true,
     "esModuleInterop": true
   },

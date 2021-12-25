@@ -1,0 +1,12 @@
+node_modules
+docs
+src
+.eslintrc.js
+.eslintignore
+package-lock.json
+package.json
+tsconfig.json
+Untitled Diagram.jpg
+Untitled Diagram.drawio
+webpack.config.js
+webpack.config.test.js

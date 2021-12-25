@@ -3,21 +3,17 @@ const path = require('path');
 const HTMLWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+const isProduction = process.env.NODE_ENV === 'production';
 
 var config = {
   context: path.resolve(__dirname, 'src'),
-  mode: 'development',
+  mode: isProduction? 'production' : 'development',
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     alias: {
       '@': path.resolve(__dirname, 'src'),
     }
-  },
-  devServer: {
-    port: 5000
-  },
-  devtool: "source-map",
-  
+  },    
   module: {
     rules: [
       {
@@ -60,7 +56,7 @@ var docs = Object.assign({}, config, {
   name: "docs",
   entry: './demo.js',
   output: {
-    filename: '[name].[contenthash].js',
+    filename: 'index.js',
     path: path.resolve(__dirname, 'docs')
   },
   plugins: [
@@ -83,8 +79,12 @@ var dist = Object.assign({}, config, {
   name: "dist",
   entry: './index.js',
   output: {
-    filename: '[name].[contenthash].js',
-    path: path.resolve(__dirname, 'dist')
+    filename: 'index.js',
+    path: path.resolve(__dirname, 'dist'),
+    library: 'MetaSlider'
+  },
+  devServer: {
+    port: 4000
   },
   plugins: [
     new MiniCssExtractPlugin({

@@ -1,4 +1,5 @@
 src/index.js
+src/plugin.ts
 src/demo.js
 src/index.html
 src/**/*.scss

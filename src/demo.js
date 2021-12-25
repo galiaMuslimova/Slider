@@ -1,8 +1,8 @@
-import './plugin'
 import "./index.scss";
+import MetaSlider from './plugin'
 
 $(function () {
-  $(".my-slider_1").slider({
+  new MetaSlider($(".my-slider_1"), {
     min: 0,
     max: undefined,
     step: 10,
@@ -12,7 +12,7 @@ $(function () {
     range: true
   })
 
-  $(".my-slider_2").slider({
+  new MetaSlider($(".my-slider_2"), {
     min: 1,
     max: 6,
     step: 1,
@@ -21,7 +21,7 @@ $(function () {
     range: false
   })
 
-  $(".my-slider_3").slider({
+  new MetaSlider($(".my-slider_3"), {
     min: 1,
     max: 1000,
     from: 100,

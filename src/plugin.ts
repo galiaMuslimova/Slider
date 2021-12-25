@@ -1,5 +1,4 @@
 import './plugin.scss';
-import jQuery from 'jquery';
 import Controller from './controller/controller';
 import { IConfig } from './interfaces';
 
@@ -9,12 +8,13 @@ declare global {
   }
 }
 
-((param) => {
-  const $ = param;
-  $.fn.slider = function (options: IConfig) {
-    const element: JQuery<HTMLElement> = this;
-    const controller = new Controller(element, options);
-    controller.init();
-    return this;
-  };
-})(jQuery);
+class MetaSlider {
+  controller: Controller;
+
+  constructor(element: JQuery<HTMLElement>, options:IConfig) {
+    this.controller = new Controller(element, options);
+    this.controller.init();
+  }
+}
+
+export default MetaSlider;

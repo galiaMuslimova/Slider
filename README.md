@@ -15,6 +15,8 @@
     tip: true, включить подсказки или отключить
     range: true, включить два значения или отключить
   }</li>
+  <li>npm install git+https://github.com/galiaMuslimova/Slider.git </li>
+
 </ul>
 
 <ul>
