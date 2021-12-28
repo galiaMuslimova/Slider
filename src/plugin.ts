@@ -1,18 +1,11 @@
-import './plugin.scss';
-import Controller from './controller/controller';
-import { IOptions } from './interfaces';
-
-declare global {
-  interface JQuery {
-    slider(options: IOptions): void;
-  }
-}
+import { IOptions } from "./interfaces"; 
+import Controller from "./controller/controller";
 
 class MetaSlider {
-  controller: Controller;
+  controller: Controller;  
+
   constructor(element: JQuery<HTMLElement>, options: IOptions) {
     this.controller = new Controller(element, options);
-    this.controller.init();
   }
 }
 

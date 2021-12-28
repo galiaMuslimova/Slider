@@ -20,6 +20,7 @@ class Controller {
     this.view = new View(this.$root, this.vertical);
     const { trackStart, trackWidth } = this.view.getTrackParameters();
     this.model = new Model(this.options, trackStart, trackWidth);
+    this.init();
   }
 
   init() {

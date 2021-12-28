@@ -16,11 +16,7 @@ class Track {
   getTrackParameters(vertical: boolean) {
     const trackStart = vertical ? Number(this.position.top) : Number(this.position.left);
     const trackWidth = vertical ? this.$track.height() : this.$track.width();
-    const hasTrackParameters = trackStart && trackWidth;
-    if (hasTrackParameters) {
-      return { trackStart, trackWidth };
-    }
-    throw new Error('wrong track position');
+    return { trackStart, trackWidth };
   }
 }
 

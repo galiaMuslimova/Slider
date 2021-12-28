@@ -4,20 +4,14 @@ const HTMLWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-const isDev = process.env.NODE_ENV === 'development';
-const isProd = process.env.NODE_ENV === 'production';
-
 var config = {
   context: path.resolve(__dirname, 'src'),
-  mode: isProd? 'production' : 'development',
   resolve: {
     extensions: ['.ts', '.js'],
     alias: {
       '@': path.resolve(__dirname, 'src'),
     }
   },  
-  
-  devtool: isDev? 'source-map' : false, 
   module: {
     rules: [
       {
@@ -64,36 +58,27 @@ var config = {
   }
 };
 
-module.exports = {
-  name: "dist",
-  entry: './plugin.ts',
+/*module.exports = {
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, 'dist'),
-  },
-  devServer: {
-    port: 4000,
-    hot: isDev
+    library: "metaslider",
+    libraryTarget: "umd"
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: '[name].[contenthash].css'
+      filename: '[name].css'
     }),
-    new CleanWebpackPlugin(),
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-    }),
+    new CleanWebpackPlugin(),    
   ],
   context: path.resolve(__dirname, 'src'),
-  mode: isProd ? 'production' : 'development',
+  mode: 'production',
   resolve: {
-    extensions: ['.ts', '.js'],
+    extensions: ['', '.ts', '.js'],
     alias: {
       '@': path.resolve(__dirname, 'src'),
     }
   },
-  devtool: isDev ? 'source-map' : false,
   module: {
     rules: [
       {
@@ -102,9 +87,9 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            "presets": [
-              "@babel/preset-env",
-              "@babel/preset-typescript"
+            presets: [
+              "@babel/preset-typescript",
+              "@babel/preset-env"
             ]
           }
         }
@@ -115,7 +100,7 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            "presets": ["@babel/preset-env"]
+            presets: ['@babel/preset-env']
           }
         }
       },
@@ -138,16 +123,19 @@ module.exports = {
       }
     ]
   }
-}
+}*/
 
-
-/*var docs = Object.assign({}, config, {
+var docs = Object.assign({}, config, {
   name: "docs",
+  mode: "development",
   entry: './demo.js',
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, 'docs')
   },
+  devServer: {
+    port: 4000
+  }, 
   plugins: [
     new HTMLWebpackPlugin({
       template: './index.html',
@@ -160,32 +148,27 @@ module.exports = {
     new webpack.ProvidePlugin({
       $: 'jquery',
       jQuery: 'jquery',
+      'window.$': 'jquery',
+      'window.jQuery': 'jquery',
     }),
   ],
 });
 
 var dist = Object.assign({}, config, {
   name: "dist",
-  entry: './plugin.ts',
+  entry: './index.js',
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, 'dist'),
   },
-  devServer: {
-    port: 4000,
-    hot: isDev
-  }, 
+  
   plugins: [
     new MiniCssExtractPlugin({
-      filename: '[name].[contenthash].css'
+      filename: 'index.css'
     }),
     new CleanWebpackPlugin(),
-    new webpack.ProvidePlugin({
-      $: 'jquery',
-      jQuery: 'jquery',
-    }),
   ], 
 });
 
 
-module.exports = [docs, dist];*/
+module.exports = [docs, dist];

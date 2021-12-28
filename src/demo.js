@@ -1,4 +1,4 @@
-import "./index.scss";
+import "./demo_styles.scss";
 import MetaSlider from './plugin'
 
 $(function () {

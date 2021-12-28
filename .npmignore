@@ -1,12 +1,12 @@
-node_modules
 docs
+node-modules
 src
-.eslintrc.js
 .eslintignore
+.eslintrc.js
 package-lock.json
 package.json
 tsconfig.json
-Untitled Diagram.jpg
 Untitled Diagram.drawio
+Untitled Diagram.jpg
 webpack.config.js
 webpack.config.test.js
