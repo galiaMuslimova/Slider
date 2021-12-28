@@ -4,7 +4,7 @@ const HTMLWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-var config = {
+const config = {
   context: path.resolve(__dirname, 'src'),
   resolve: {
     extensions: ['.ts', '.js'],
@@ -125,7 +125,7 @@ var config = {
   }
 }*/
 
-var docs = Object.assign({}, config, {
+const docs = Object.assign({}, config, {
   name: "docs",
   mode: "development",
   entry: './demo.js',
@@ -154,12 +154,15 @@ var docs = Object.assign({}, config, {
   ],
 });
 
-var dist = Object.assign({}, config, {
+const dist = Object.assign({}, config, {
   name: "dist",
+  mode: "production",
   entry: './index.js',
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, 'dist'),
+    library: "MetaSlider",
+    libraryTarget: "umd"
   },
   
   plugins: [

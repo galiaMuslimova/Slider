@@ -4,12 +4,12 @@
   "description": "",
   "main": "./dist/index.js",
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack --mode development",
-    "build": "cross-env NODE_ENV=production webpack --mode production",
-    "watch": "cross-env NODE_ENV=development webpack --mode development --watch",
-    "start": "cross-env NODE_ENV=development webpack-dev-server --mode development --open",
-    "test": "cross-env NODE_ENV=development mocha --require ignore-styles -r ts-node/register ./src/**/*.test.ts",
-    "compile": "cross-env NODE_ENV=development webpack"
+    "dev": "webpack --mode development",
+    "build": "webpack --mode production",
+    "watch": "webpack --mode development --watch",
+    "start": "webpack-dev-server --mode development --open",
+    "test": "mocha --require ignore-styles -r ts-node/register ./src/**/*.test.ts",
+    "compile": "webpack"
   },
   "author": "G.M.",
   "license": "ISC",
