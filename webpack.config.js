@@ -15,6 +15,9 @@ const config = {
   module: {
     rules: [
       {
+        test: require.resolve('jquery')
+      },
+      {
         test: /\.ts$/,
         exclude: /node_modules/,
         use: {
