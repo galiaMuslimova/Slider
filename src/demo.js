@@ -3,12 +3,12 @@ import MetaSlider from './plugin'
 
 $(function () {
   new MetaSlider($(".my-slider_1"), {
-    min: 0,
-    max: undefined,
-    step: 10,
-    from: 10,
+    min: true,
+    max: 10,
+    step: 15.4,
+    from: 18/2,
     to: 70,
-    tip: true,
+    tip: 'gg',
     range: true
   })
 

@@ -16,6 +16,8 @@ const defaults: IConfig = {
 class Model {
   config: IConfig;
 
+  options: IOptions;
+
   positionsArr: IPositions[];
 
   parameters: IParameters;
@@ -27,7 +29,8 @@ class Model {
   range: number;
 
   constructor(options: IOptions, trackStart: number = 0, trackWidth: number = 500) {
-    this.config = this.correctConfig($.extend({}, defaults, options));
+    this.options = this.correctOptions(options);
+    this.config = this.correctConfig($.extend({}, defaults, this.options));
     this.trackStart = trackStart;
     this.trackWidth = trackWidth;
     this.range = this.config.max - this.config.min;
@@ -35,18 +38,31 @@ class Model {
     this.parameters = this.initParameters();
   }
 
+  correctOptions(options: IOptions = this.options) {
+    const checkedNumConfig = { ...options };
+    checkedNumConfig.max = Number.isInteger(options.max) ? options.max : defaults.max;
+    checkedNumConfig.min = Number.isInteger(options.min) ? options.min : defaults.min;
+    checkedNumConfig.step = Number.isInteger(options.step) ? options.step : defaults.step;
+    checkedNumConfig.from = Number.isInteger(options.from) ? options.from : defaults.from;
+    checkedNumConfig.to = Number.isInteger(options.to) ? options.to : defaults.to;
+    return checkedNumConfig;
+  }
+
   correctConfig(config: IConfig = this.config) {
     const checkedConfig = { ...config };
     checkedConfig.max = (config.max > config.min) ? config.max : config.min;
     checkedConfig.min = (config.max > config.min) ? config.min : config.max;
+    checkedConfig.max = (config.max === config.min) ? checkedConfig.min + 10 : checkedConfig.max;
+    checkedConfig.max = Math.round(checkedConfig.max);
+    checkedConfig.min = Math.round(checkedConfig.min);
     const range = checkedConfig.max - checkedConfig.min;
     this.range = range;
-    const isStepInrange = config.step * 2 < range && config.step * 20 > range;
-    checkedConfig.step = isStepInrange ? config.step : Math.round(range / 10);
+    const isStepInRange = config.step * 2 < range && config.step * 20 > range;
+    checkedConfig.step = isStepInRange ? Math.round(config.step) : Math.round(range / 10);
     const isFromInRange = config.from < checkedConfig.max && config.from >= checkedConfig.min;
-    const from = isFromInRange ? config.from : (checkedConfig.min + checkedConfig.step);
+    const from = isFromInRange ? Math.round(config.from) : (checkedConfig.min + checkedConfig.step);
     const isToInRange = config.to <= checkedConfig.max && config.to > checkedConfig.min;
-    const to = isToInRange ? config.to : (checkedConfig.max - checkedConfig.step);
+    const to = isToInRange ? Math.round(config.to) : (checkedConfig.max - checkedConfig.step);
     checkedConfig.from = from < to ? from : to;
     checkedConfig.to = from < to ? to : from;
     return checkedConfig;
