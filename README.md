@@ -41,6 +41,6 @@ new MetaSlider(element, {
 ## Совместимость
 Использованы jquery version 3.6.0, node version 14.16.0
 
-##
+## 
 В node_modules/@types/jquery/misc.d.ts изменила 'declare const jquery' на 'declare var jquery'
 

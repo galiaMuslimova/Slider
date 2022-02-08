@@ -11,7 +11,7 @@ const config = {
     alias: {
       '@': path.resolve(__dirname, 'src'),
     }
-  },  
+  },
   module: {
     rules: [
       {
@@ -54,8 +54,8 @@ const config = {
         use: [{
           loader: MiniCssExtractPlugin.loader
         },
-          'css-loader',
-          'sass-loader']
+          'css-loader', 'postcss-loader', 'sass-loader'
+        ]
       }
     ]
   }
@@ -71,7 +71,7 @@ const docs = Object.assign({}, config, {
   },
   devServer: {
     port: 4000
-  }, 
+  },
   plugins: [
     new HTMLWebpackPlugin({
       template: './index.html',
@@ -100,13 +100,13 @@ const dist = Object.assign({}, config, {
     library: "MetaSlider",
     libraryTarget: "umd"
   },
-  
+
   plugins: [
     new MiniCssExtractPlugin({
       filename: 'index.css'
     }),
     new CleanWebpackPlugin(),
-  ], 
+  ],
 });
 
 
