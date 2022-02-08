@@ -1,7 +1,7 @@
-import './settings_styles.scss';
+import { IConfig, ISettings } from '../../interfaces';
 import Observer from '../../observer';
 import settingsTemplate from './settingsTemplate';
-import { IConfig, ISettings } from '../../interfaces';
+import './settings_styles.scss';
 
 class Settings {
   $root: JQuery<HTMLElement>;

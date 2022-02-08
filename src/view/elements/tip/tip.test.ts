@@ -1,6 +1,7 @@
 import { expect } from 'chai';
-import Tip from './tip';
+
 import Handle from '../handle/handle';
+import Tip from './tip';
 
 const { JSDOM } = require('jsdom');
 

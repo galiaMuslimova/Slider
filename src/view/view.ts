@@ -1,9 +1,9 @@
-import './slider.scss';
-import Settings from './settings/settings';
-import Observer from '../observer';
 import {
   IConfig, IParameters, IPositions, ISettings,
 } from '../interfaces';
+import Observer from '../observer';
+import Settings from './settings/settings';
+import './slider.scss';
 
 import Track from './elements/track/track';
 import Scale from './elements/scale/scale';

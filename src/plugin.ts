@@ -1,5 +1,5 @@
+import Controller from "./controller/controller"; 
 import { IOptions } from "./interfaces"; 
-import Controller from "./controller/controller";
 import "./plugin_styles.scss"
 
 class MetaSlider {

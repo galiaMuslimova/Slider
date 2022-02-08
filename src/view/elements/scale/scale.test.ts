@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+
 import Scale from './scale';
 
 const { JSDOM } = require('jsdom');

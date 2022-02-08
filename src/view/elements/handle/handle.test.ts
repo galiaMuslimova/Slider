@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+
 import Handle from './handle';
 
 const { JSDOM } = require('jsdom');

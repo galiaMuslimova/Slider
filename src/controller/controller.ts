@@ -1,6 +1,6 @@
+import { IOptions, ISettings } from '../interfaces';
 import View from '../view/view';
 import Model from '../model/model';
-import { IOptions, ISettings } from '../interfaces';
 
 class Controller {
   model: Model;

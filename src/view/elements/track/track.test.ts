@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+
 import Track from './track';
 
 const { JSDOM } = require('jsdom');
