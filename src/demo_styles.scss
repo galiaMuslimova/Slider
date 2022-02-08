@@ -1,15 +1,17 @@
-.my-slider_1 {
-  width: 500px;
-  height: 500px;
-  margin: 0px auto;
-}
+.body__slider {
+  &_first {
+    width: 500px;
+    height: 500px;
+    margin: 0px auto;
+  }
 
-.my-slider_2 {
-  width: 400px;
-  height: 400px;
-}
+  &_second {
+    width: 400px;
+    height: 400px;
+  }
 
-.my-slider_3 {
-  width: 320px;
-  height: 320px;
+  &_third {
+    width: 320px;
+    height: 320px;
+  }
 }

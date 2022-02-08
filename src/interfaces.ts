@@ -10,15 +10,15 @@ interface IConfig {
 }
 
 interface IOptions {
-  min?: number,
-  max?: number,
-  step?: number,
-  from?: number,
-  to?: number,
-  vertical?: boolean,
-  tip?: boolean,
-  range?: boolean,
-  handleWidth?: number
+  min?: any,
+  max?: any,
+  step?: any,
+  from?: any,
+  to?: any,
+  vertical?: any,
+  tip?: any,
+  range?: any,
+  handleWidth?: any
 }
 
 interface ISettings {
