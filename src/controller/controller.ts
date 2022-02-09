@@ -24,7 +24,7 @@ class Controller {
   }
 
   init() {
-    const stepsArr = this.model.initStepsArr();
+    const { stepsArr } = this.model;
     this.view.initScale(stepsArr);
     const { range } = this.model.config;
     this.view.initHandles(range);

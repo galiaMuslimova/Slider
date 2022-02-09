@@ -12,7 +12,7 @@ $(() => {
     tip: 'gg',
     range: true,
   };
-  const slider1 = new MetaSlider($('.my-slider_1'), options1);
+  const slider1 = new MetaSlider($('.body__slider_first'), options1);
 
   const options2: IOptions = {
     min: 1,
@@ -22,7 +22,7 @@ $(() => {
     tip: true,
     range: false,
   };
-  const slider2 = new MetaSlider($('.my-slider_2'), options2);
+  const slider2 = new MetaSlider($('.body__slider_second'), options2);
 
   const options3: IOptions = {
     min: 1,
@@ -32,5 +32,5 @@ $(() => {
     vertical: true,
     tip: false,
   };
-  const slider3 = new MetaSlider($('.my-slider_3'), options3);
+  const slider3 = new MetaSlider($('.body__slider_third'), options3);
 });

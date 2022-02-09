@@ -20,6 +20,8 @@ class Model {
 
   positionsArr: IPositions[];
 
+  stepsArr: IPositions[];
+
   parameters: IParameters;
 
   trackStart: number;
@@ -35,6 +37,7 @@ class Model {
     this.trackWidth = trackWidth;
     this.range = this.config.max - this.config.min;
     this.positionsArr = this.initPositionsArr();
+    this.stepsArr = this.initStepsArr();
     this.parameters = this.initParameters();
   }
 
@@ -75,6 +78,9 @@ class Model {
     const valuesArr = Array.from(emptyArr, (_, i) => (this.config.min + this.config.step * i));
     const stepsArr: IPositions[] = [];
     valuesArr.map((el, index) => stepsArr.push({ value: el, x: Math.round(stepLength * index) }));
+    if (valuesArr.indexOf(this.config.max) === -1) {
+      stepsArr.push({ value: this.config.max, x: this.trackWidth });
+    }
     return stepsArr;
   }
 
@@ -116,7 +122,7 @@ class Model {
     const position = Math.round(mousePosition - this.trackStart);
     const isInScale = (position >= 0) && (position <= this.trackWidth);
     if (isInScale) {
-      const positionParameters = this.positionsArr.find((el) => el.x === position);
+      const positionParameters = this.stepsArr.find((el) => el.x === position);
 
       if (positionParameters) {
         this.parameters.values[index] = positionParameters.value;
