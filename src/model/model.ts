@@ -18,8 +18,6 @@ class Model {
 
   options: IOptions;
 
-  positionsArr: IPositions[];
-
   stepsArr: IPositions[];
 
   parameters: IParameters;
@@ -36,7 +34,6 @@ class Model {
     this.trackStart = trackStart;
     this.trackWidth = trackWidth;
     this.range = this.config.max - this.config.min;
-    this.positionsArr = this.initPositionsArr();
     this.stepsArr = this.initStepsArr();
     this.parameters = this.initParameters();
   }
@@ -79,17 +76,12 @@ class Model {
     const stepsArr: IPositions[] = [];
     valuesArr.map((el, index) => stepsArr.push({ value: el, x: Math.round(stepLength * index) }));
     if (valuesArr.indexOf(this.config.max) === -1) {
+      valuesArr.push(this.config.max);
       stepsArr.push({ value: this.config.max, x: this.trackWidth });
     }
+    this.config.from = valuesArr.indexOf(this.config.from) === -1 ? valuesArr[1] : this.config.from;
+    this.config.to = valuesArr.indexOf(this.config.to) === -1 ? valuesArr[2] : this.config.to;
     return stepsArr;
-  }
-
-  initPositionsArr() {
-    const valueLength = this.trackWidth / this.range;
-    const valuesArr = Array.from(Array(this.range + 1), (_, i) => (this.config.min + i));
-    const positionsArr: IPositions[] = [];
-    valuesArr.map((el, i) => positionsArr.push({ value: el, x: Math.round(valueLength * i) }));
-    return positionsArr;
   }
 
   initParameters() {
@@ -106,7 +98,7 @@ class Model {
   }
 
   takeXByValue(val: number) {
-    const position = this.positionsArr.find((el) => el.value === val);
+    const position = this.stepsArr.find((el) => el.value === val);
     if (position) {
       return position.x;
     }
@@ -122,7 +114,9 @@ class Model {
     const position = Math.round(mousePosition - this.trackStart);
     const isInScale = (position >= 0) && (position <= this.trackWidth);
     if (isInScale) {
-      const positionParameters = this.stepsArr.find((el) => el.x === position);
+      const substractedArr = this.stepsArr.map((el) => Math.abs(el.x - position));
+      const indexOfClosestPosition = substractedArr.indexOf(Math.min(...substractedArr));
+      const positionParameters = this.stepsArr[indexOfClosestPosition];
 
       if (positionParameters) {
         this.parameters.values[index] = positionParameters.value;

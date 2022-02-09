@@ -60,8 +60,8 @@ class Controller {
       case 'min':
       case 'max':
       case 'step': {
-        this.view.initScale(this.model.initStepsArr());
-        this.model.positionsArr = this.model.initPositionsArr();
+        this.model.stepsArr = this.model.initStepsArr();
+        this.view.initScale(this.model.stepsArr);
         this.view.setParameters(this.model.initParameters());
         break;
       }
