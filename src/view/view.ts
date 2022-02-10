@@ -1,8 +1,8 @@
 import {
   IConfig, IParameters, IPositions, ISettings,
 } from '../interfaces';
+import Panel from '../panel/panel';
 import Observer from '../observer';
-import Settings from './settings/settings';
 import './slider.scss';
 
 import Track from './elements/track/track';
@@ -22,7 +22,7 @@ class View {
 
   $slider: JQuery<HTMLElement>;
 
-  settings: Settings;
+  panel: Panel;
 
   track: Track;
 
@@ -51,8 +51,8 @@ class View {
     this.handles = new Handle(this.$slider);
     this.tips = new Tip(this.$slider);
     this.interval = new Interval(this.$slider);
-    this.settings = new Settings(this.$container);
-    this.settings.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) });
+    this.panel = new Panel(this.$container);
+    this.panel.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) });
     this.handleMove();
     this.scaleClick();
   }
@@ -81,11 +81,30 @@ class View {
     this.handles.moveHandles(parameters.handleX, this.vertical);
     this.tips.changeTips(parameters.values);
     this.interval.moveInterval(parameters.handleX, this.vertical);
-    this.settings.initValues(parameters.values);
+    this.panel.initValues(parameters.values);
   }
 
-  initSettings(config:IConfig) {
-    this.settings.initSettings(config);
+  setSettings(setting: ISettings, key: string) {
+    switch (key) {
+      case 'min':
+      case 'max':
+      case 'step':
+      case 'from':
+      case 'to':
+        this.panel.setValue(setting);
+        break;
+      case 'vertical':
+      case 'tip':
+      case 'range':
+        this.panel.setProp(setting);
+        break;
+      default:
+        throw new Error('undefined setting');
+    }
+  }
+
+  initPanel(config: IConfig) {
+    this.panel.initPanel(config);
   }
 
   handleMove() {

@@ -6,8 +6,14 @@ html
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <title>Slider</title>
   body.body
-    .body__slider.body__slider_first
-    .body__slider.body__slider_second
-    .body__slider.body__slider_third
+    .body__container.body__container_first  
+      .body__slider
+      include panel/panel.pug
+    .body__container.body__container_second
+      .body__slider
+      include panel/panel.pug
+    .body__container.body__container_third
+      .body__slider
+      include panel/panel.pug
 
 

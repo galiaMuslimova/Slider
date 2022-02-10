@@ -34,7 +34,7 @@ class Controller {
     this.view.setParameters(parameters);
     this.view.observer.subscribe({ key: 'mousemove', observer: this.moveHandle.bind(this) });
     this.view.observer.subscribe({ key: 'click', observer: this.clickOnScale.bind(this) });
-    this.view.initSettings(this.model.config);
+    this.view.initPanel(this.model.config);
     this.view.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) });
   }
 
@@ -53,9 +53,11 @@ class Controller {
   }
 
   changeSettings(settings: ISettings) {
-    this.model.config = this.model.correctConfig($.extend({}, this.model.config, settings));
+    const config = this.model.correctConfig($.extend({}, this.model.config, settings));
+    this.model.config = config;
     const key = Object.keys(settings)[0];
     const value = Object.values(settings)[0];
+    this.view.setSettings(settings, key);
     switch (key) {
       case 'min':
       case 'max':

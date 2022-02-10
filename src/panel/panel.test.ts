@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
-import { IConfig } from '../../interfaces';
-import Settings from './settings';
+import { IConfig } from '../interfaces';
+import Panel from './panel';
 
 const { JSDOM } = require('jsdom');
 
@@ -14,7 +14,7 @@ const { document } = dom.window;
 
 describe('Settings', () => {
   let $root: JQuery<HTMLElement>;
-  let settingsClass: Settings;
+  let settingsClass: Panel;
   let $settings: JQuery<HTMLElement>;
   let config: IConfig;
   let $min: JQuery<HTMLElement>;

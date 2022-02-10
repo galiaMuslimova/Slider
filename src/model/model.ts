@@ -79,8 +79,10 @@ class Model {
       valuesArr.push(this.config.max);
       stepsArr.push({ value: this.config.max, x: this.trackWidth });
     }
-    this.config.from = valuesArr.indexOf(this.config.from) === -1 ? valuesArr[1] : this.config.from;
-    this.config.to = valuesArr.indexOf(this.config.to) === -1 ? valuesArr[2] : this.config.to;
+    const isFromInArr = valuesArr.indexOf(this.config.from) === -1;
+    this.config.from = isFromInArr ? valuesArr[1] : this.config.from;
+    const isToInArr = valuesArr.indexOf(this.config.to) === -1;
+    this.config.to = isToInArr ? valuesArr[2] : this.config.to;
     return stepsArr;
   }
 
