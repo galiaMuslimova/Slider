@@ -38,7 +38,7 @@ class View {
     this.$root = root;
     this.vertical = vertical;
     this.observer = new Observer();
-    this.$container = this.$root.closest('.body__container').addClass(this.vertical ? 'body__container_vertical' : 'body__container_horizontal');
+    this.$container = this.$root.closest('.js-body__container').addClass(this.vertical ? 'body__container_vertical' : 'body__container_horizontal');
     this.$slider = jQuery('<div>', {
       class: 'meta-slider',
     }).appendTo(this.$root).addClass(this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
