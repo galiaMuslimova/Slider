@@ -38,13 +38,10 @@ class View {
     this.$root = root;
     this.vertical = vertical;
     this.observer = new Observer();
-    this.$container = jQuery('<div>', {
-      class: `meta-slider ${this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal'}`,
-    }).appendTo(this.$root);
-
+    this.$container = this.$root.closest('.body__container').addClass(this.vertical ? 'body__container_vertical' : 'body__container_horizontal');
     this.$slider = jQuery('<div>', {
-      class: 'meta-slider__slider',
-    }).appendTo(this.$container);
+      class: 'meta-slider',
+    }).appendTo(this.$root).addClass(this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
 
     this.track = new Track(this.$slider);
     this.scale = new Scale(this.$slider);

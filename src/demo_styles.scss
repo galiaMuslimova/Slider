@@ -1,4 +1,19 @@
 .body__container {
+  display: grid;
+  padding: 10px;
+  box-sizing: border-box;
+
+  &_horizontal {
+    width: 100%;
+    grid-template-rows: min-content max-content;
+  }
+
+  &_vertical {
+    height: 100%;
+    grid-template-columns: min-content 1fr;
+    grid-template-rows: 1fr;
+  }
+
   &_first {
     width: 500px;
     height: 500px;

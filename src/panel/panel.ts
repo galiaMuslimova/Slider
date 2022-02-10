@@ -28,7 +28,7 @@ class Panel {
   constructor(root: JQuery<HTMLElement>) {
     this.$root = root;
     this.observer = new Observer();
-    this.$panel = $(this.$root).find('.meta-slider__panel');
+    this.$panel = $(this.$root).find('.panel');
     this.$max = this.$panel.find('input[name="max"]');
     this.$min = this.$panel.find('input[name="min"]');
     this.$step = this.$panel.find('input[name="step"]');
