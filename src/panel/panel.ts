@@ -77,6 +77,8 @@ class Panel {
           throw new Error('undefined setting');
       }
     });
+
+    $('.js-panel__form').on('submit', () => false);
   }
 
   changeBounds(set: ISettings) {
