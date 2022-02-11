@@ -1,8 +1,8 @@
 import {
   IConfig, IParameters, IPositions, ISettings,
-} from '../interfaces';
+} from '../interfaces/interfaces';
 import Panel from '../panel/panel';
-import Observer from '../observer';
+import Observer from '../observer/observer';
 import './slider.scss';
 
 import Track from './elements/track/track';
@@ -72,6 +72,12 @@ class View {
 
   changeTips(values: number[]) {
     this.tips.changeTips(values);
+  }
+
+  changeDirection(vertical: boolean) {
+    this.vertical = vertical;
+    this.$container.removeClass(`body__container_${this.vertical ? 'horizontal' : 'vertical'}`).addClass(`body__container_${this.vertical ? 'vertical' : 'horizontal'}`);
+    this.$slider.removeClass(`meta-slider_${this.vertical ? 'horizontal' : 'vertical'}`).addClass(`meta-slider_${this.vertical ? 'vertical' : 'horizontal'}`);
   }
 
   setParameters(parameters: IParameters) {

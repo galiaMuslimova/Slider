@@ -6,11 +6,11 @@
   &_horizontal {
     grid-template-rows: min-content min-content;
     padding-top: 30px;
-    max-width: 100%;
+    width: inherit;
 
     .meta-slider {
       &__track {
-        width: 100%;
+        width: inherit;
         height: 10px;
       }
 
@@ -35,13 +35,13 @@
 
   &_vertical {
     grid-template-columns: max-content max-content;
-    height: 100%;
+    height: inherit;
     padding: 0px 25px;
 
     .meta-slider {
       &__track {
         width: 10px;
-        height: 100%
+        height: inherit;
       }
 
       &__scale {

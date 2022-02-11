@@ -1,4 +1,4 @@
-import { IOptions, ISettings } from '../interfaces';
+import { IOptions, ISettings } from '../interfaces/interfaces';
 import View from '../view/view';
 import Model from '../model/model';
 
@@ -24,6 +24,14 @@ class Controller {
   }
 
   init() {
+    this.initElements();
+    this.view.observer.subscribe({ key: 'mousemove', observer: this.moveHandle.bind(this) });
+    this.view.observer.subscribe({ key: 'click', observer: this.clickOnScale.bind(this) });
+    this.view.initPanel(this.model.config);
+    this.view.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) });
+  }
+
+  initElements() {
     const { stepsArr } = this.model;
     this.view.initScale(stepsArr);
     const { range } = this.model.config;
@@ -32,10 +40,6 @@ class Controller {
     this.view.initTips(tip);
     const parameters = this.model.initParameters();
     this.view.setParameters(parameters);
-    this.view.observer.subscribe({ key: 'mousemove', observer: this.moveHandle.bind(this) });
-    this.view.observer.subscribe({ key: 'click', observer: this.clickOnScale.bind(this) });
-    this.view.initPanel(this.model.config);
-    this.view.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) });
   }
 
   moveHandle(options: { eventPosition: { pageX: number, pageY: number }, index: number }) {
@@ -53,44 +57,48 @@ class Controller {
   }
 
   changeSettings(settings: ISettings) {
-    const config = this.model.correctConfig($.extend({}, this.model.config, settings));
-    this.model.config = config;
+    this.model.config = $.extend({}, this.model.config, settings);
     const key = Object.keys(settings)[0];
-    const value = Object.values(settings)[0];
-    this.view.setSettings(settings, key);
     switch (key) {
       case 'min':
       case 'max':
-      case 'step': {
-        this.model.stepsArr = this.model.initStepsArr();
+      case 'step':
+        this.model.changeConfig();
+        this.view.setSettings({ min: this.model.config.min }, 'min');
+        this.view.setSettings({ max: this.model.config.max }, 'max');
+        this.view.setSettings({ step: this.model.config.step }, 'step');
         this.view.initScale(this.model.stepsArr);
         this.view.setParameters(this.model.initParameters());
         break;
-      }
       case 'from':
-      case 'to': {
+      case 'to':
+        this.model.correctFromTo();
+        this.view.setSettings({ from: this.model.config.from }, 'from');
+        this.view.setSettings({ to: this.model.config.to }, 'to');
         this.view.setParameters(this.model.initParameters());
         break;
-      }
-      case 'range': {
-        this.view.initHandles(value as boolean);
+      case 'range':
+        this.model.correctFromTo();
+        this.view.setSettings({ range: this.model.config.range }, 'range');
+        this.view.initHandles(this.model.config.range);
         this.view.initTips(this.model.config.tip);
         this.view.setParameters(this.model.initParameters());
         break;
-      }
-      case 'tip': {
-        this.view.initTips(value as boolean);
+      case 'tip':
+        this.view.setSettings({ tip: this.model.config.tip }, 'tip');
+        this.view.initTips(this.model.config.tip);
         this.view.changeTips(this.model.parameters.values);
         break;
-      }
       case 'vertical': {
-        this.options.vertical = !this.vertical;
-        this.vertical = !this.vertical;
-        this.$root.find('.meta-slider').remove();
-        this.view = new View(this.$root, this.vertical);
+        this.view.setSettings({ vertical: this.model.config.vertical }, 'vertical');
+        const vertical = !this.vertical;
+        this.options.vertical = vertical;
+        this.vertical = vertical;
+        this.view.changeDirection(vertical);
         const { trackStart, trackWidth } = this.view.getTrackParameters();
-        this.model = new Model(this.options, trackStart, trackWidth);
-        this.init();
+        this.model.trackStart = trackStart || 0;
+        this.model.trackWidth = trackWidth || 500;
+        this.initElements();
         break;
       }
       default: {

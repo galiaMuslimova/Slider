@@ -2,16 +2,23 @@
   display: grid;
   padding: 10px;
   box-sizing: border-box;
+  margin-bottom: 50px;
 
   &_horizontal {
-    width: 100%;
     grid-template-rows: min-content max-content;
+
+    .body__slider {
+      width: inherit;
+    }
   }
 
   &_vertical {
-    height: 100%;
     grid-template-columns: min-content 1fr;
     grid-template-rows: 1fr;
+
+    .body__slider {
+      height: inherit;
+    }
   }
 
   &_first {

@@ -1,5 +1,5 @@
-import { IConfig, ISettings } from '../interfaces';
-import Observer from '../observer';
+import { IConfig, ISettings } from '../interfaces/interfaces';
+import Observer from '../observer/observer';
 import './panel-styles.scss';
 
 class Panel {
@@ -50,44 +50,31 @@ class Panel {
         case 'step':
         case 'from':
         case 'to':
-        { const setting: { [index: string]: number } = {};
+        {
+          const setting: { [index: string]: number } = {};
           setting[key] = value;
           element.setValue(setting);
           $input.on('change', () => {
             setting[key] = Number($input.val());
             observer.notify('settings', setting);
           });
-          break; }
+          break;
+        }
         case 'vertical':
         case 'tip':
         case 'range':
-          { const setting: { [index: string]: boolean } = {};
-            setting[key] = value;
-            $input.on('change', () => {
-              setting[key] = $input.prop('checked');
-              observer.notify('settings', setting);
-            }); }
+        {
+          const setting: { [index: string]: boolean } = {};
+          setting[key] = value;
+          element.setProp(setting);
+          $input.on('change', () => {
+            setting[key] = $input.prop('checked');
+            observer.notify('settings', setting);
+          });
           break;
+        }
         default:
           throw new Error('undefined setting');
-      }
-
-      switch (key) {
-        case 'min':
-        case 'max':
-        case 'step':
-        case 'from':
-        case 'to':
-        case 'range':
-          { const setting: ISettings = {};
-            setting[key] = value;
-            element.changeBounds(setting);
-            $input.on('change', () => {
-              element.changeBounds(setting);
-            }); }
-          break;
-        default:
-          break;
       }
     });
   }
@@ -95,20 +82,19 @@ class Panel {
   changeBounds(set: ISettings) {
     const key = Object.keys(set)[0];
     const value = Object.values(set)[0];
-    let maxMinRange;
+    const maxMinRange = Number(this.$max.val()) - Number(this.$min.val());
 
     switch (key) {
       case 'min':
         this.$max.prop('min', value);
         this.$from.prop('min', value);
-        maxMinRange = Number(this.$max.val()) - (value as number);
-        this.$step.prop('max', maxMinRange);
+        this.$step.prop('max', maxMinRange / 2);
         break;
       case 'max':
         this.$min.prop('max', value);
+        this.$from.prop('max', this.$range.prop('checked') ? this.$to.val() : value);
         this.$to.prop('max', value);
-        maxMinRange = (value as number) - Number(this.$min.val());
-        this.$step.prop('max', maxMinRange);
+        this.$step.prop('max', maxMinRange / 2);
         break;
       case 'step':
         this.$from.prop('step', value);
@@ -136,6 +122,7 @@ class Panel {
     const value = Number(Object.values(set)[0]);
     const $input = this.$panel.find(`input[name='${key}']`);
     $input.val(value);
+    this.changeBounds(set);
   }
 
   setProp(set: ISettings) {
@@ -143,6 +130,9 @@ class Panel {
     const value = Object.values(set)[0];
     const $input = this.$panel.find(`input[name='${key}']`);
     $input.prop('checked', value);
+    if (key === 'range') {
+      this.changeBounds(set);
+    }
   }
 
   initValues(values: number[]) {

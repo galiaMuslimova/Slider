@@ -1,6 +1,6 @@
 import {
   IConfig, IOptions, IParameters, IPositions,
-} from '../interfaces';
+} from '../interfaces/interfaces';
 
 const defaults: IConfig = {
   min: 10,
@@ -26,51 +26,51 @@ class Model {
 
   trackWidth: number;
 
-  range: number;
-
   constructor(options: IOptions, trackStart: number = 0, trackWidth: number = 500) {
-    this.options = this.correctOptions(options);
-    this.config = this.correctConfig($.extend({}, defaults, this.options));
     this.trackStart = trackStart;
     this.trackWidth = trackWidth;
-    this.range = this.config.max - this.config.min;
-    this.stepsArr = this.initStepsArr();
+    this.options = this.correctOptionsType(options);
+    this.config = $.extend({}, defaults, this.options);
+    this.stepsArr = [];
+    this.changeConfig();
     this.parameters = this.initParameters();
   }
 
-  correctOptions(options: IOptions = this.options) {
-    const checkedNumConfig = { ...options };
-    checkedNumConfig.max = Number.isInteger(options.max) ? options.max : defaults.max;
-    checkedNumConfig.min = Number.isInteger(options.min) ? options.min : defaults.min;
-    checkedNumConfig.step = Number.isInteger(options.step) ? options.step : defaults.step;
-    checkedNumConfig.from = Number.isInteger(options.from) ? options.from : defaults.from;
-    checkedNumConfig.to = Number.isInteger(options.to) ? options.to : defaults.to;
-    return checkedNumConfig;
+  correctOptionsType(options: IOptions = this.options) {
+    const correctConfig = { ...options };
+    correctConfig.max = Number.isInteger(options.max) ? Math.round(options.max) : defaults.max;
+    correctConfig.min = Number.isInteger(options.min) ? Math.round(options.min) : defaults.min;
+    correctConfig.step = Number.isInteger(options.step) ? Math.round(options.step) : defaults.step;
+    correctConfig.from = Number.isInteger(options.from) ? Math.round(options.from) : defaults.from;
+    correctConfig.to = Number.isInteger(options.to) ? Math.round(options.to) : defaults.to;
+    correctConfig.vertical = typeof options.vertical === 'boolean' ? options.vertical : defaults.vertical;
+    correctConfig.tip = typeof options.tip === 'boolean' ? options.tip : defaults.tip;
+    correctConfig.range = typeof options.range === 'boolean' ? options.range : defaults.range;
+    return correctConfig;
   }
 
-  correctConfig(config: IConfig = this.config) {
-    const checkedConfig = { ...config };
-    checkedConfig.max = (config.max > config.min) ? config.max : config.min;
-    checkedConfig.min = (config.max > config.min) ? config.min : config.max;
-    checkedConfig.max = (config.max === config.min) ? checkedConfig.min + 10 : checkedConfig.max;
-    checkedConfig.max = Math.round(checkedConfig.max);
-    checkedConfig.min = Math.round(checkedConfig.min);
-    const range = checkedConfig.max - checkedConfig.min;
-    this.range = range;
-    const isStepInRange = config.step * 2 < range && config.step * 20 > range;
-    checkedConfig.step = isStepInRange ? Math.round(config.step) : Math.round(range / 10);
-    const isFromInRange = config.from < checkedConfig.max && config.from >= checkedConfig.min;
-    const from = isFromInRange ? Math.round(config.from) : (checkedConfig.min + checkedConfig.step);
-    const isToInRange = config.to <= checkedConfig.max && config.to > checkedConfig.min;
-    const to = isToInRange ? Math.round(config.to) : (checkedConfig.max - checkedConfig.step);
-    checkedConfig.from = from < to ? from : to;
-    checkedConfig.to = from < to ? to : from;
-    return checkedConfig;
+  changeConfig() {
+    this.correctMinMaxStep();
+    this.initStepsArr();
+    this.correctFromTo();
+  }
+
+  correctMinMaxStep(config: IConfig = this.config) {
+    const correctConfig = { ...config };
+    correctConfig.max = (config.max > config.min) ? config.max : config.min;
+    correctConfig.min = (config.max > config.min) ? config.min : config.max;
+    correctConfig.max = (config.max === config.min) ? config.min + 10 : correctConfig.max;
+    const range = correctConfig.max - correctConfig.min;
+    const isStepInRange = config.step * 2 <= range && config.step * 20 >= range;
+    correctConfig.step = isStepInRange ? config.step : Math.round(range / 10);
+    this.config = correctConfig;
+    return correctConfig;
   }
 
   initStepsArr() {
-    const stepLength = (this.trackWidth / this.range) * this.config.step;
-    const stepsCount = Math.floor(this.range / this.config.step);
+    const range = this.config.max - this.config.min;
+    const stepLength = (this.trackWidth / range) * this.config.step;
+    const stepsCount = Math.floor(range / this.config.step);
     const emptyArr = Array(stepsCount + 1);
     const valuesArr = Array.from(emptyArr, (_, i) => (this.config.min + this.config.step * i));
     const stepsArr: IPositions[] = [];
@@ -79,11 +79,28 @@ class Model {
       valuesArr.push(this.config.max);
       stepsArr.push({ value: this.config.max, x: this.trackWidth });
     }
-    const isFromInArr = valuesArr.indexOf(this.config.from) === -1;
-    this.config.from = isFromInArr ? valuesArr[1] : this.config.from;
-    const isToInArr = valuesArr.indexOf(this.config.to) === -1;
-    this.config.to = isToInArr ? valuesArr[2] : this.config.to;
+    this.stepsArr = stepsArr;
     return stepsArr;
+  }
+
+  static takeClosestValue(value: number, array: IPositions[]) {
+    const substractedArr = array.map((item) => Math.abs(item.value - value));
+    const indexOfClosestPosition = substractedArr.indexOf(Math.min(...substractedArr));
+    return array[indexOfClosestPosition].value;
+  }
+
+  correctFromTo(config: IConfig = this.config) {
+    const correctConfig = { ...config };
+    const from = Model.takeClosestValue(correctConfig.from, this.stepsArr);
+    const to = Model.takeClosestValue(correctConfig.to, this.stepsArr);
+    if (this.config.range) {
+      correctConfig.from = from < to ? from : to;
+      correctConfig.to = from < to ? to : from;
+    } else {
+      correctConfig.from = from;
+    }
+    this.config = correctConfig;
+    return correctConfig;
   }
 
   initParameters() {
@@ -116,20 +133,15 @@ class Model {
     const position = Math.round(mousePosition - this.trackStart);
     const isInScale = (position >= 0) && (position <= this.trackWidth);
     if (isInScale) {
-      const substractedArr = this.stepsArr.map((el) => Math.abs(el.x - position));
+      const substractedArr = this.stepsArr.map((item) => Math.abs(item.x - position));
       const indexOfClosestPosition = substractedArr.indexOf(Math.min(...substractedArr));
       const positionParameters = this.stepsArr[indexOfClosestPosition];
-
-      if (positionParameters) {
-        this.parameters.values[index] = positionParameters.value;
-        this.parameters.handleX[index] = positionParameters.x;
-        const value = this.parameters.values[0];
-        this.config.from = value;
-        this.config.to = this.parameters.values[1] ? this.parameters.values[1] : this.config.to;
-        return this.parameters;
-      }
-
-      return false;
+      this.parameters.values[index] = positionParameters.value;
+      this.parameters.handleX[index] = positionParameters.x;
+      const value = this.parameters.values[0];
+      this.config.from = value;
+      this.config.to = this.parameters.values[1] ? this.parameters.values[1] : this.config.to;
+      return this.parameters;
     }
 
     return false;

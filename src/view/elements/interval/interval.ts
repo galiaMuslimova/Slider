@@ -34,7 +34,9 @@ class Interval {
 
     width = (width > 0) ? width : 0;
     this.$interval.css(vertical ? 'height' : 'width', `${width}px`);
+    this.$interval.css(vertical ? 'width' : 'height', '10px');
     this.$interval.css(vertical ? 'top' : 'left', `${min}px`);
+    this.$interval.css(vertical ? 'left' : 'top', '0px');
   }
 }
 

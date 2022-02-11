@@ -1,5 +1,5 @@
 import './demo_styles.scss';
-import { IOptions } from './interfaces';
+import { IOptions } from './interfaces/interfaces';
 import MetaSlider from './plugin';
 
 $(() => {

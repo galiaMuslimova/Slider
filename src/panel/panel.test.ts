@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { IConfig } from '../interfaces';
+import { IConfig } from '../interfaces/interfaces';
 import Panel from './panel';
 
 const { JSDOM } = require('jsdom');

@@ -43,7 +43,7 @@
     width: 0px;
     margin: 0px;
 
-    &:checked+.meta-slider__box {
+    &:checked+.panel__box {
       background-color: #0776A0;
 
       &:before {
