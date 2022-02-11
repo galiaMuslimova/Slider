@@ -1,4 +1,4 @@
-import Controller from "./controller/controller"; 
+import Controller from "./controller/Controller"; 
 import { IOptions } from "./interfaces/interfaces"; 
 
 class MetaSlider {

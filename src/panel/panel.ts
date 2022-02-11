@@ -1,5 +1,5 @@
 import { IConfig, ISettings } from '../interfaces/interfaces';
-import Observer from '../observer/observer';
+import Observer from '../observer/Observer';
 import './panel-styles.scss';
 
 class Panel {

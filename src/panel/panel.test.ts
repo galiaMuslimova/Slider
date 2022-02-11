@@ -1,7 +1,7 @@
 import { expect } from 'chai';
 
 import { IConfig } from '../interfaces/interfaces';
-import Panel from './panel';
+import Panel from './Panel';
 
 const { JSDOM } = require('jsdom');
 
@@ -31,7 +31,7 @@ describe('Settings', () => {
   });
 
   beforeEach(() => {
-    settingsClass = new Settings($root);
+    settingsClass = new Panel($root);
     $settings = $root.find('.meta-slider__settings');
     config = {
       min: 5,
@@ -43,7 +43,7 @@ describe('Settings', () => {
       tip: true,
       range: true,
     };
-    settingsClass.initSettings(config);
+    settingsClass.initPanel(config);
     $min = $settings.find("input[name='min']");
     $max = $settings.find("input[name='max']");
     $step = $settings.find("input[name='step']");

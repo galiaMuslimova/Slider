@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import Model from './model';
+import Model from './Model';
 
 describe('Model', () => {
   it('устанавливает значения в конфиг', () => {
@@ -108,27 +108,6 @@ describe('Model', () => {
       { value: 5, x: 400 },
       { value: 6, x: 500 }];
     expect(model.initStepsArr()).to.deep.equal(stepsArr);
-  });
-
-  it('сделать массив всех позиций', () => {
-    const model = new Model({
-      min: 0,
-      max: 10,
-      step: 1,
-    });
-    const positionsArr = [
-      { value: 0, x: 0 },
-      { value: 1, x: 50 },
-      { value: 2, x: 100 },
-      { value: 3, x: 150 },
-      { value: 4, x: 200 },
-      { value: 5, x: 250 },
-      { value: 6, x: 300 },
-      { value: 7, x: 350 },
-      { value: 8, x: 400 },
-      { value: 9, x: 450 },
-      { value: 10, x: 500 }];
-    expect(model.initPositionsArr()).to.deep.equal(positionsArr);
   });
 
   it('инициализировать параметры', () => {

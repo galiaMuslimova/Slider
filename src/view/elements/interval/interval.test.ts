@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import Interval from './interval';
+import Interval from './Interval';
 
 const { JSDOM } = require('jsdom');
 
