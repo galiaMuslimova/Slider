@@ -1,7 +1,1 @@
 node_modules
-.eslintignore
-.eslintrc.js
-webpack.config.test.js
-package-lock.json
-package.json
-tsconfig.json
