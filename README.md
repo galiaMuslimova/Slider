@@ -42,7 +42,7 @@ new MetaSlider(element, {
 Команда для запуска линтера **npx eslint src**
 
 ## Совместимость
-Использованы jquery version 3.6.0, node version 14.16.0
+Использованы jquery version 3.6.0, node version 14.16.0, typescript version 4.5.5, pug version 3.0.2.
 
 ## 
 В node_modules/@types/jquery/misc.d.ts 'declare const jquery' был заменен 'declare var jquery', для того, чтобы сделать область видимости перемнной jquery глобальной.
