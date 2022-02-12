@@ -1,6 +1,6 @@
 src/index.js
-src/plugin.ts
-src/demo.js
 src/index.html
 src/**/*.scss
 webpack.config.js
+node_modules
+dist

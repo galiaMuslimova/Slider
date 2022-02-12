@@ -41,6 +41,10 @@ const config = {
         }
       },
       {
+        test: /\.pug$/,
+        use: ['pug-loader'],
+      },
+      {
         test: /\.css$/,
         use: [
           {
@@ -64,7 +68,7 @@ const config = {
 const docs = Object.assign({}, config, {
   name: "docs",
   mode: "development",
-  entry: './demo.js',
+  entry: './demo.ts',
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, 'docs')
@@ -74,7 +78,7 @@ const docs = Object.assign({}, config, {
   },
   plugins: [
     new HTMLWebpackPlugin({
-      template: './index.html',
+      template: './demo.pug',
       filename: 'index.html'
     }),
     new MiniCssExtractPlugin({

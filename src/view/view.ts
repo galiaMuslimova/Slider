@@ -5,11 +5,11 @@ import Panel from '../panel/Panel';
 import Observer from '../observer/Observer';
 import './slider.scss';
 
-import Track from './elements/track/Track';
-import Scale from './elements/scale/Scale';
-import Handle from './elements/handle/Handle';
-import Interval from './elements/interval/Interval';
-import Tip from './elements/tip/Tip';
+import Track from './elements/track/track';
+import Scale from './elements/scale/scale';
+import Handle from './elements/handle/handle';
+import Interval from './elements/interval/interval';
+import Tip from './elements/tip/tip';
 
 class View {
   vertical: boolean;
