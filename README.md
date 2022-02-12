@@ -48,7 +48,7 @@ new MetaSlider(element, {
 В node_modules/@types/jquery/misc.d.ts 'declare const jquery' был заменен 'declare var jquery', для того, чтобы сделать область видимости перемнной jquery глобальной.
 
 ## UML-диаграмма
-![alt UML-диаграмма](https://github.com/galiaMuslimova/Slider/Diagram.jpg)
+![alt UML-диаграмма](https://github.com/galiaMuslimova/Slider/blob/master/Diagram.jpg)
 
 ## Описание слоев
 ***Controller*** принимает в качестве параметра корневой элемент слайдера *root* и пользовательские опции *option*. Создает класс *View*.  
