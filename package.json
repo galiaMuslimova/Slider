@@ -9,7 +9,9 @@
     "watch": "webpack --mode development --watch",
     "start": "webpack-dev-server --mode development --open",
     "test": "mocha --require ignore-styles -r ts-node/register ./src/**/*.test.ts",
-    "compile": "webpack"
+    "compile": "webpack",
+    "elint": "eslint src",
+    "elint-fix": "eslint --fix src"
   },
   "author": "G.M.",
   "license": "ISC",
