@@ -2,13 +2,14 @@ module.exports = {
   root: true,
   env: {
     browser: true,
-    es2021: true,
     es6: true,
     node: true,
+    jquery: true,
   },
   extends: [
     'airbnb-base',
     'airbnb-typescript/base',
+    'plugin:fsd/all'
   ],
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -18,6 +19,7 @@ module.exports = {
   },
   plugins: [
     '@typescript-eslint',
+    'fsd'
   ],
   settings: {
     'import/resolver': {
@@ -29,6 +31,7 @@ module.exports = {
   rules: {
     'linebreak-style': 0,
     "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": 'off'
+    "@typescript-eslint/no-unused-vars": 'off',
+    'func-names': 'off'
   },
 };
