@@ -1,6 +1,6 @@
 import './demo_styles.scss';
 import { IOptions } from './interfaces/interfaces';
-import MetaSlider from './plugin';
+import MetaSlider from './MetaSlider';
 
 const options1: IOptions = {
   min: true,

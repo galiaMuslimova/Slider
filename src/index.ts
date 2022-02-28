@@ -1,3 +1,3 @@
-import MetaSlider from './plugin';
+import MetaSlider from './MetaSlider';
 
 export default MetaSlider;
