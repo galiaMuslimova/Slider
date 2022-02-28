@@ -97,7 +97,7 @@ const docs = Object.assign({}, config, {
 const dist = Object.assign({}, config, {
   name: "dist",
   mode: "production",
-  entry: './index.js',
+  entry: './index.ts',
   output: {
     filename: 'index.js',
     path: path.resolve(__dirname, 'dist'),
