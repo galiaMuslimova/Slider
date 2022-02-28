@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import View from './view';
+import View from './View';
 
 const { JSDOM } = require('jsdom');
 

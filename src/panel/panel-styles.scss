@@ -21,36 +21,38 @@
   }
 
   &__input {
-    border: 1px solid #226078;
-    box-sizing: border-box;
-    border-radius: 5px;
-    width: 50px;
-    height: 25px;
-    color: #024C68;
+    &_with-number {
+      border: 1px solid #226078;
+      box-sizing: border-box;
+      border-radius: 5px;
+      width: 50px;
+      height: 25px;
+      color: #024C68;
 
-    &:disabled {
-      opacity: 0.2;
+      &:disabled {
+        opacity: 0.2;
+      }
+    }
+
+    &_with-checkbox {
+      visibility: hidden;
+      width: 0px;
+      margin: 0px;
+
+      &:checked+.panel__box {
+        background-color: #0776A0;
+
+        &:before {
+          transform: translateX(25px);
+          background-color: #FFF;
+        }
+      }
     }
   }
 
   &__toggle {
     display: flex;
     align-items: center;
-  }
-
-  &__checkbox {
-    visibility: hidden;
-    width: 0px;
-    margin: 0px;
-
-    &:checked+.panel__box {
-      background-color: #0776A0;
-
-      &:before {
-        transform: translateX(25px);
-        background-color: #FFF;
-      }
-    }
   }
 
   &__box {

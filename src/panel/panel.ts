@@ -9,6 +9,8 @@ class Panel {
 
   $panel: JQuery<HTMLElement>;
 
+  $inputs: JQuery<HTMLElement>;
+
   $max: JQuery<HTMLElement>;
 
   $min: JQuery<HTMLElement>;
@@ -29,6 +31,7 @@ class Panel {
     this.$root = root;
     this.observer = new Observer();
     this.$panel = $(this.$root).find('.js-panel');
+    this.$inputs = $(this.$root).find('.js-panel__input');
     this.$max = this.$panel.find('input[name="max"]');
     this.$min = this.$panel.find('input[name="min"]');
     this.$step = this.$panel.find('input[name="step"]');
@@ -37,48 +40,39 @@ class Panel {
     this.$vertical = this.$panel.find('input[name="vertical"]');
     this.$range = this.$panel.find('input[name="range"]');
     this.$tip = this.$panel.find('input[name="tip"]');
+    this.bindEventListeners();
+  }
+
+  bindEventListeners() {
+    const element = this;
+    this.$inputs.each(function () {
+      $(this).on('change', element.handleInputValueChange.bind(element))
+    })
+    $('.js-panel__form').on('submit', () => false);
   }
 
   initPanel(config: IConfig) {
     const element = this;
-    const { observer } = this;
     Object.entries(config).forEach(([key, value]) => {
-      const $input = this.$panel.find(`input[name='${key}']`);
-      switch (key) {
-        case 'min':
-        case 'max':
-        case 'step':
-        case 'from':
-        case 'to':
-        {
-          const setting: { [index: string]: number } = {};
-          setting[key] = value;
-          element.setValue(setting);
-          $input.on('change', () => {
-            setting[key] = Number($input.val());
-            observer.notify('settings', setting);
-          });
-          break;
-        }
-        case 'vertical':
-        case 'tip':
-        case 'range':
-        {
-          const setting: { [index: string]: boolean } = {};
-          setting[key] = value;
-          element.setProp(setting);
-          $input.on('change', () => {
-            setting[key] = $input.prop('checked');
-            observer.notify('settings', setting);
-          });
-          break;
-        }
-        default:
-          throw new Error('undefined setting');
-      }
+      const setting: ISettings = {};
+      setting[key] = value;
+      element.setValue(setting);      
     });
+  }
 
-    $('.js-panel__form').on('submit', () => false);
+  handleInputValueChange(event: Event) {
+    const setting: ISettings = {};
+    let key = (<HTMLInputElement>event.target).name;
+    const inputType = (<HTMLInputElement>event.target).type;
+    switch (inputType) {
+      case 'number':
+        setting[key] = Number((<HTMLInputElement>event.target).value);
+        break;
+      case 'checkbox':
+        setting[key] = (<HTMLInputElement>event.target).checked;
+        break;
+    }
+    this.observer.notify('settings', setting);
   }
 
   changeBounds(set: ISettings) {
@@ -121,17 +115,18 @@ class Panel {
 
   setValue(set: ISettings) {
     const key = Object.keys(set)[0];
-    const value = Number(Object.values(set)[0]);
-    const $input = this.$panel.find(`input[name='${key}']`);
-    $input.val(value);
-    this.changeBounds(set);
-  }
-
-  setProp(set: ISettings) {
-    const key = Object.keys(set)[0];
     const value = Object.values(set)[0];
     const $input = this.$panel.find(`input[name='${key}']`);
-    $input.prop('checked', value);
+    const inputType = $input.prop('type');
+    switch (inputType) {
+      case 'number':
+        $input.val(Number(value));
+        this.changeBounds(set);
+        break;
+      case 'checkbox':
+        $input.prop('checked', value);
+        break;
+    }
     if (key === 'range') {
       this.changeBounds(set);
     }

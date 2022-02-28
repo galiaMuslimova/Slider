@@ -88,22 +88,7 @@ class View {
   }
 
   setSettings(setting: ISettings, key: string) {
-    switch (key) {
-      case 'min':
-      case 'max':
-      case 'step':
-      case 'from':
-      case 'to':
-        this.panel.setValue(setting);
-        break;
-      case 'vertical':
-      case 'tip':
-      case 'range':
-        this.panel.setProp(setting);
-        break;
-      default:
-        throw new Error('undefined setting');
-    }
+    this.panel.setValue(setting);
   }
 
   initPanel(config: IConfig) {
