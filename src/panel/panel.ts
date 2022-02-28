@@ -46,9 +46,9 @@ class Panel {
   bindEventListeners() {
     const element = this;
     this.$inputs.each(function () {
-      $(this).on('change', element.handleInputValueChange.bind(element))
-    })
-    $('.js-panel__form').on('submit', () => false);
+      $(this).on('change', element.handleInputValueChange.bind(element));
+    });
+    $('.js-panel__form').on('submit', Panel.handlePanelormSubmit);
   }
 
   initPanel(config: IConfig) {
@@ -56,13 +56,13 @@ class Panel {
     Object.entries(config).forEach(([key, value]) => {
       const setting: ISettings = {};
       setting[key] = value;
-      element.setValue(setting);      
+      element.setValue(setting);
     });
   }
 
   handleInputValueChange(event: Event) {
     const setting: ISettings = {};
-    let key = (<HTMLInputElement>event.target).name;
+    const key = (<HTMLInputElement>event.target).name;
     const inputType = (<HTMLInputElement>event.target).type;
     switch (inputType) {
       case 'number':
@@ -71,14 +71,21 @@ class Panel {
       case 'checkbox':
         setting[key] = (<HTMLInputElement>event.target).checked;
         break;
+      default:
+        break;
     }
     this.observer.notify('settings', setting);
+  }
+
+  static handlePanelormSubmit() {
+    return false;
   }
 
   changeBounds(set: ISettings) {
     const key = Object.keys(set)[0];
     const value = Object.values(set)[0];
-    const maxMinRange = Number(this.$max.val()) - Number(this.$min.val());
+    const maxMinRange = Number(this.$max.val()) - Number(this.$min.val())
+    console.log(this.$from.prop('max'))
 
     switch (key) {
       case 'min':
@@ -125,6 +132,8 @@ class Panel {
         break;
       case 'checkbox':
         $input.prop('checked', value);
+        break;
+      default:
         break;
     }
     if (key === 'range') {

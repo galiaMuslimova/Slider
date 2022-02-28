@@ -50,7 +50,7 @@ class View {
     this.interval = new Interval(this.$slider);
     this.panel = new Panel(this.$container);
     this.panel.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) });
-    this.handleMove();
+    this.moveHandle();
     this.scaleClick();
   }
 
@@ -95,22 +95,18 @@ class View {
     this.panel.initPanel(config);
   }
 
-  handleMove() {
+  moveHandle() {
     const { observer } = this;
     this.$slider.on('mousedown touchstart', '.meta-slider__handle', (event) => {
       const index = $(event.currentTarget).hasClass('meta-slider__handle_right') ? 1 : 0;
-      $(document).on('mousemove', { index, observer }, View.sendMouseMoveOptions);
-      $(document).on('touchmove', { index, observer }, View.sendTouchMoveOptions);
-
-      $(document).on('mouseup touchend', () => {
-        $(document).off('mousemove mouseup touchmove touchend');
-      });
-
-      $(document).on('dragstart', () => false);
+      $(document).on('mousemove', { index, observer }, View.handleMouseMove);
+      $(document).on('touchmove', { index, observer }, View.handleTouchMove);
+      $(document).on('mouseup touchend', View.handleMoveEnd);
+      $(document).on('dragstart', View.handleDragStart);
     });
   }
 
-  static sendMouseMoveOptions(e: {
+  static handleMouseMove(e: {
     pageX: number;
     pageY: number;
     data: { index: number, observer: Observer }
@@ -122,7 +118,7 @@ class View {
     observer.notify('mousemove', options);
   }
 
-  static sendTouchMoveOptions(e: {
+  static handleTouchMove(e: {
     data: { index: number; observer: Observer };
 
     // use type any cause event can be any type
@@ -140,6 +136,14 @@ class View {
         observer.notify('mousemove', options);
       }
     }
+  }
+
+  static handleMoveEnd() {
+    $(document).off('mousemove mouseup touchmove touchend');
+  }
+
+  static handleDragStart() {
+    return false;
   }
 
   scaleClick() {
