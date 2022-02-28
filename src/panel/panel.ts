@@ -85,8 +85,6 @@ class Panel {
     const key = Object.keys(set)[0];
     const value = Object.values(set)[0];
     const maxMinRange = Number(this.$max.val()) - Number(this.$min.val())
-    console.log(this.$from.prop('max'))
-
     switch (key) {
       case 'min':
         this.$max.prop('min', value);
