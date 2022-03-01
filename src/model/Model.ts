@@ -1,5 +1,5 @@
 import {
-  IConfig, IOptions, IParameters, IPositions,
+  IConfig, IOptions, IParameters, IPosition,
 } from '../interfaces/interfaces';
 
 const defaults: IConfig = {
@@ -18,7 +18,7 @@ class Model {
 
   options: IOptions;
 
-  stepsArr: IPositions[];
+  stepsArr: IPosition[];
 
   parameters: IParameters;
 
@@ -73,7 +73,7 @@ class Model {
     const stepsCount = Math.floor(range / this.config.step);
     const emptyArr = Array(stepsCount + 1);
     const valuesArr = Array.from(emptyArr, (_, i) => (this.config.min + this.config.step * i));
-    const stepsArr: IPositions[] = [];
+    const stepsArr: IPosition[] = [];
     valuesArr.map((el, index) => stepsArr.push({ value: el, x: Math.round(stepLength * index) }));
     if (valuesArr.indexOf(this.config.max) === -1) {
       valuesArr.push(this.config.max);
@@ -83,16 +83,10 @@ class Model {
     return stepsArr;
   }
 
-  static takeClosestValue(value: number, array: IPositions[]) {
-    const substractedArr = array.map((item) => Math.abs(item.value - value));
-    const indexOfClosestPosition = substractedArr.indexOf(Math.min(...substractedArr));
-    return array[indexOfClosestPosition].value;
-  }
-
   correctFromTo(config: IConfig = this.config) {
     const correctConfig = { ...config };
-    const from = Model.takeClosestValue(correctConfig.from, this.stepsArr);
-    const to = Model.takeClosestValue(correctConfig.to, this.stepsArr);
+    const from = Model.takeClosestNum(correctConfig.from, this.stepsArr, 'value');
+    const to = Model.takeClosestNum(correctConfig.to, this.stepsArr, 'value');
     if (this.config.range) {
       correctConfig.from = from < to ? from : to;
       correctConfig.to = from < to ? to : from;
@@ -103,15 +97,23 @@ class Model {
     return correctConfig;
   }
 
+  static takeClosestNum(num: number, array: IPosition[], type: keyof IPosition) {
+    const substractedArr = array.map((item) => Math.abs(item[type] - num));
+    const indexOfClosestPosition = substractedArr.indexOf(Math.min(...substractedArr));
+    const closestItem = array[indexOfClosestPosition];
+    return closestItem[type];
+  }
+
   initParameters() {
-    const parameters: IParameters = { values: [], handleX: [] };
+    const parameters: IParameters = { values: [], positions: [] };
     const element = this;
     parameters.values[0] = this.config.from;
+
     if (this.config.range) {
       parameters.values[1] = this.config.to;
     }
 
-    parameters.handleX = parameters.values.map((x) => element.takeXByValue(x));
+    parameters.positions = parameters.values.map((x) => element.takeXByValue(x));
     this.parameters = parameters;
     return parameters;
   }
@@ -137,7 +139,7 @@ class Model {
       const indexOfClosestPosition = substractedArr.indexOf(Math.min(...substractedArr));
       const positionParameters = this.stepsArr[indexOfClosestPosition];
       this.parameters.values[index] = positionParameters.value;
-      this.parameters.handleX[index] = positionParameters.x;
+      this.parameters.positions[index] = positionParameters.x;
       const value = this.parameters.values[0];
       this.config.from = value;
       this.config.to = this.parameters.values[1] ? this.parameters.values[1] : this.config.to;
@@ -149,20 +151,53 @@ class Model {
 
   takeParamScaleClick(value: number) {
     if (this.config.range) {
-      const closest = this.parameters.values.reduce((prev, curr) => {
-        const closestValue = Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev;
-        return closestValue;
-      });
-
-      const index = this.parameters.values.indexOf(closest);
+      const index = Model.takeClosestIndex(this.parameters.values, value);
       this.parameters.values[index] = value;
-      this.parameters.handleX[index] = this.takeXByValue(value);
+      this.parameters.positions[index] = this.takeXByValue(value);
       return this.parameters;
     }
 
     this.parameters.values = [value];
-    this.parameters.handleX = [this.takeXByValue(value)];
+    this.parameters.positions = [this.takeXByValue(value)];
     return this.parameters;
+  }
+
+  static takeClosestIndex(array: number[], value: number) {
+    const closest = array.reduce((prev, curr) => {
+      const closestValue = Math.abs(curr - value) < Math.abs(prev - value) ? curr : prev;
+      return closestValue;
+    });
+    const index = array.indexOf(closest);
+    return index;
+  }
+
+  takeParamTrackClick(position: number) {
+    const correctPosition = Model.takeClosestNum(position - this.trackStart, this.stepsArr, 'x');
+    if (this.config.range) {
+      const index = Model.takeClosestIndex(this.parameters.positions, correctPosition);
+      this.parameters.positions[index] = correctPosition;
+      this.parameters.values[index] = this.takeValueByX(correctPosition);
+      return this.parameters;
+    }
+
+    this.parameters.values = [correctPosition];
+    this.parameters.positions = [this.takeValueByX(correctPosition)];
+    return this.parameters;
+  }
+
+  static takeClosestPosition(position: number, array: IPosition[]) {
+    const substractedArr = array.map((item) => Math.abs(item.x - position));
+    const indexOfClosestPosition = substractedArr.indexOf(Math.min(...substractedArr));
+    return array[indexOfClosestPosition].x;
+  }
+
+  takeValueByX(x: number) {
+    const item = this.stepsArr.find((el) => el.x === x);
+    if (item) {
+      return item.value;
+    }
+
+    throw new Error('value for this position is not consist');
   }
 }
 

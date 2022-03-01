@@ -29,6 +29,7 @@ class Controller {
     this.view.observer.subscribe({ key: 'click', observer: this.clickOnScale.bind(this) });
     this.view.initPanel(this.model.config);
     this.view.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) });
+    this.view.observer.subscribe({ key: 'position', observer: this.changePositionByTrack.bind(this) });
   }
 
   initElements() {
@@ -104,6 +105,13 @@ class Controller {
       default: {
         throw new Error('undefined setting');
       }
+    }
+  }
+
+  changePositionByTrack(position: number) {
+    const parameters = this.model.takeParamTrackClick(position);
+    if (parameters) {
+      this.view.setParameters(parameters);
     }
   }
 }

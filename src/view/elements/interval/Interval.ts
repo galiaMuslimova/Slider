@@ -15,17 +15,17 @@ class Interval {
     this.$interval = this.$slider.find('.meta-slider__interval');
   }
 
-  moveInterval(handleX: number[], vertical: boolean) {
+  moveInterval(positions: number[], vertical: boolean) {
     let min: number;
     let width: number;
     const handleWidth = 20;
     const gap = 2; // to make a gap between interval and handle
-    if (handleX.length === 1) {
+    if (positions.length === 1) {
       min = 0;
-      width = handleX[0] - handleWidth / 2 - gap;
-    } else if (handleX.length === 2) {
-      const minHandle = Math.min(handleX[0], handleX[1]);
-      const maxHandle = Math.max(handleX[0], handleX[1]);
+      width = positions[0] - handleWidth / 2 - gap;
+    } else if (positions.length === 2) {
+      const minHandle = Math.min(positions[0], positions[1]);
+      const maxHandle = Math.max(positions[0], positions[1]);
       min = minHandle + handleWidth / 2;
       width = maxHandle - minHandle - handleWidth - gap;
     } else {

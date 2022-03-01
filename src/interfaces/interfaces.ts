@@ -27,16 +27,16 @@ interface ISettings {
 
 interface IParameters {
   values: number[],
-  handleX: number[],
+  positions: number[],
 }
 
-interface IPositions {
+interface IPosition {
   value: number,
   x: number
 }
 
 interface IResult {
-  stepsArr: IPositions[],
+  stepsArr: IPosition[],
   parameters: IParameters
 }
 
@@ -45,6 +45,6 @@ export {
   IConfig,
   ISettings,
   IParameters,
-  IPositions,
+  IPosition,
   IResult,
 };

@@ -1,5 +1,5 @@
 import {
-  IConfig, IParameters, IPositions, ISettings,
+  IConfig, IParameters, IPosition, ISettings,
 } from '../interfaces/interfaces';
 import Panel from '../panel/Panel';
 import Observer from '../observer/Observer';
@@ -44,6 +44,7 @@ class View {
     }).appendTo(this.$root).addClass(this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
 
     this.track = new Track(this.$slider);
+    this.track.observer.subscribe({ key: 'position', observer: this.changePositionByTrack.bind(this) });
     this.scale = new Scale(this.$slider);
     this.handles = new Handle(this.$slider);
     this.tips = new Tip(this.$slider);
@@ -54,45 +55,12 @@ class View {
     this.scaleClick();
   }
 
-  getTrackParameters() {
-    return this.track.getTrackParameters(this.vertical);
+  changePositionByTrack(position: number) {
+    this.observer.notify('position', position);
   }
 
-  initScale(stepsArr: IPositions[]) {
-    this.scale.initScale(stepsArr, this.vertical);
-  }
-
-  initHandles(range:boolean) {
-    this.handles.initHandles(range);
-  }
-
-  initTips(tip: boolean) {
-    this.tips.initTips(tip);
-  }
-
-  changeTips(values: number[]) {
-    this.tips.changeTips(values);
-  }
-
-  changeDirection(vertical: boolean) {
-    this.vertical = vertical;
-    this.$container.removeClass(`body__container_${this.vertical ? 'horizontal' : 'vertical'}`).addClass(`body__container_${this.vertical ? 'vertical' : 'horizontal'}`);
-    this.$slider.removeClass(`meta-slider_${this.vertical ? 'horizontal' : 'vertical'}`).addClass(`meta-slider_${this.vertical ? 'vertical' : 'horizontal'}`);
-  }
-
-  setParameters(parameters: IParameters) {
-    this.handles.moveHandles(parameters.handleX, this.vertical);
-    this.tips.changeTips(parameters.values);
-    this.interval.moveInterval(parameters.handleX, this.vertical);
-    this.panel.initValues(parameters.values);
-  }
-
-  setSettings(setting: ISettings, key: string) {
-    this.panel.setValue(setting);
-  }
-
-  initPanel(config: IConfig) {
-    this.panel.initPanel(config);
+  changeSettings(settings: ISettings) {
+    this.observer.notify('settings', settings);
   }
 
   moveHandle() {
@@ -157,8 +125,45 @@ class View {
     observer.notify('click', currentValue);
   }
 
-  changeSettings(settings: ISettings) {
-    this.observer.notify('settings', settings);
+  getTrackParameters() {
+    return this.track.getTrackParameters(this.vertical);
+  }
+
+  initScale(stepsArr: IPosition[]) {
+    this.scale.initScale(stepsArr, this.vertical);
+  }
+
+  initHandles(range:boolean) {
+    this.handles.initHandles(range);
+  }
+
+  initTips(tip: boolean) {
+    this.tips.initTips(tip);
+  }
+
+  changeTips(values: number[]) {
+    this.tips.changeTips(values);
+  }
+
+  changeDirection(vertical: boolean) {
+    this.vertical = vertical;
+    this.$container.removeClass(`body__container_${this.vertical ? 'horizontal' : 'vertical'}`).addClass(`body__container_${this.vertical ? 'vertical' : 'horizontal'}`);
+    this.$slider.removeClass(`meta-slider_${this.vertical ? 'horizontal' : 'vertical'}`).addClass(`meta-slider_${this.vertical ? 'vertical' : 'horizontal'}`);
+  }
+
+  setParameters(parameters: IParameters) {
+    this.handles.moveHandles(parameters.positions, this.vertical);
+    this.tips.changeTips(parameters.values);
+    this.interval.moveInterval(parameters.positions, this.vertical);
+    this.panel.initValues(parameters.values);
+  }
+
+  setSettings(setting: ISettings, key: string) {
+    this.panel.setValue(setting);
+  }
+
+  initPanel(config: IConfig) {
+    this.panel.initPanel(config);
   }
 }
 

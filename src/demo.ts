@@ -3,10 +3,10 @@ import { IOptions } from './interfaces/interfaces';
 import MetaSlider from './MetaSlider';
 
 const options1: IOptions = {
-  min: true,
+  min: 0,
   max: 10,
-  step: 15.4,
-  from: 18 / 2,
+  step: 1,
+  from: 3,
   to: 70,
   tip: 'gg',
   range: true,
@@ -18,6 +18,7 @@ const options2: IOptions = {
   min: 1,
   max: 6,
   step: 1,
+  from: 10,
   vertical: false,
   tip: true,
   range: false,

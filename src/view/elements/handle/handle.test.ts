@@ -54,20 +54,20 @@ describe('Handle', () => {
   });
 
   it('проверить позицию при handle = 2 при vertical=false', () => {
-    const handleX = [-10, 10];
-    handleClass.moveHandles(handleX, false);
+    const positions = [-10, 10];
+    handleClass.moveHandles(positions, false);
     const $handle = $slider.find('.meta-slider__handle');
     $handle.each((index, element) => {
-      expect($(element).css('left')).to.equal(`${handleX[index] - 10}px`);
+      expect($(element).css('left')).to.equal(`${positions[index] - 10}px`);
     });
   });
 
   it('проверить позицию при handle = 2 при vertical=true', () => {
-    const handleX = [50, 200];
-    handleClass.moveHandles(handleX, true);
+    const positions = [50, 200];
+    handleClass.moveHandles(positions, true);
     const $handle = $slider.find('.meta-slider__handle');
     $handle.each((index, element) => {
-      expect($(element).css('top')).to.equal(`${handleX[index] - 10}px`);
+      expect($(element).css('top')).to.equal(`${positions[index] - 10}px`);
     });
   });
 });

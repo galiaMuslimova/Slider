@@ -118,7 +118,7 @@ describe('Model', () => {
       from: 3,
       to: 10,
     });
-    expect(model.initParameters()).to.deep.equal({ values: [3, 10], handleX: [150, 500] });
+    expect(model.initParameters()).to.deep.equal({ values: [3, 10], positions: [150, 500] });
   });
 
   it('инициализировать параметры с неправильными from и  to', () => {
@@ -129,7 +129,7 @@ describe('Model', () => {
       from: 13,
       to: 19,
     });
-    expect(model.initParameters()).to.deep.equal({ values: [1, 9], handleX: [50, 450] });
+    expect(model.initParameters()).to.deep.equal({ values: [1, 9], positions: [50, 450] });
   });
 
   it('получить позицию x по значению value', () => {
@@ -153,7 +153,7 @@ describe('Model', () => {
     const options = { eventPosition: pagePositions, index: 0 };
     const parameters = {
       values: [130, 400],
-      handleX: [130, 400],
+      positions: [130, 400],
     };
     expect(model.takeParamHandleMove(options)).to.deep.equal(parameters);
   });
@@ -170,7 +170,7 @@ describe('Model', () => {
     const options = { eventPosition: pagePositions, index: 1 };
     const parameters = {
       values: [10, 13],
-      handleX: [100, 130],
+      positions: [100, 130],
     };
     expect(model.takeParamHandleMove(options)).to.deep.equal(parameters);
   });
@@ -182,7 +182,7 @@ describe('Model', () => {
       from: 10,
       to: 40,
     });
-    expect(model.takeParamScaleClick(49)).to.deep.equal({ values: [10, 49], handleX: [100, 490] });
+    expect(model.takeParamScaleClick(49)).to.deep.equal({ values: [10, 49], positions: [100, 490] });
   });
 
   it('получить параметры при клике на шкалу, меняется handle 1', () => {
@@ -192,7 +192,7 @@ describe('Model', () => {
       from: 10,
       to: 40,
     });
-    expect(model.takeParamScaleClick(18)).to.deep.equal({ values: [18, 40], handleX: [180, 400] });
+    expect(model.takeParamScaleClick(18)).to.deep.equal({ values: [18, 40], positions: [180, 400] });
   });
 
   it('получить параметры при клике на шкалу, при range=false', () => {
@@ -203,6 +203,6 @@ describe('Model', () => {
       to: 40,
       range: false,
     });
-    expect(model.takeParamScaleClick(5)).to.deep.equal({ values: [5], handleX: [50] });
+    expect(model.takeParamScaleClick(5)).to.deep.equal({ values: [5], positions: [50] });
   });
 });

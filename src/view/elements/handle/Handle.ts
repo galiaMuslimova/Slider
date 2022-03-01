@@ -28,10 +28,10 @@ class Handle {
     }
   }
 
-  moveHandles(handleX: number[], vertical:boolean) {
+  moveHandles(positions: number[], vertical:boolean) {
     const handleWidth = 20;
     this.handles.forEach((item, index) => {
-      item.css(vertical ? 'top' : 'left', `${handleX[index] - handleWidth / 2}px`);
+      item.css(vertical ? 'top' : 'left', `${positions[index] - handleWidth / 2}px`);
     });
   }
 }

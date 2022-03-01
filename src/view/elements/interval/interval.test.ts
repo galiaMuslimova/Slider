@@ -31,7 +31,7 @@ describe('Interval', () => {
     expect($interval.css('left')).to.eq('110px');
   });
 
-  it('проверяет создание интервала при range=false, vertical=false маленькое значение handlex', () => {
+  it('проверяет создание интервала при range=false, vertical=false маленькое значение positions', () => {
     intervalClass.moveInterval([10], false);
     expect($interval.css('width')).to.eq('0px');
     expect($interval.css('left')).to.eq('0px');
