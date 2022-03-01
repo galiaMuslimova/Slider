@@ -84,18 +84,15 @@ class Panel {
   changeBounds(set: ISettings) {
     const key = Object.keys(set)[0];
     const value = Object.values(set)[0];
-    const maxMinRange = Number(this.$max.val()) - Number(this.$min.val());
     switch (key) {
       case 'min':
         this.$max.prop('min', value);
         this.$from.prop('min', value);
-        this.$step.prop('max', maxMinRange / 2);
         break;
       case 'max':
         this.$min.prop('max', value);
         this.$from.prop('max', this.$range.prop('checked') ? this.$to.val() : value);
         this.$to.prop('max', value);
-        this.$step.prop('max', maxMinRange / 2);
         break;
       case 'step':
         this.$from.prop('step', value);

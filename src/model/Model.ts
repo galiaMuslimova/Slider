@@ -60,24 +60,22 @@ class Model {
     correctConfig.max = (config.max > config.min) ? config.max : config.min;
     correctConfig.min = (config.max > config.min) ? config.min : config.max;
     correctConfig.max = (config.max === config.min) ? config.min + 10 : correctConfig.max;
-    const range = correctConfig.max - correctConfig.min;
-    const isStepInRange = config.step * 2 <= range && config.step * 20 >= range;
-    correctConfig.step = isStepInRange ? config.step : Math.round(range / 10);
     this.config = correctConfig;
     return correctConfig;
   }
 
   initStepsArr() {
-    const range = this.config.max - this.config.min;
-    const stepLength = (this.trackWidth / range) * this.config.step;
-    const stepsCount = Math.floor(range / this.config.step);
+    const { min, max, step } = this.config;
+    const range = max - min;
+    const stepLength = (this.trackWidth / range) * step;
+    const stepsCount = Math.floor(range / step);
     const emptyArr = Array(stepsCount + 1);
-    const valuesArr = Array.from(emptyArr, (_, i) => (this.config.min + this.config.step * i));
+    const valuesArr = Array.from(emptyArr, (_, i) => (min + Math.round(step * i * 10) / 10));
     const stepsArr: IPosition[] = [];
     valuesArr.map((el, index) => stepsArr.push({ value: el, x: Math.round(stepLength * index) }));
-    if (valuesArr.indexOf(this.config.max) === -1) {
-      valuesArr.push(this.config.max);
-      stepsArr.push({ value: this.config.max, x: this.trackWidth });
+    if (valuesArr.indexOf(max) === -1) {
+      valuesArr.push(max);
+      stepsArr.push({ value: max, x: this.trackWidth });
     }
     this.stepsArr = stepsArr;
     return stepsArr;
