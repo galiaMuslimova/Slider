@@ -46,7 +46,7 @@ class Panel {
   bindEventListeners() {
     const element = this;
     this.$inputs.each(function () {
-      $(this).on('change', element.handleInputValueChange.bind(element));
+      $(this).on('change keyup', element.handleInputValueChange.bind(element));
     });
     $('.js-panel__form').on('submit', Panel.handlePanelormSubmit);
   }

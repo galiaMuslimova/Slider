@@ -67,6 +67,7 @@
     user-select: none;
     position: relative;
     background-color: #62B1D0;
+    cursor: pointer;
   }
 
   &__interval {
@@ -99,6 +100,7 @@
     background-color: #226078;
     position: absolute;
     z-index: 10;
+    cursor: pointer;
   }
 
   &__tip {
