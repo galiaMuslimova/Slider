@@ -16,8 +16,7 @@ const slider1 = new MetaSlider(element1, options1);
 
 const options2: IOptions = {
   min: 1,
-  max: 6,
-  step: 1,
+  max: 15,
   from: 10,
   vertical: false,
   tip: true,
@@ -30,6 +29,7 @@ const options3: IOptions = {
   min: 1,
   max: 1000,
   from: 100,
+  step: 100,
   to: undefined,
   vertical: true,
   tip: false,
