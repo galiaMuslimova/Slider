@@ -66,6 +66,7 @@ class View {
   moveHandle() {
     const { observer } = this;
     this.$slider.on('mousedown touchstart', '.meta-slider__handle', (event) => {
+      event.preventDefault();
       const index = $(event.currentTarget).hasClass('meta-slider__handle_right') ? 1 : 0;
       $(document).on('mousemove', { index, observer }, View.handleMouseMove);
       $(document).on('touchmove', { index, observer }, View.handleTouchMove);
