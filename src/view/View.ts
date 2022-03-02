@@ -43,7 +43,7 @@ class View {
       class: 'meta-slider',
     }).appendTo(this.$root).addClass(this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
 
-    this.track = new Track(this.$slider);
+    this.track = new Track(this.$slider, this.vertical);
     this.track.observer.subscribe({ key: 'position', observer: this.changePositionByTrack.bind(this) });
     this.scale = new Scale(this.$slider);
     this.handles = new Handle(this.$slider);

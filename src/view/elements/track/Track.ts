@@ -7,15 +7,24 @@ class Track {
 
   observer: Observer;
 
+  vertical: boolean;
+
   position: { top: number, left: number };
 
-  constructor(slider: JQuery<HTMLElement>) {
+  trackStart: number;
+
+  trackWidth: number | undefined;
+
+  constructor(slider: JQuery<HTMLElement>, vertical: boolean) {
     this.$slider = slider;
+    this.vertical = vertical;
     this.$track = jQuery('<div>', {
       class: 'meta-slider__track',
     }).appendTo(this.$slider);
     this.observer = new Observer();
     this.position = this.$track.position();
+    this.trackStart = this.vertical ? Number(this.position.top) : Number(this.position.left);
+    this.trackWidth = this.vertical ? this.$track.height() : this.$track.width();
     this.bindEventListeners();
   }
 
@@ -24,13 +33,17 @@ class Track {
   }
 
   handleTrackClick(event: any) {
-    const position = event.pageX;
+    const eventPosition = this.vertical ? event.pageY : event.pageX;
+    const position = Math.round(eventPosition - this.trackStart);
     this.observer.notify('position', position);
   }
 
   getTrackParameters(vertical: boolean) {
+    this.vertical = vertical;
     const trackStart = vertical ? Number(this.position.top) : Number(this.position.left);
     const trackWidth = vertical ? this.$track.height() : this.$track.width();
+    this.trackStart = trackStart;
+    this.trackWidth = trackWidth;
     return { trackStart, trackWidth };
   }
 }
