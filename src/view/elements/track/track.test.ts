@@ -6,8 +6,6 @@ const { JSDOM } = require('jsdom');
 
 const dom = new JSDOM('<!DOCTYPE html><body><div class=\'testSlider\'><div class=\'meta-slider\'><div class=\'meta-slider__slider\'></div></div></body>');
 global.window = dom.window;
-global.$ = require('jquery');
-global.jQuery = require('jquery');
 
 const { document } = dom.window;
 
@@ -17,7 +15,7 @@ describe('Track', () => {
 
   before(() => {
     $slider = $(document).find('.meta-slider__slider');
-    trackClass = new Track($slider);
+    trackClass = new Track($slider, true);
     const { $track } = trackClass;
     trackClass.position = { top: 30, left: 50 };
     $track.css('height', '600');

@@ -6,8 +6,6 @@ const { JSDOM } = require('jsdom');
 
 const dom = new JSDOM('<!DOCTYPE html><body><div class=\'testSlider\'><div class=\'meta-slider\'></div></div></body>');
 global.window = dom.window;
-global.$ = require('jquery');
-global.jQuery = require('jquery');
 
 const { document } = dom.window;
 

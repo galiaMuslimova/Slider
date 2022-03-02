@@ -8,7 +8,7 @@
     "build": "webpack --mode production",
     "watch": "webpack --mode development --watch",
     "start": "webpack-dev-server --mode development --open",
-    "test": "mocha --require ignore-styles -r ts-node/register ./src/**/*.test.ts",
+    "test": "mocha",
     "compile": "webpack",
     "elint": "eslint src",
     "elint-fix": "eslint --fix src"
@@ -19,7 +19,7 @@
     "@babel/core": "^7.16.0",
     "@babel/preset-typescript": "^7.16.0",
     "@types/chai": "^4.2.22",
-    "@types/jquery": "^3.5.8",
+    "@types/jquery": "^3.5.14",
     "@types/jsdom": "^16.2.13",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.11.9",

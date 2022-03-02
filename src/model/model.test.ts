@@ -50,24 +50,6 @@ describe('Model', () => {
     expect(model.config.max).to.equal(35);
   });
 
-  it('скорректирован step', () => {
-    const model = new Model({
-      min: 10,
-      max: 50,
-      step: 30,
-    });
-    expect(model.config.step).to.equal(4);
-  });
-
-  it('скорректирован step', () => {
-    const model = new Model({
-      min: 10,
-      max: 25,
-      step: 60,
-    });
-    expect(model.config.step).to.equal(2);
-  });
-
   it('скорректирован from', () => {
     const model = new Model({
       min: 10,
@@ -75,7 +57,7 @@ describe('Model', () => {
       step: 5,
       from: 5,
     });
-    expect(model.config.from).to.equal(15);
+    expect(model.config.from).to.equal(10);
   });
 
   it('скорректирован to', () => {
@@ -83,9 +65,10 @@ describe('Model', () => {
       min: 10,
       max: 25,
       step: 5,
-      to: 5,
+      from: 1,
+      to: 125,
     });
-    expect(model.config.to).to.equal(20);
+    expect(model.config.to).to.equal(25);
   });
 
   it('установить параметры трека', () => {
@@ -126,10 +109,11 @@ describe('Model', () => {
       min: 0,
       max: 10,
       step: 1,
-      from: 13,
+      from: -8,
       to: 19,
     });
-    expect(model.initParameters()).to.deep.equal({ values: [1, 9], positions: [50, 450] });
+    model.changeConfig();
+    expect(model.initParameters()).to.deep.equal({ values: [0, 10], positions: [0, 500] });
   });
 
   it('получить позицию x по значению value', () => {
@@ -152,8 +136,8 @@ describe('Model', () => {
     const pagePositions = { pageX: 130, pageY: 50 };
     const options = { eventPosition: pagePositions, index: 0 };
     const parameters = {
-      values: [130, 400],
-      positions: [130, 400],
+      values: [150, 400],
+      positions: [150, 400],
     };
     expect(model.takeParamHandleMove(options)).to.deep.equal(parameters);
   });
@@ -169,8 +153,8 @@ describe('Model', () => {
     const pagePositions = { pageX: 130, pageY: 50 };
     const options = { eventPosition: pagePositions, index: 1 };
     const parameters = {
-      values: [10, 13],
-      positions: [100, 130],
+      values: [10, 15],
+      positions: [100, 150],
     };
     expect(model.takeParamHandleMove(options)).to.deep.equal(parameters);
   });
@@ -179,26 +163,31 @@ describe('Model', () => {
     const model = new Model({
       min: 0,
       max: 50,
+      step: 5,
       from: 10,
       to: 40,
     });
-    expect(model.takeParamScaleClick(49)).to.deep.equal({ values: [10, 49], positions: [100, 490] });
+    const parameters = { values: [10, 45], positions: [100, 450] };
+    expect(model.takeParamScaleClick(45)).to.deep.equal(parameters);
   });
 
   it('получить параметры при клике на шкалу, меняется handle 1', () => {
     const model = new Model({
       min: 0,
       max: 50,
+      step: 5,
       from: 10,
       to: 40,
     });
-    expect(model.takeParamScaleClick(18)).to.deep.equal({ values: [18, 40], positions: [180, 400] });
+    const parameters = { values: [15, 40], positions: [150, 400] };
+    expect(model.takeParamScaleClick(15)).to.deep.equal(parameters);
   });
 
   it('получить параметры при клике на шкалу, при range=false', () => {
     const model = new Model({
       min: 0,
       max: 50,
+      step: 5,
       from: 10,
       to: 40,
       range: false,
