@@ -99,7 +99,7 @@ const dist = Object.assign({}, config, {
   mode: "production",
   entry: './index.ts',
   output: {
-    filename: 'index.js',
+    filename: 'index.[contenthash].js',
     path: path.resolve(__dirname, 'dist'),
     library: "MetaSlider",
     libraryTarget: "umd"
@@ -107,7 +107,7 @@ const dist = Object.assign({}, config, {
 
   plugins: [
     new MiniCssExtractPlugin({
-      filename: 'index.css'
+      filename: 'index.[contenthash].css'
     }),
     new CleanWebpackPlugin(),
   ],
