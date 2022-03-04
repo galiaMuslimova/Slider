@@ -1,6 +1,7 @@
+import Input from './input/Input';
 import { IConfig, ISettings } from '../interfaces/interfaces';
 import Observer from '../observer/Observer';
-import './panel-styles.scss';
+import './panel.scss';
 
 class Panel {
   $root: JQuery<HTMLElement>;
@@ -9,76 +10,81 @@ class Panel {
 
   $panel: JQuery<HTMLElement>;
 
-  $inputs: JQuery<HTMLElement>;
+  $form: JQuery<HTMLElement>;
 
-  $max: JQuery<HTMLElement>;
+  inputs: Map<string, Input>;
 
-  $min: JQuery<HTMLElement>;
+  max: Input;
 
-  $step: JQuery<HTMLElement>;
+  min: Input;
 
-  $from: JQuery<HTMLElement>;
+  step: Input;
 
-  $to: JQuery<HTMLElement>;
+  from: Input;
 
-  $vertical: JQuery<HTMLElement>;
+  to: Input;
 
-  $range: JQuery<HTMLElement>;
-
-  $tip: JQuery<HTMLElement>;
+  range: Input;
 
   constructor(root: JQuery<HTMLElement>) {
     this.$root = root;
     this.observer = new Observer();
     this.$panel = $(this.$root).find('.js-panel');
-    this.$inputs = $(this.$root).find('.js-panel__input');
-    this.$max = this.$panel.find('input[name="max"]');
-    this.$min = this.$panel.find('input[name="min"]');
-    this.$step = this.$panel.find('input[name="step"]');
-    this.$from = this.$panel.find('input[name="from"]');
-    this.$to = this.$panel.find('input[name="to"]');
-    this.$vertical = this.$panel.find('input[name="vertical"]');
-    this.$range = this.$panel.find('input[name="range"]');
-    this.$tip = this.$panel.find('input[name="tip"]');
+    this.$form = this.$panel.find('.js-panel__form');
+    this.inputs = this.initInputs();
+    this.max = this.getInput('max');
+    this.min = this.getInput('min');
+    this.step = this.getInput('step');
+    this.from = this.getInput('from');
+    this.to = this.getInput('to');
+    this.range = this.getInput('range');
     this.bindEventListeners();
   }
 
-  bindEventListeners() {
+  initInputs() {
     const element = this;
-    this.$inputs.each(function () {
-      $(this).on('change keyup', element.handleInputValueChange.bind(element));
+    const inputs = new Map<string, Input>();
+    this.$panel.find('.js-input__field').each(function () {
+      const input = new Input($(this));
+      const name = input.getName();
+      input.observer.subscribe({ key: 'setting', observer: element.changeSettings.bind(element) });
+      inputs.set(name, input);
     });
-    $('.js-panel__form').on('submit', Panel.handlePanelormSubmit);
+    return inputs;
+  }
+
+  getInput(name: string) {
+    const input = this.inputs.get(name);
+    if (input) {
+      return input;
+    }
+    throw new Error('no such input');
+  }
+
+  bindEventListeners() {
+    this.$form.on('submit', Panel.handlePanelFormSubmit);
+  }
+
+  static handlePanelFormSubmit() {
+    return false;
+  }
+
+  changeSettings(setting: ISettings) {
+    this.changeBounds(setting);
+    this.observer.notify('settings', setting);
   }
 
   initPanel(config: IConfig) {
     const element = this;
     Object.entries(config).forEach(([key, value]) => {
+      const input = element.inputs.get(key);
       const setting: ISettings = {};
-      setting[key] = value;
-      element.setValue(setting);
+      if (input) {
+        input.setValue(value);
+        setting[key] = value;
+        this.changeBounds(setting);
+      }
     });
-  }
-
-  handleInputValueChange(event: Event) {
-    const setting: ISettings = {};
-    const key = (<HTMLInputElement>event.target).name;
-    const inputType = (<HTMLInputElement>event.target).type;
-    switch (inputType) {
-      case 'number':
-        setting[key] = Number((<HTMLInputElement>event.target).value);
-        break;
-      case 'checkbox':
-        setting[key] = (<HTMLInputElement>event.target).checked;
-        break;
-      default:
-        break;
-    }
-    this.observer.notify('settings', setting);
-  }
-
-  static handlePanelormSubmit() {
-    return false;
   }
 
   changeBounds(set: ISettings) {
@@ -86,75 +92,64 @@ class Panel {
     const value = Object.values(set)[0];
     switch (key) {
       case 'min':
-        this.$max.prop('min', value);
-        this.$from.prop('min', value);
+        this.max.setProp('min', value);
+        this.from.setProp('min', value);
         break;
       case 'max':
-        this.$min.prop('max', value);
-        this.$from.prop('max', this.$range.prop('checked') ? this.$to.val() : value);
-        this.$to.prop('max', value);
+        this.min.setProp('max', value);
+        this.from.setProp('max', this.range.getValue() ? this.to.getValue() : value);
+        this.to.setProp('max', value);
         break;
       case 'step':
-        this.$from.prop('step', value);
-        this.$to.prop('step', value);
+        this.from.setProp('step', value);
+        this.to.setProp('step', value);
         break;
       case 'from':
-        this.$to.prop('min', value);
+        this.to.setProp('min', value);
         break;
       case 'to':
-        this.$from.prop('max', value);
+        this.from.setProp('max', value);
         break;
       case 'range': {
-        const max = value ? this.$to.val() : this.$max.val();
-        this.$to.prop('disabled', !value);
-        this.$from.prop('max', max);
+        const max = value ? this.to.getValue() : this.max.getValue();
+        this.to.setProp('disabled', !value);
+        this.from.setProp('max', max);
         break;
       }
+      case 'vertical':
+      case 'tip':
+        break;
       default:
         throw new Error('undefined setting');
-    }
-  }
-
-  setValue(set: ISettings) {
-    const key = Object.keys(set)[0];
-    const value = Object.values(set)[0];
-    const $input = this.$panel.find(`input[name='${key}']`);
-    const inputType = $input.prop('type');
-    switch (inputType) {
-      case 'number':
-        $input.val(Number(value));
-        this.changeBounds(set);
-        break;
-      case 'checkbox':
-        $input.prop('checked', value);
-        break;
-      default:
-        break;
-    }
-    if (key === 'range') {
-      this.changeBounds(set);
     }
   }
 
   initValues(values: number[]) {
     switch (values.length) {
       case 1: {
-        const max = this.$max.val();
-        this.$from.val(values[0]);
-        this.$from.prop('max', max);
+        const max = this.max.getValue();
+        this.from.setValue(values[0]);
+        this.from.setProp('max', max);
         break;
       }
       case 2: {
-        this.$from.val(values[0]);
-        this.$to.val(values[1]);
-        this.$from.prop('max', values[1]);
-        this.$to.prop('min', values[0]);
+        this.from.setValue(values[0]);
+        this.to.setValue(values[1]);
+        this.from.setProp('max', values[1]);
+        this.to.setProp('min', values[0]);
         break;
       }
       default: {
         throw new Error('undefined values');
       }
     }
+  }
+
+  setValue(setting: ISettings) {
+    const key = Object.keys(setting)[0];
+    const value = Object.values(setting)[0];
+    const input = this.getInput(key);
+    input.setValue(value);
   }
 }
 

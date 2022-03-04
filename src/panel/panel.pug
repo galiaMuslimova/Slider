@@ -1,38 +1,12 @@
+include input/input.pug
+
 .panel.js-panel
   form.panel__form.js-panel__form
-    label.panel__number
-      p.panel__text min
-      input.panel__input.js-panel__input.panel__input_with-number(type="number" name="min" value="0")
-  form.panel__form.js-panel__form
-    label.panel__number
-      p.panel__text max
-      input.panel__input.js-panel__input.panel__input_with-number(type="number" name="max" value="50")
-  form.panel__form.js-panel__form
-    label.panel__number
-      p.panel__text step
-      input.panel__input.js-panel__input.panel__input_with-number(type="number" name="step" value="5" min="0.1" step="0.1")
-      form.panel__form
-  form.panel__form.js-panel__form
-    label.panel__number
-      p.panel__text from
-      input.panel__input.js-panel__input.panel__input_with-number(type="number" name="from" value="10")
-      form.panel__form
-  form.panel__form.js-panel__form
-    label.panel__number
-      p.panel__text to
-      input.panel__input.js-panel__input.panel__input_with-number(type="number" name="to" value="40")
-  form.panel__form.js-panel__form
-    label.panel__toggle
-      p.panel__text vertical
-      input.panel__input.js-panel__input.panel__input_with-checkbox(type="checkbox" name="vertical")
-      span.panel__box
-  form.panel__form.js-panel__form
-    label.panel__toggle
-      p.panel__text tip
-      input.panel__input.js-panel__input.panel__input_with-checkbox(type="checkbox" name="tip")
-      span.panel__box
-  form.panel__form.js-panel__form
-    label.panel__toggle
-      p.panel__text range
-      input.panel__input.js-panel__input.panel__input_with-checkbox(type="checkbox" name="range")
-      span.panel__box
+   +input({type:"number", name:"max", value:"0"})
+   +input({type:"number", name:"min", value:"10"})
+   +input({type:"number", name:"step", value:"1", min:"0.1", step:"0.1"})
+   +input({type:"number", name:"from", value:"2"})
+   +input({type:"number", name:"to", value:"8"})
+   +input({type:"checkbox", name:"vertical"})
+   +input({type:"checkbox", name:"tip"})
+   +input({type:"checkbox", name:"range"})

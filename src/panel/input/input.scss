@@ -1,26 +1,11 @@
-.panel {
-  color: #024C68;
-  margin: 10px;
-  display: grid;
-  grid-auto-flow: row;
-  grid-row-gap: 20px;
-  grid-column-gap: 20px;
-  grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
-  justify-items: end;
-
-  &__number {
+.input {
+  &__label {
     display: flex;
     height: 30px;
     align-items: center;
   }
 
-  &__text {
-    font-size: 18px;
-    padding-right: 10px;
-    margin: 0px;
-  }
-
-  &__input {
+  &__field {
     &_with-number {
       border: 1px solid #226078;
       box-sizing: border-box;
@@ -39,7 +24,7 @@
       width: 0px;
       margin: 0px;
 
-      &:checked+.panel__box {
+      &:checked+.input__box {
         background-color: #0776A0;
 
         &:before {
@@ -50,9 +35,10 @@
     }
   }
 
-  &__toggle {
-    display: flex;
-    align-items: center;
+  &__text {
+    font-size: 18px;
+    padding-right: 10px;
+    margin: 0px;
   }
 
   &__box {

@@ -1,0 +1,13 @@
+.panel {
+  color: #024C68;
+  margin: 10px;
+
+  &__form {
+    display: grid;
+    grid-auto-flow: row;
+    grid-row-gap: 20px;
+    grid-column-gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    justify-items: end;
+  }
+}
