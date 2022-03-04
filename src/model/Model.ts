@@ -77,6 +77,7 @@ class Model {
       valuesArr.push(max);
       stepsArr.push({ value: max, x: this.trackWidth });
     }
+
     this.stepsArr = stepsArr;
     return stepsArr;
   }
@@ -92,6 +93,7 @@ class Model {
     } else {
       correctConfig.from = from;
     }
+
     this.config = correctConfig;
     return correctConfig;
   }
@@ -110,7 +112,6 @@ class Model {
     const parameters: IParameters = { values: [], positions: [] };
     const element = this;
     parameters.values[0] = this.config.from;
-
     if (this.config.range) {
       parameters.values[1] = this.config.to;
     }

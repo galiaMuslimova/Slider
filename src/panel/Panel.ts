@@ -58,6 +58,7 @@ class Panel {
     if (input) {
       return input;
     }
+
     throw new Error('no such input');
   }
 

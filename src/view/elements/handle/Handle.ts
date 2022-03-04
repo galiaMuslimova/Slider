@@ -23,7 +23,6 @@ class Handle {
       const $handle2 = jQuery('<div>', {
         class: 'meta-slider__handle meta-slider__handle_right',
       }).appendTo($track);
-
       this.handles.push($handle2);
     }
   }

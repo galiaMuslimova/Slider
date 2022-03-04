@@ -96,14 +96,12 @@ class View {
     const { index } = e.data;
     const { observer } = e.data;
     const { originalEvent } = e;
-    if (originalEvent !== undefined) {
-      const { touches } = originalEvent;
-      if (touches !== undefined) {
-        const touch = touches[0];
-        const eventPosition = { pageX: touch.pageX, pageY: touch.pageY };
-        const options = { eventPosition, index };
-        observer.notify('mousemove', options);
-      }
+    const touches = originalEvent?.touches;
+    if (touches !== undefined) {
+      const touch = touches[0];
+      const eventPosition = { pageX: touch.pageX, pageY: touch.pageY };
+      const options = { eventPosition, index };
+      observer.notify('mousemove', options);
     }
   }
 

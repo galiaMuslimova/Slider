@@ -17,15 +17,16 @@ class Tip {
   }
 
   initTips(tip = true) {
+    const element = this;
     this.$slider.find('.meta-slider__tip').remove();
     this.$tips = [];
-    const handles = this.$slider.find('.meta-slider__handle');
     if (tip) {
-      for (let i = 0; i < handles.length; i += 1) {
-        const $tipClone = this.$tip.clone();
-        $tipClone.appendTo($(handles[i]));
-        this.$tips.push($tipClone);
-      }
+      const $handles = this.$slider.find('.meta-slider__handle');
+      $handles.each(function () {
+        const $tipClone = element.$tip.clone();
+        $tipClone.appendTo($(this));
+        element.$tips.push($tipClone);
+      });
     }
   }
 
