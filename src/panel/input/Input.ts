@@ -3,15 +3,15 @@ import Observer from '../../observer/Observer';
 import './input.scss';
 
 class Input {
-  element: JQuery<HTMLElement>;
+  readonly element: JQuery<HTMLElement>;
 
-  observer: Observer;
+  public observer: Observer;
 
-  name: string;
+  readonly name: string;
 
-  type: string;
+  readonly type: string;
 
-  value: number | boolean;
+  private value: number | boolean;
 
   constructor(element: JQuery<HTMLElement>) {
     this.element = element;
@@ -22,11 +22,11 @@ class Input {
     this.bindEventListeners();
   }
 
-  bindEventListeners() {
+  private bindEventListeners() {
     $(this.element).on('change keyup', this.handleInputValueChange.bind(this));
   }
 
-  handleInputValueChange(event: Event) {
+  private handleInputValueChange(event: Event) {
     switch (this.type) {
       case 'number':
         this.value = Number((<HTMLInputElement>event.target).value);
@@ -42,15 +42,15 @@ class Input {
     this.observer.notify('setting', setting);
   }
 
-  getName() {
+  public getName() {
     return this.name;
   }
 
-  getValue() {
+  public getValue() {
     return this.value;
   }
 
-  setValue(value: number | boolean) {
+  public setValue(value: number | boolean) {
     this.value = value;
     if (typeof value === 'number') {
       this.element.val(value);
@@ -59,7 +59,7 @@ class Input {
     }
   }
 
-  setProp(name: string, value: number | boolean) {
+  public setProp(name: string, value: number | boolean) {
     this.element.prop(name, value);
   }
 }

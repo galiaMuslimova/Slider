@@ -4,27 +4,27 @@ import Observer from '../observer/Observer';
 import './panel.scss';
 
 class Panel {
-  $root: JQuery<HTMLElement>;
+  readonly $root: JQuery<HTMLElement>;
 
-  observer: Observer;
+  public observer: Observer;
 
-  $panel: JQuery<HTMLElement>;
+  readonly $panel: JQuery<HTMLElement>;
 
-  $form: JQuery<HTMLElement>;
+  readonly $form: JQuery<HTMLElement>;
 
-  inputs: Map<string, Input>;
+  readonly inputs: Map<string, Input>;
 
-  max: Input;
+  private max: Input;
 
-  min: Input;
+  private min: Input;
 
-  step: Input;
+  private step: Input;
 
-  from: Input;
+  readonly from: Input;
 
-  to: Input;
+  readonly to: Input;
 
-  range: Input;
+  readonly range: Input;
 
   constructor(root: JQuery<HTMLElement>) {
     this.$root = root;
@@ -32,16 +32,16 @@ class Panel {
     this.$panel = $(this.$root).find('.js-panel');
     this.$form = this.$panel.find('.js-panel__form');
     this.inputs = this.initInputs();
-    this.max = this.getInput('max');
-    this.min = this.getInput('min');
-    this.step = this.getInput('step');
-    this.from = this.getInput('from');
-    this.to = this.getInput('to');
-    this.range = this.getInput('range');
+    this.max = this.takeInputFromArr('max');
+    this.min = this.takeInputFromArr('min');
+    this.step = this.takeInputFromArr('step');
+    this.from = this.takeInputFromArr('from');
+    this.to = this.takeInputFromArr('to');
+    this.range = this.takeInputFromArr('range');
     this.bindEventListeners();
   }
 
-  initInputs() {
+  private initInputs() {
     const element = this;
     const inputs = new Map<string, Input>();
     this.$panel.find('.js-input__field').each(function () {
@@ -53,7 +53,7 @@ class Panel {
     return inputs;
   }
 
-  getInput(name: string) {
+  private takeInputFromArr(name: string) {
     const input = this.inputs.get(name);
     if (input) {
       return input;
@@ -62,7 +62,7 @@ class Panel {
     throw new Error('no such input');
   }
 
-  bindEventListeners() {
+  private bindEventListeners() {
     this.$form.on('submit', Panel.handlePanelFormSubmit);
   }
 
@@ -70,12 +70,12 @@ class Panel {
     return false;
   }
 
-  changeSettings(setting: ISettings) {
+  private changeSettings(setting: ISettings) {
     this.changeBounds(setting);
-    this.observer.notify('settings', setting);
+    this.observer.notify('setting', setting);
   }
 
-  initPanel(config: IConfig) {
+  public initPanel(config: IConfig) {
     const element = this;
     Object.entries(config).forEach(([key, value]) => {
       const input = element.inputs.get(key);
@@ -88,7 +88,7 @@ class Panel {
     });
   }
 
-  changeBounds(set: ISettings) {
+  private changeBounds(set: ISettings) {
     const key = Object.keys(set)[0];
     const value = Object.values(set)[0];
     switch (key) {
@@ -125,7 +125,7 @@ class Panel {
     }
   }
 
-  initValues(values: number[]) {
+  public initValues(values: number[]) {
     switch (values.length) {
       case 1: {
         const max = this.max.getValue();
@@ -146,10 +146,10 @@ class Panel {
     }
   }
 
-  setValue(setting: ISettings) {
+  public setValue(setting: ISettings) {
     const key = Object.keys(setting)[0];
     const value = Object.values(setting)[0];
-    const input = this.getInput(key);
+    const input = this.takeInputFromArr(key);
     input.setValue(value);
   }
 }

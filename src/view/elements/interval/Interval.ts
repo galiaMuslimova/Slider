@@ -1,9 +1,9 @@
 class Interval {
-  $slider: JQuery<HTMLElement>;
+  readonly $slider: JQuery<HTMLElement>;
 
-  $interval: JQuery<HTMLElement>;
+  readonly $interval: JQuery<HTMLElement>;
 
-  $track: JQuery<HTMLElement>;
+  readonly $track: JQuery<HTMLElement>;
 
   constructor(slider: JQuery<HTMLElement>) {
     this.$slider = slider;
@@ -15,7 +15,7 @@ class Interval {
     this.$interval = this.$slider.find('.meta-slider__interval');
   }
 
-  moveInterval(positions: number[], vertical: boolean) {
+  public moveInterval(positions: number[], vertical: boolean) {
     let min: number;
     let width: number;
     const handleWidth = 20;

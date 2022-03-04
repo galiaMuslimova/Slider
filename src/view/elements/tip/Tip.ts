@@ -1,11 +1,11 @@
 class Tip {
-  $slider: JQuery<HTMLElement>;
+  readonly $slider: JQuery<HTMLElement>;
 
-  $handles: JQuery<HTMLElement>[];
+  readonly $handles: JQuery<HTMLElement>[];
 
-  $tips: JQuery<HTMLElement>[];
+  private $tips: JQuery<HTMLElement>[];
 
-  $tip: JQuery<HTMLElement>;
+  readonly $tip: JQuery<HTMLElement>;
 
   constructor(slider: JQuery<HTMLElement>) {
     this.$slider = slider;
@@ -16,7 +16,7 @@ class Tip {
     });
   }
 
-  initTips(tip = true) {
+  public initTips(tip = true) {
     const element = this;
     this.$slider.find('.meta-slider__tip').remove();
     this.$tips = [];
@@ -30,7 +30,7 @@ class Tip {
     }
   }
 
-  changeTips(values: number[]) {
+  public changeTips(values: number[]) {
     this.$tips.forEach((item, index) => {
       item.html(`${values[index]}`);
     });

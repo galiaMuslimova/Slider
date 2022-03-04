@@ -1,19 +1,19 @@
 import Observer from '../../../observer/Observer';
 
 class Track {
-  $slider: JQuery<HTMLElement>;
+  readonly $slider: JQuery<HTMLElement>;
 
-  $track: JQuery<HTMLElement>;
+  readonly $track: JQuery<HTMLElement>;
 
-  observer: Observer;
+  public observer: Observer;
 
-  vertical: boolean;
+  private vertical: boolean;
 
-  position: { top: number, left: number };
+  readonly position: { top: number, left: number };
 
-  trackStart: number;
+  private trackStart: number;
 
-  trackWidth: number | undefined;
+  private trackWidth: number | undefined;
 
   constructor(slider: JQuery<HTMLElement>, vertical: boolean) {
     this.$slider = slider;
@@ -28,17 +28,17 @@ class Track {
     this.bindEventListeners();
   }
 
-  bindEventListeners() {
+  private bindEventListeners() {
     this.$track.on('click', this.handleTrackClick.bind(this));
   }
 
-  handleTrackClick(event: any) {
+  private handleTrackClick(event: any) {
     const eventPosition = this.vertical ? event.pageY : event.pageX;
     const position = Math.round(eventPosition - this.trackStart);
     this.observer.notify('position', position);
   }
 
-  getTrackParameters(vertical: boolean) {
+  public getTrackParameters(vertical: boolean) {
     this.vertical = vertical;
     const trackStart = vertical ? Number(this.position.top) : Number(this.position.left);
     const trackWidth = vertical ? this.$track.height() : this.$track.width();

@@ -14,29 +14,30 @@ const defaults: IConfig = {
 };
 
 class Model {
-  config: IConfig;
+  private config: IConfig;
 
-  options: IOptions;
+  readonly options: IOptions;
 
-  stepsArr: IPosition[];
+  private stepsArr: IPosition[];
 
-  parameters: IParameters;
+  private parameters: IParameters;
 
-  trackStart: number;
+  private trackStart: number;
 
-  trackWidth: number;
+  private trackWidth: number;
 
   constructor(options: IOptions, trackStart: number = 0, trackWidth: number = 500) {
     this.trackStart = trackStart;
     this.trackWidth = trackWidth;
     this.options = this.correctOptionsType(options);
     this.config = $.extend({}, defaults, this.options);
-    this.stepsArr = [];
-    this.changeConfig();
+    this.correctMinMax();
+    this.stepsArr = this.initStepsArr();
+    this.correctFromTo();
     this.parameters = this.initParameters();
   }
 
-  correctOptionsType(options: IOptions = this.options) {
+  private correctOptionsType(options: IOptions = this.options) {
     const correctConfig = { ...options };
     correctConfig.max = Number.isInteger(options.max) ? Math.round(options.max) : defaults.max;
     correctConfig.min = Number.isInteger(options.min) ? Math.round(options.min) : defaults.min;
@@ -49,13 +50,7 @@ class Model {
     return correctConfig;
   }
 
-  changeConfig() {
-    this.correctMinMax();
-    this.initStepsArr();
-    this.correctFromTo();
-  }
-
-  correctMinMax(config: IConfig = this.config) {
+  public correctMinMax(config: IConfig = this.config) {
     const correctConfig = { ...config };
     correctConfig.max = (config.max > config.min) ? config.max : config.min;
     correctConfig.min = (config.max > config.min) ? config.min : config.max;
@@ -64,13 +59,13 @@ class Model {
     return correctConfig;
   }
 
-  initStepsArr() {
+  public initStepsArr() {
     const { min, max, step } = this.config;
     const range = max - min;
     const stepLength = (this.trackWidth / range) * step;
     const stepsCount = Math.floor(range / step);
     const emptyArr = Array(stepsCount + 1);
-    const valuesArr = Array.from(emptyArr, (_, i) => (min + Math.round(step * i * 10) / 10));
+    const valuesArr = Array.from(emptyArr, (_, i) => (Model.round(min + Model.round(step * i))));
     const stepsArr: IPosition[] = [];
     valuesArr.map((el, index) => stepsArr.push({ value: el, x: Math.round(stepLength * index) }));
     if (valuesArr.indexOf(max) === -1) {
@@ -82,7 +77,11 @@ class Model {
     return stepsArr;
   }
 
-  correctFromTo(config: IConfig = this.config) {
+  static round(num: number) {
+    return (Math.round(num * 10)) / 10;
+  }
+
+  public correctFromTo(config: IConfig = this.config) {
     const correctConfig = { ...config };
     const valuesArr = this.stepsArr.map((item) => item.value);
     const from = Model.takeClosestNum(correctConfig.from, valuesArr);
@@ -108,7 +107,7 @@ class Model {
     return array.indexOf(closest);
   }
 
-  initParameters() {
+  public initParameters() {
     const parameters: IParameters = { values: [], positions: [] };
     const element = this;
     parameters.values[0] = this.config.from;
@@ -121,7 +120,7 @@ class Model {
     return parameters;
   }
 
-  takeXByValue(val: number) {
+  private takeXByValue(val: number) {
     const position = this.stepsArr.find((el) => el.value === val);
     if (position) {
       return position.x;
@@ -130,7 +129,9 @@ class Model {
     throw new Error('position for this value is not consist');
   }
 
-  takeParamHandleMove(options: { eventPosition: { pageX: number, pageY: number }, index: number }) {
+  public takeParamHandleMove(options:
+  { eventPosition: { pageX: number, pageY: number },
+    index: number }) {
     const { pageX } = options.eventPosition;
     const { pageY } = options.eventPosition;
     const { index } = options;
@@ -152,7 +153,7 @@ class Model {
     return false;
   }
 
-  takeParamScaleClick(value: number) {
+  public takeParamScaleClick(value: number) {
     if (this.config.range) {
       const index = Model.takeClosestIndex(value, this.parameters.values);
       this.parameters.values[index] = value;
@@ -165,7 +166,7 @@ class Model {
     return this.parameters;
   }
 
-  takeParamTrackClick(position: number) {
+  public takeParamTrackClick(position: number) {
     const positionsArr = this.stepsArr.map((item) => item.x);
     const closestPosition = Model.takeClosestNum(position, positionsArr);
     if (this.config.range) {
@@ -180,13 +181,37 @@ class Model {
     return this.parameters;
   }
 
-  takeValueByX(x: number) {
+  private takeValueByX(x: number) {
     const item = this.stepsArr.find((el) => el.x === x);
     if (item) {
       return item.value;
     }
 
     throw new Error('value for this position is not consist');
+  }
+
+  public getConfig() {
+    return this.config;
+  }
+
+  public setConfig(config: IConfig) {
+    this.config = config;
+  }
+
+  public getParameters() {
+    return this.parameters;
+  }
+
+  public setTrackStart(trackStart: number = 0) {
+    this.trackStart = trackStart;
+  }
+
+  public settrackWidth(trackWidth: number = 500) {
+    this.trackWidth = trackWidth;
+  }
+
+  public getStepsArr() {
+    return this.stepsArr;
   }
 }
 

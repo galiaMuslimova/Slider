@@ -12,27 +12,27 @@ import Interval from './elements/interval/interval';
 import Tip from './elements/tip/tip';
 
 class View {
-  vertical: boolean;
+  private vertical: boolean;
 
-  observer: Observer;
+  public observer: Observer;
 
-  $root: JQuery<HTMLElement>;
+  readonly $root: JQuery<HTMLElement>;
 
-  $container: JQuery<HTMLElement>;
+  readonly $container: JQuery<HTMLElement>;
 
-  $slider: JQuery<HTMLElement>;
+  readonly $slider: JQuery<HTMLElement>;
 
-  panel: Panel;
+  private panel: Panel;
 
-  track: Track;
+  readonly track: Track;
 
-  scale: Scale;
+  readonly scale: Scale;
 
-  handles: Handle;
+  readonly handles: Handle;
 
-  interval: Interval;
+  readonly interval: Interval;
 
-  tips: Tip;
+  readonly tips: Tip;
 
   constructor(root: JQuery<HTMLElement>, vertical: boolean) {
     this.$root = root;
@@ -50,20 +50,20 @@ class View {
     this.tips = new Tip(this.$slider);
     this.interval = new Interval(this.$slider);
     this.panel = new Panel(this.$container);
-    this.panel.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) });
+    this.panel.observer.subscribe({ key: 'setting', observer: this.changeSettings.bind(this) });
     this.moveHandle();
     this.scaleClick();
   }
 
-  changePositionByTrack(position: number) {
+  private changePositionByTrack(position: number) {
     this.observer.notify('position', position);
   }
 
-  changeSettings(settings: ISettings) {
-    this.observer.notify('settings', settings);
+  private changeSettings(setting: ISettings) {
+    this.observer.notify('setting', setting);
   }
 
-  moveHandle() {
+  private moveHandle() {
     const { observer } = this;
     this.$slider.on('mousedown touchstart', '.meta-slider__handle', (event) => {
       event.preventDefault();
@@ -113,7 +113,7 @@ class View {
     return false;
   }
 
-  scaleClick() {
+  private scaleClick() {
     const { observer } = this;
     this.$slider.on('click touchstart', '.meta-slider__value', { observer }, View.sendScaleClickValue);
   }
@@ -124,44 +124,44 @@ class View {
     observer.notify('click', currentValue);
   }
 
-  getTrackParameters() {
+  public getTrackParameters() {
     return this.track.getTrackParameters(this.vertical);
   }
 
-  initScale(stepsArr: IPosition[]) {
+  public initScale(stepsArr: IPosition[]) {
     this.scale.initScale(stepsArr, this.vertical);
   }
 
-  initHandles(range:boolean) {
+  public initHandles(range:boolean) {
     this.handles.initHandles(range);
   }
 
-  initTips(tip: boolean) {
+  public initTips(tip: boolean) {
     this.tips.initTips(tip);
   }
 
-  changeTips(values: number[]) {
+  public changeTips(values: number[]) {
     this.tips.changeTips(values);
   }
 
-  changeDirection(vertical: boolean) {
+  public changeDirection(vertical: boolean) {
     this.vertical = vertical;
     this.$container.removeClass(`body__container_${this.vertical ? 'horizontal' : 'vertical'}`).addClass(`body__container_${this.vertical ? 'vertical' : 'horizontal'}`);
     this.$slider.removeClass(`meta-slider_${this.vertical ? 'horizontal' : 'vertical'}`).addClass(`meta-slider_${this.vertical ? 'vertical' : 'horizontal'}`);
   }
 
-  setParameters(parameters: IParameters) {
+  public setParameters(parameters: IParameters) {
     this.handles.moveHandles(parameters.positions, this.vertical);
     this.tips.changeTips(parameters.values);
     this.interval.moveInterval(parameters.positions, this.vertical);
     this.panel.initValues(parameters.values);
   }
 
-  setSettings(setting: ISettings, key: string) {
+  public setSettings(setting: ISettings, key: string) {
     this.panel.setValue(setting);
   }
 
-  initPanel(config: IConfig) {
+  public initPanel(config: IConfig) {
     this.panel.initPanel(config);
   }
 }

@@ -3,15 +3,15 @@ import View from '../view/View';
 import Model from '../model/Model';
 
 class Controller {
-  model: Model;
+  readonly model: Model;
 
-  view: View;
+  readonly view: View;
 
-  options: IOptions;
+  readonly options: IOptions;
 
-  $root: JQuery<HTMLElement>;
+  readonly $root: JQuery<HTMLElement>;
 
-  vertical: boolean;
+  private vertical: boolean;
 
   constructor(root: JQuery<HTMLElement>, options: IOptions) {
     this.options = options;
@@ -27,78 +27,81 @@ class Controller {
     this.initElements();
     this.view.observer.subscribe({ key: 'mousemove', observer: this.moveHandle.bind(this) });
     this.view.observer.subscribe({ key: 'click', observer: this.clickOnScale.bind(this) });
-    this.view.initPanel(this.model.config);
-    this.view.observer.subscribe({ key: 'settings', observer: this.changeSettings.bind(this) });
+    this.view.initPanel(this.model.getConfig());
+    this.view.observer.subscribe({ key: 'setting', observer: this.changeSettings.bind(this) });
     this.view.observer.subscribe({ key: 'position', observer: this.changePositionByTrack.bind(this) });
   }
 
-  initElements() {
-    const { stepsArr } = this.model;
+  private initElements() {
+    const stepsArr = this.model.getStepsArr();
     this.view.initScale(stepsArr);
-    const { range } = this.model.config;
+    const { range } = this.model.getConfig();
     this.view.initHandles(range);
-    const { tip } = this.model.config;
+    const { tip } = this.model.getConfig();
     this.view.initTips(tip);
-    const parameters = this.model.initParameters();
+    const parameters = this.model.getParameters();
     this.view.setParameters(parameters);
   }
 
-  moveHandle(options: { eventPosition: { pageX: number, pageY: number }, index: number }) {
+  private moveHandle(options: { eventPosition: { pageX: number, pageY: number }, index: number }) {
     const parameters = this.model.takeParamHandleMove(options);
     if (parameters) {
       this.view.setParameters(parameters);
     }
   }
 
-  clickOnScale(value: number) {
+  private clickOnScale(value: number) {
     const parameters = this.model.takeParamScaleClick(value);
     if (parameters) {
       this.view.setParameters(parameters);
     }
   }
 
-  changeSettings(settings: ISettings) {
-    this.model.config = $.extend({}, this.model.config, settings);
-    const key = Object.keys(settings)[0];
+  private changeSettings(setting: ISettings) {
+    const modelConfig = this.model.getConfig();
+    const newConfig = $.extend({}, modelConfig, setting);
+    this.model.setConfig(newConfig);
+    const key = Object.keys(setting)[0];
     switch (key) {
       case 'min':
       case 'max':
       case 'step':
-        this.model.changeConfig();
-        this.view.setSettings({ min: this.model.config.min }, 'min');
-        this.view.setSettings({ max: this.model.config.max }, 'max');
-        this.view.setSettings({ step: this.model.config.step }, 'step');
-        this.view.initScale(this.model.stepsArr);
+        this.model.correctMinMax();
+        this.view.initScale(this.model.initStepsArr());
+        this.view.setSettings({ min: newConfig.min }, 'min');
+        this.view.setSettings({ max: newConfig.max }, 'max');
+        this.view.setSettings({ step: newConfig.step }, 'step');
+        this.model.correctFromTo();
         this.view.setParameters(this.model.initParameters());
         break;
       case 'from':
       case 'to':
         this.model.correctFromTo();
-        this.view.setSettings({ from: this.model.config.from }, 'from');
-        this.view.setSettings({ to: this.model.config.to }, 'to');
+        this.view.setSettings({ from: newConfig.from }, 'from');
+        this.view.setSettings({ to: newConfig.to }, 'to');
         this.view.setParameters(this.model.initParameters());
         break;
       case 'range':
         this.model.correctFromTo();
-        this.view.setSettings({ range: this.model.config.range }, 'range');
-        this.view.initHandles(this.model.config.range);
-        this.view.initTips(this.model.config.tip);
+        this.view.setSettings({ range: newConfig.range }, 'range');
+        this.view.initHandles(newConfig.range);
+        this.view.initTips(newConfig.tip);
         this.view.setParameters(this.model.initParameters());
         break;
       case 'tip':
-        this.view.setSettings({ tip: this.model.config.tip }, 'tip');
-        this.view.initTips(this.model.config.tip);
-        this.view.changeTips(this.model.parameters.values);
+        this.view.setSettings({ tip: newConfig.tip }, 'tip');
+        this.view.initTips(newConfig.tip);
+        this.view.changeTips(this.model.getParameters().values);
         break;
       case 'vertical': {
-        this.view.setSettings({ vertical: this.model.config.vertical }, 'vertical');
+        this.view.setSettings({ vertical: newConfig.vertical }, 'vertical');
         const vertical = !this.vertical;
         this.options.vertical = vertical;
         this.vertical = vertical;
         this.view.changeDirection(vertical);
         const { trackStart, trackWidth } = this.view.getTrackParameters();
-        this.model.trackStart = trackStart || 0;
-        this.model.trackWidth = trackWidth || 500;
+        this.model.setTrackStart(trackStart);
+        this.model.settrackWidth(trackWidth);
         this.initElements();
         break;
       }
@@ -108,7 +111,7 @@ class Controller {
     }
   }
 
-  changePositionByTrack(position: number) {
+  private changePositionByTrack(position: number) {
     const parameters = this.model.takeParamTrackClick(position);
     if (parameters) {
       this.view.setParameters(parameters);

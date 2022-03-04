@@ -1,14 +1,14 @@
 class Handle {
-  $slider: JQuery<HTMLElement>;
+  readonly $slider: JQuery<HTMLElement>;
 
-  handles: JQuery<HTMLElement>[];
+  private handles: JQuery<HTMLElement>[];
 
   constructor(slider: JQuery<HTMLElement>) {
     this.$slider = slider;
     this.handles = [];
   }
 
-  initHandles(range:boolean = true) {
+  public initHandles(range:boolean = true) {
     this.handles = [];
     const $handles = this.$slider.find('.meta-slider__handle');
     $handles.remove();
@@ -27,7 +27,7 @@ class Handle {
     }
   }
 
-  moveHandles(positions: number[], vertical:boolean) {
+  public moveHandles(positions: number[], vertical:boolean) {
     const handleWidth = 20;
     this.handles.forEach((item, index) => {
       item.css(vertical ? 'top' : 'left', `${positions[index] - handleWidth / 2}px`);

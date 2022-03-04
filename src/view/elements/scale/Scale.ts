@@ -1,7 +1,7 @@
 class Scale {
-  $slider: JQuery<HTMLElement>;
+  readonly $slider: JQuery<HTMLElement>;
 
-  $scale: JQuery<HTMLElement>;
+  readonly $scale: JQuery<HTMLElement>;
 
   constructor(slider: JQuery<HTMLElement>) {
     this.$slider = slider;
@@ -10,7 +10,7 @@ class Scale {
     }).appendTo(this.$slider);
   }
 
-  initScale(stepsArr: { value: number, x: number }[], vertical:boolean = false) {
+  public initScale(stepsArr: { value: number, x: number }[], vertical:boolean = false) {
     this.$scale.empty();
     const handleWidth = 20;
     stepsArr.forEach((item) => {
