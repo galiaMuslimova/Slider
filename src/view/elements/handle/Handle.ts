@@ -17,10 +17,10 @@ class Handle {
     this.vertical = vertical;
     this.observer = new Observer();
     this.handles = this.initHandles();
-    this.bindEventListener();
+    this.bindEventListeners();
   }
 
-  private bindEventListener() {
+  private bindEventListeners() {
     this.handles.forEach((item) => {
       item.on('mousedown touchstart', this.handleHandleMouseDown.bind(this));
     });
@@ -86,7 +86,7 @@ class Handle {
       $handle2.remove();
       this.handles.pop();
     }
-    this.bindEventListener();
+    this.bindEventListeners();
   }
 
   public moveHandles(positions: number[]) {
@@ -102,19 +102,3 @@ class Handle {
 
 export default Handle;
 
-/* private handleTouchMove(e: {
-  data: { index: number };
-
-  // use type any cause event can be any type
-  originalEvent: any;
-}) {
-  const { index } = e.data;
-  const { originalEvent } = e;
-  const touches = originalEvent?.touches;
-  if (touches !== undefined) {
-    const touch = touches[0];
-    const eventPosition = { pageX: touch.pageX, pageY: touch.pageY };
-    const options = { eventPosition, index };
-    this.observer.notify('mousemove', options);
-  }
-} */

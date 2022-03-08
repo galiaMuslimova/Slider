@@ -71,13 +71,15 @@ const docs = Object.assign({}, config, {
   entry: './demo.ts',
   output: {
     filename: 'index.js',
-    path: path.resolve(__dirname, 'docs')
+    path: path.resolve(__dirname, 'docs/')
   },
   devServer: {
-    port: 4000
+    port: 4000,
+    static: 'docs'
   },
   plugins: [
     new HTMLWebpackPlugin({
+      cache: false,
       template: './demo.pug',
       filename: 'index.html'
     }),
@@ -104,7 +106,6 @@ const dist = Object.assign({}, config, {
     library: "MetaSlider",
     libraryTarget: "umd"
   },
-
   plugins: [
     new MiniCssExtractPlugin({
       filename: 'index.[contenthash].css'
