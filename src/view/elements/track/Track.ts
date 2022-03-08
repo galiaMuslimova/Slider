@@ -38,13 +38,16 @@ class Track {
     this.observer.notify('position', position);
   }
 
-  public getTrackParameters(vertical: boolean) {
-    this.vertical = vertical;
-    const trackStart = vertical ? Number(this.position.top) : Number(this.position.left);
-    const trackWidth = vertical ? this.$track.height() : this.$track.width();
+  public getTrackParameters() {
+    const trackStart = this.vertical ? Number(this.position.top) : Number(this.position.left);
+    const trackWidth = this.vertical ? this.$track.height() : this.$track.width();
     this.trackStart = trackStart;
     this.trackWidth = trackWidth;
     return { trackStart, trackWidth };
+  }
+
+  public setVertical(vertical: boolean) {
+    this.vertical = vertical;
   }
 }
 

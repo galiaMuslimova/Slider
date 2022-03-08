@@ -3,9 +3,9 @@ import View from '../view/View';
 import Model from '../model/Model';
 
 class Controller {
-  readonly model: Model;
+  private model: Model;
 
-  readonly view: View;
+  private view: View;
 
   readonly options: IOptions;
 
@@ -26,6 +26,7 @@ class Controller {
   init() {
     this.initElements();
     this.view.observer.subscribe({ key: 'mousemove', observer: this.moveHandle.bind(this) });
+    this.view.observer.subscribe({ key: 'moveend', observer: this.moveEnd.bind(this) });
     this.view.observer.subscribe({ key: 'click', observer: this.clickOnScale.bind(this) });
     this.view.initPanel(this.model.getConfig());
     this.view.observer.subscribe({ key: 'setting', observer: this.changeSettings.bind(this) });
@@ -36,18 +37,26 @@ class Controller {
     const stepsArr = this.model.getStepsArr();
     this.view.initScale(stepsArr);
     const { range } = this.model.getConfig();
-    this.view.initHandles(range);
+    this.view.correctHandlesByRange(range);
     const { tip } = this.model.getConfig();
     this.view.initTips(tip);
     const parameters = this.model.getParameters();
     this.view.setParameters(parameters);
   }
 
-  private moveHandle(options: { eventPosition: { pageX: number, pageY: number }, index: number }) {
+  private moveHandle(options: { eventPosition: number, index: number }) {
     const parameters = this.model.takeParamHandleMove(options);
     if (parameters) {
       this.view.setParameters(parameters);
     }
+  }
+
+  private moveEnd() {
+    this.model.correctFromToByParams();
+    const modelConfig = this.model.getConfig();
+    this.view.setSettings({ from: modelConfig.from }, 'from');
+    this.view.setSettings({ to: modelConfig.to }, 'to');
+    this.view.setParameters(this.model.getParameters());
   }
 
   private clickOnScale(value: number) {
@@ -84,7 +93,7 @@ class Controller {
       case 'range':
         this.model.correctFromTo();
         this.view.setSettings({ range: newConfig.range }, 'range');
-        this.view.initHandles(newConfig.range);
+        this.view.correctHandlesByRange(newConfig.range);
         this.view.initTips(newConfig.tip);
         this.view.setParameters(this.model.initParameters());
         break;
@@ -95,13 +104,12 @@ class Controller {
         break;
       case 'vertical': {
         this.view.setSettings({ vertical: newConfig.vertical }, 'vertical');
-        const vertical = !this.vertical;
-        this.options.vertical = vertical;
-        this.vertical = vertical;
-        this.view.changeDirection(vertical);
+        this.vertical = !this.vertical;
+        this.view.changeDirection(this.vertical);
         const { trackStart, trackWidth } = this.view.getTrackParameters();
         this.model.setTrackStart(trackStart);
         this.model.settrackWidth(trackWidth);
+        this.view.initScale(this.model.initStepsArr());
         this.initElements();
         break;
       }

@@ -47,7 +47,11 @@ class Input {
   }
 
   public getValue() {
-    return this.value;
+    const { value } = this;
+    if (typeof value === 'number') {
+      Number(value);
+    }
+    return value;
   }
 
   public setValue(value: number | boolean) {

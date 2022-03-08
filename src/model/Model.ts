@@ -129,14 +129,10 @@ class Model {
     throw new Error('position for this value is not consist');
   }
 
-  public takeParamHandleMove(options:
-  { eventPosition: { pageX: number, pageY: number },
-    index: number }) {
-    const { pageX } = options.eventPosition;
-    const { pageY } = options.eventPosition;
+  public takeParamHandleMove(options: { eventPosition: number, index: number }) {
+    const { eventPosition } = options;
     const { index } = options;
-    const mousePosition = this.config.vertical ? pageY : pageX;
-    const position = Math.round(mousePosition - this.trackStart);
+    const position = Math.round(eventPosition - this.trackStart);
     const isInScale = (position >= 0) && (position <= this.trackWidth);
     if (isInScale) {
       const positionsArr = this.stepsArr.map((item) => item.x);
@@ -144,13 +140,18 @@ class Model {
       const stepsArrItem = this.stepsArr[stepsArrClosestIndex];
       this.parameters.values[index] = stepsArrItem.value;
       this.parameters.positions[index] = stepsArrItem.x;
-      const value = this.parameters.values[0];
-      this.config.from = value;
-      this.config.to = this.parameters.values[1] ? this.parameters.values[1] : this.config.to;
       return this.parameters;
     }
 
     return false;
+  }
+
+  public correctFromToByParams() {
+    this.parameters.values.sort();
+    this.parameters.positions.sort();
+    const value = this.parameters.values[0];
+    this.config.from = value;
+    this.config.to = this.parameters.values[1] ? this.parameters.values[1] : this.config.to;
   }
 
   public takeParamScaleClick(value: number) {

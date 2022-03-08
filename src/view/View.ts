@@ -24,15 +24,15 @@ class View {
 
   private panel: Panel;
 
-  readonly track: Track;
+  private track: Track;
 
-  readonly scale: Scale;
+  private scale: Scale;
 
-  readonly handles: Handle;
+  private handles: Handle;
 
-  readonly interval: Interval;
+  private interval: Interval;
 
-  readonly tips: Tip;
+  private tips: Tip;
 
   constructor(root: JQuery<HTMLElement>, vertical: boolean) {
     this.$root = root;
@@ -42,98 +42,49 @@ class View {
     this.$slider = jQuery('<div>', {
       class: 'meta-slider',
     }).appendTo(this.$root).addClass(this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
-
     this.track = new Track(this.$slider, this.vertical);
     this.track.observer.subscribe({ key: 'position', observer: this.changePositionByTrack.bind(this) });
-    this.scale = new Scale(this.$slider);
-    this.handles = new Handle(this.$slider);
+    this.scale = new Scale(this.$slider, this.vertical);
+    this.scale.observer.subscribe({ key: 'click', observer: this.scaleClick.bind(this) });
+    this.handles = new Handle(this.$slider, this.vertical);
+    this.handles.observer.subscribe({ key: 'mousemove', observer: this.mouseMove.bind(this) });
+    this.handles.observer.subscribe({ key: 'moveend', observer: this.mouseMoveEnd.bind(this) });
     this.tips = new Tip(this.$slider);
     this.interval = new Interval(this.$slider);
     this.panel = new Panel(this.$container);
     this.panel.observer.subscribe({ key: 'setting', observer: this.changeSettings.bind(this) });
-    this.moveHandle();
-    this.scaleClick();
   }
 
   private changePositionByTrack(position: number) {
     this.observer.notify('position', position);
   }
 
+  private scaleClick(currentValue: number) {
+    this.observer.notify('click', currentValue);
+  }
+
   private changeSettings(setting: ISettings) {
     this.observer.notify('setting', setting);
   }
 
-  private moveHandle() {
-    const { observer } = this;
-    this.$slider.on('mousedown touchstart', '.meta-slider__handle', (event) => {
-      event.preventDefault();
-      const index = $(event.currentTarget).hasClass('meta-slider__handle_right') ? 1 : 0;
-      $(document).on('mousemove', { index, observer }, View.handleMouseMove);
-      $(document).on('touchmove', { index, observer }, View.handleTouchMove);
-      $(document).on('mouseup touchend', View.handleMoveEnd);
-      $(document).on('dragstart', View.handleDragStart);
-    });
+  private mouseMove(options: { eventPosition: number, index: number }) {
+    this.observer.notify('mousemove', options);
   }
 
-  static handleMouseMove(e: {
-    pageX: number;
-    pageY: number;
-    data: { index: number, observer: Observer }
-  }) {
-    const { index } = e.data;
-    const { observer } = e.data;
-    const eventPosition = { pageX: e.pageX, pageY: e.pageY };
-    const options = { eventPosition, index };
-    observer.notify('mousemove', options);
-  }
-
-  static handleTouchMove(e: {
-    data: { index: number; observer: Observer };
-
-    // use type any cause event can be any type
-    originalEvent: any;
-  }) {
-    const { index } = e.data;
-    const { observer } = e.data;
-    const { originalEvent } = e;
-    const touches = originalEvent?.touches;
-    if (touches !== undefined) {
-      const touch = touches[0];
-      const eventPosition = { pageX: touch.pageX, pageY: touch.pageY };
-      const options = { eventPosition, index };
-      observer.notify('mousemove', options);
-    }
-  }
-
-  static handleMoveEnd() {
-    $(document).off('mousemove mouseup touchmove touchend');
-  }
-
-  static handleDragStart() {
-    return false;
-  }
-
-  private scaleClick() {
-    const { observer } = this;
-    this.$slider.on('click touchstart', '.meta-slider__value', { observer }, View.sendScaleClickValue);
-  }
-
-  static sendScaleClickValue(e: { currentTarget: HTMLElement; data: { observer: Observer } }) {
-    const { observer } = e.data;
-    const currentValue = Number($(e.currentTarget).attr('data_value'));
-    observer.notify('click', currentValue);
+  private mouseMoveEnd(event: Event) {
+    this.observer.notify('moveend', event);
   }
 
   public getTrackParameters() {
-    return this.track.getTrackParameters(this.vertical);
+    return this.track.getTrackParameters();
   }
 
   public initScale(stepsArr: IPosition[]) {
     this.scale.initScale(stepsArr, this.vertical);
   }
 
-  public initHandles(range:boolean) {
-    this.handles.initHandles(range);
+  public correctHandlesByRange(range:boolean) {
+    this.handles.correctHandlesByRange(range);
   }
 
   public initTips(tip: boolean) {
@@ -146,12 +97,15 @@ class View {
 
   public changeDirection(vertical: boolean) {
     this.vertical = vertical;
+    this.track.setVertical(vertical);
+    this.scale.setVertical(vertical);
+    this.handles.setVertical(vertical);
     this.$container.removeClass(`body__container_${this.vertical ? 'horizontal' : 'vertical'}`).addClass(`body__container_${this.vertical ? 'vertical' : 'horizontal'}`);
     this.$slider.removeClass(`meta-slider_${this.vertical ? 'horizontal' : 'vertical'}`).addClass(`meta-slider_${this.vertical ? 'vertical' : 'horizontal'}`);
   }
 
   public setParameters(parameters: IParameters) {
-    this.handles.moveHandles(parameters.positions, this.vertical);
+    this.handles.moveHandles(parameters.positions);
     this.tips.changeTips(parameters.values);
     this.interval.moveInterval(parameters.positions, this.vertical);
     this.panel.initValues(parameters.values);

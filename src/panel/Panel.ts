@@ -91,13 +91,16 @@ class Panel {
   private changeBounds(set: ISettings) {
     const key = Object.keys(set)[0];
     const value = Object.values(set)[0];
+    const range = Number(this.max.getValue()) - Number(this.min.getValue());
     switch (key) {
       case 'min':
         this.max.setProp('min', value);
+        this.step.setProp('max', range);
         this.from.setProp('min', value);
         break;
       case 'max':
         this.min.setProp('max', value);
+        this.step.setProp('max', range);
         this.from.setProp('max', this.range.getValue() ? this.to.getValue() : value);
         this.to.setProp('max', value);
         break;

@@ -4,7 +4,7 @@ import MetaSlider from './MetaSlider';
 
 const options1: IOptions = {
   min: 0,
-  max: 10,
+  max: 50,
   step: 1,
   from: 3,
   to: 70,
