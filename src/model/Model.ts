@@ -1,5 +1,5 @@
 import {
-  IConfig, IOptions, IParameters, IPosition,
+  IConfig, IOptions, IParameters, IPosition, IEventPosition,
 } from '../interfaces/interfaces';
 
 const defaults: IConfig = {
@@ -129,7 +129,7 @@ class Model {
     throw new Error('position for this value is not consist');
   }
 
-  public takeParamHandleMove(options: { eventPosition: number, index: number }) {
+  public takeParamHandleMove(options: IEventPosition) {
     const { eventPosition } = options;
     const { index } = options;
     const position = Math.round(eventPosition - this.trackStart);

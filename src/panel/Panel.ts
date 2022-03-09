@@ -12,7 +12,7 @@ class Panel {
 
   readonly $form: JQuery<HTMLElement>;
 
-  readonly inputs: Map<string, Input>;
+  public inputs: Map<string, Input>;
 
   private max: Input;
 

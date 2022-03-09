@@ -1,5 +1,5 @@
 class Observer {
-  observers: { key: string, observer: (data: any) => void }[];
+  public observers: { key: string, observer: (data: any) => void }[];
 
   constructor() {
     this.observers = [];
@@ -7,15 +7,15 @@ class Observer {
 
   // use type any, cause any can subscribe
 
-  subscribe(fn: { key: string, observer: (data: any) => void }) {
+  public subscribe(fn: { key: string, observer: (data: any) => void }) {
     this.observers.push(fn);
   }
 
-  unsubscribe(fn: { key: string, observer: (data: any) => void }) {
+  public unsubscribe(fn: { key: string, observer: (data: any) => void }) {
     this.observers = this.observers.filter((item) => item !== fn);
   }
 
-  notify(key: string, data: any) {
+  public notify(key: string, data: any) {
     this.observers.forEach((item) => {
       if (item.key === key) {
         item.observer(data);

@@ -40,6 +40,11 @@ interface IResult {
   parameters: IParameters
 }
 
+interface IEventPosition {
+  eventPosition: number,
+  index: number
+}
+
 export {
   IOptions,
   IConfig,
@@ -47,4 +52,5 @@ export {
   IParameters,
   IPosition,
   IResult,
+  IEventPosition,
 };

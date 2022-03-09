@@ -7,9 +7,9 @@ class Input {
 
   public observer: Observer;
 
-  readonly name: string;
+  private name: string;
 
-  readonly type: string;
+  private type: string;
 
   private value: number | boolean;
 

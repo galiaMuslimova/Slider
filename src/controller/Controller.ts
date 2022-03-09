@@ -1,4 +1,4 @@
-import { IOptions, ISettings } from '../interfaces/interfaces';
+import { IOptions, ISettings, IEventPosition } from '../interfaces/interfaces';
 import View from '../view/View';
 import Model from '../model/Model';
 
@@ -23,7 +23,7 @@ class Controller {
     this.init();
   }
 
-  init() {
+  private init() {
     this.initElements();
     this.view.observer.subscribe({ key: 'mousemove', observer: this.moveHandle.bind(this) });
     this.view.observer.subscribe({ key: 'moveend', observer: this.moveEnd.bind(this) });
@@ -44,7 +44,7 @@ class Controller {
     this.view.setParameters(parameters);
   }
 
-  private moveHandle(options: { eventPosition: number, index: number }) {
+  private moveHandle(options: IEventPosition) {
     const parameters = this.model.takeParamHandleMove(options);
     if (parameters) {
       this.view.setParameters(parameters);

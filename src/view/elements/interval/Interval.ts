@@ -11,7 +11,6 @@ class Interval {
     jQuery('<div>', {
       class: 'meta-slider__interval',
     }).appendTo(this.$track);
-
     this.$interval = this.$slider.find('.meta-slider__interval');
   }
 

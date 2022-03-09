@@ -10,10 +10,6 @@ class Scale {
 
   readonly $scale: JQuery<HTMLElement>;
 
-  private position: { top: number, left: number };
-
-  private scaleWidth: number | undefined;
-
   constructor(slider: JQuery<HTMLElement>, vertical: boolean) {
     this.$slider = slider;
     this.vertical = vertical;
@@ -21,8 +17,6 @@ class Scale {
     this.$scale = jQuery('<div>', {
       class: 'meta-slider__scale',
     }).appendTo(this.$slider);
-    this.position = this.$scale.position();
-    this.scaleWidth = this.vertical ? this.$scale.height() : this.$scale.width();
     this.bindEventListeners();
   }
 
@@ -84,7 +78,6 @@ class Scale {
 
   public setVertical(vertical: boolean) {
     this.vertical = vertical;
-    this.scaleWidth = this.vertical ? this.$scale.height() : this.$scale.width();
   }
 }
 

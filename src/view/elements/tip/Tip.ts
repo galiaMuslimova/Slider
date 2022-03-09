@@ -1,7 +1,7 @@
 class Tip {
   readonly $slider: JQuery<HTMLElement>;
 
-  readonly $handles: JQuery<HTMLElement>[];
+  private $handles: JQuery<HTMLElement>[];
 
   private $tips: JQuery<HTMLElement>[];
 
@@ -16,7 +16,7 @@ class Tip {
     });
   }
 
-  public initTips(tip = true) {
+  public initTips(tip: boolean = true) {
     const element = this;
     this.$slider.find('.meta-slider__tip').remove();
     this.$tips = [];

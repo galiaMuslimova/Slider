@@ -32,8 +32,8 @@ class Track {
     this.$track.on('click', this.handleTrackClick.bind(this));
   }
 
-  private handleTrackClick(event: any) {
-    const eventPosition = this.vertical ? event.pageY : event.pageX;
+  private handleTrackClick(event: Event) {
+    const eventPosition = this.vertical ? (<MouseEvent>event).pageY : (<MouseEvent>event).pageX;
     const position = Math.round(eventPosition - this.trackStart);
     this.observer.notify('position', position);
   }

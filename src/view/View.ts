@@ -1,5 +1,5 @@
 import {
-  IConfig, IParameters, IPosition, ISettings,
+  IConfig, IEventPosition, IParameters, IPosition, ISettings,
 } from '../interfaces/interfaces';
 import Panel from '../panel/Panel';
 import Observer from '../observer/Observer';
@@ -67,7 +67,7 @@ class View {
     this.observer.notify('setting', setting);
   }
 
-  private mouseMove(options: { eventPosition: number, index: number }) {
+  private mouseMove(options: IEventPosition) {
     this.observer.notify('mousemove', options);
   }
 
