@@ -15,11 +15,11 @@ const element1 = $('.js-body__container_first').find('.js-body__slider');
 const slider1 = new MetaSlider(element1, options1);
 
 const options2: IOptions = {
-  min: 1000000,
-  max: 2000000,
-  from: 250000,
-  to: 357500,
-  step: 10000,
+  min: 100000,
+  max: 210000,
+  from: 25000,
+  to: 35750,
+  step: 30000,
   vertical: false,
   tip: true,
   range: false,

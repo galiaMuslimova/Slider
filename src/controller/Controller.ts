@@ -109,7 +109,7 @@ class Controller {
         const { trackStart, trackWidth } = this.view.getTrackParameters();
         this.model.setTrackStart(trackStart);
         this.model.settrackWidth(trackWidth);
-        this.view.initScale(this.model.initStepsArr());
+        this.model.initStepsArr();
         this.initElements();
         break;
       }

@@ -36,7 +36,7 @@
       &__tip {
         bottom: 20px;
         width: 60px;
-        right: 20px;
+        right: -20px;
         text-align: center;
       }
     }
@@ -124,7 +124,7 @@
     font-size: 16px;
     font-weight: bold;
     line-height: 20px;
-    position: relative;
+    position: absolute;
     text-align: center;
   }
 }

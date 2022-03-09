@@ -92,6 +92,7 @@ class Handle {
   public moveHandles(positions: number[]) {
     this.handles.forEach((item, index) => {
       item.css(this.vertical ? 'top' : 'left', `${positions[index] - 20 / 2}px`);
+      item.css(this.vertical ? 'left' : 'top', '-5px');
     });
   }
 
