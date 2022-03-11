@@ -1,7 +1,9 @@
 import Observer from '../../../observer/Observer';
+import IObserver from '../../../observer/interface';
+import IHandle from './interface';
 
-class Handle {
-  public observer: Observer;
+class Handle implements IHandle {
+  public observer: IObserver;
 
   readonly $slider: JQuery<HTMLElement>;
 
@@ -20,7 +22,7 @@ class Handle {
     this.bindEventListeners();
   }
 
-  public correctHandlesByRange(range: boolean) {
+  public correctHandlesByRange(range: boolean): void {
     if (range && this.handles.length === 1) {
       const $handle2 = jQuery('<div>', {
         class: 'meta-slider__handle meta-slider__handle_right',
@@ -34,28 +36,28 @@ class Handle {
     this.bindEventListeners();
   }
 
-  public moveHandles(positions: number[]) {
+  public moveHandles(positions: number[]): void {
     this.handles.forEach((item, index) => {
       item.css(this.vertical ? 'top' : 'left', `${positions[index] - 20 / 2}px`);
       item.css(this.vertical ? 'left' : 'top', '-5px');
     });
   }
 
-  public setVertical(vertical: boolean) {
+  public setVertical(vertical: boolean): void {
     this.vertical = vertical;
   }
 
-  static handleDragStart() {
+  static handleDragStart(): boolean {
     return false;
   }
 
-  private bindEventListeners() {
+  private bindEventListeners(): void {
     this.handles.forEach((item) => {
       item.on('mousedown touchstart', this.handleHandleMouseDown.bind(this));
     });
   }
 
-  private handleHandleMouseDown(event: Event) {
+  private handleHandleMouseDown(event: Event): void {
     event.preventDefault();
     const eventTarget = <Element>event.target;
     $(document).on('mousemove', this.handleMouseMove.bind(this, eventTarget));
@@ -64,14 +66,14 @@ class Handle {
     $(document).on('dragstart', Handle.handleDragStart);
   }
 
-  private handleMouseMove(eventTarget: EventTarget, event: Event) {
+  private handleMouseMove(eventTarget: EventTarget, event: Event): void {
     const index = $(eventTarget).hasClass('meta-slider__handle_right') ? 1 : 0;
     const eventPosition = this.vertical ? (<MouseEvent>event).pageY : (<MouseEvent>event).pageX;
     const options = { eventPosition, index };
     this.observer.notify('mousemove', options);
   }
 
-  private handleTouchMove(eventTarget: EventTarget, event: Event) {
+  private handleTouchMove(eventTarget: EventTarget, event: Event): void {
     const index = $(eventTarget).hasClass('meta-slider__handle_right') ? 1 : 0;
     const touches = (<TouchEvent>event)?.touches;
     if (touches !== undefined) {
@@ -82,12 +84,12 @@ class Handle {
     }
   }
 
-  private handleMoveEnd(event: Event) {
+  private handleMoveEnd(event: Event): void {
     this.observer.notify('moveend', event);
     $(document).off('mousemove mouseup touchmove touchend');
   }
 
-  private initHandles() {
+  private initHandles(): JQuery<HTMLElement>[] {
     const handles: JQuery<HTMLElement>[] = [];
     const $handle1 = jQuery('<div>', {
       class: 'meta-slider__handle meta-slider__handle_left',

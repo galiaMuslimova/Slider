@@ -1,4 +1,6 @@
-class Tip {
+import ITip from './interface';
+
+class Tip implements ITip {
   readonly $slider: JQuery<HTMLElement>;
 
   readonly $tip: JQuery<HTMLElement>;
@@ -13,7 +15,7 @@ class Tip {
     });
   }
 
-  public initTips(tip: boolean = true) {
+  public initTips(tip: boolean = true): void {
     const element = this;
     this.$slider.find('.meta-slider__tip').remove();
     this.$tips = [];
@@ -27,7 +29,7 @@ class Tip {
     }
   }
 
-  public changeTips(values: number[]) {
+  public changeTips(values: number[]): void {
     this.$tips.forEach((item, index) => {
       item.html(`${values[index]}`);
     });

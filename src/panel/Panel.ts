@@ -1,12 +1,15 @@
-import Input from './input/Input';
 import { IConfig, ISettings } from '../interfaces/interfaces';
 import Observer from '../observer/Observer';
+import IObserver from '../observer/interface';
+import Input from './input/Input';
+import IPanel from './interface';
+
 import './panel.scss';
 
-class Panel {
+class Panel implements IPanel {
   public inputs: Map<string, Input>;
 
-  public observer: Observer;
+  public observer: IObserver;
 
   readonly $root: JQuery<HTMLElement>;
 
@@ -14,11 +17,11 @@ class Panel {
 
   readonly $form: JQuery<HTMLElement>;
 
-  readonly from: Input;
+  private from: Input;
 
-  readonly to: Input;
+  private to: Input;
 
-  readonly range: Input;
+  private range: Input;
 
   private max: Input;
 
@@ -41,7 +44,7 @@ class Panel {
     this.bindEventListeners();
   }
 
-  public initPanel(config: IConfig) {
+  public initPanel(config: IConfig): void {
     const element = this;
     Object.entries(config).forEach(([key, value]) => {
       const input = element.inputs.get(key);
@@ -54,7 +57,7 @@ class Panel {
     });
   }
 
-  public initValues(values: number[]) {
+  public initValues(values: number[]): void {
     switch (values.length) {
       case 1: {
         const max = this.max.getValue();
@@ -75,18 +78,18 @@ class Panel {
     }
   }
 
-  public setValue(setting: ISettings) {
+  public setValue(setting: ISettings): void {
     const key = Object.keys(setting)[0];
     const value = Object.values(setting)[0];
     const input = this.takeInputFromArr(key);
     input.setValue(value);
   }
 
-  static handlePanelFormSubmit() {
+  static handlePanelFormSubmit(): boolean {
     return false;
   }
 
-  private initInputs() {
+  private initInputs(): Map<string, Input> {
     const element = this;
     const inputs = new Map<string, Input>();
     this.$panel.find('.js-input__field').each(function () {
@@ -98,7 +101,7 @@ class Panel {
     return inputs;
   }
 
-  private takeInputFromArr(name: string) {
+  private takeInputFromArr(name: string): Input {
     const input = this.inputs.get(name);
     if (input) {
       return input;
@@ -107,16 +110,16 @@ class Panel {
     throw new Error('no such input');
   }
 
-  private bindEventListeners() {
+  private bindEventListeners(): void {
     this.$form.on('submit', Panel.handlePanelFormSubmit);
   }
 
-  private changeSettings(setting: ISettings) {
+  private changeSettings(setting: ISettings): void {
     this.changeBounds(setting);
     this.observer.notify('setting', setting);
   }
 
-  private changeBounds(set: ISettings) {
+  private changeBounds(set: ISettings): void {
     const key = Object.keys(set)[0];
     const value = Object.values(set)[0];
     const range = Number(this.max.getValue()) - Number(this.min.getValue());

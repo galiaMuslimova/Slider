@@ -1,7 +1,10 @@
+import { ITrackPosition } from '../../../interfaces/interfaces';
 import Observer from '../../../observer/Observer';
+import IObserver from '../../../observer/interface';
+import ITrack from './interface';
 
-class Track {
-  public observer: Observer;
+class Track implements ITrack {
+  public observer: IObserver;
 
   readonly $slider: JQuery<HTMLElement>;
 
@@ -25,22 +28,22 @@ class Track {
     this.bindEventListeners();
   }
 
-  public getTrackParameters() {
+  public getTrackParameters(): ITrackPosition {
     const trackStart = this.vertical ? Number(this.position.top) : Number(this.position.left);
     const trackWidth = this.vertical ? this.$track.height() : this.$track.width();
     this.trackStart = trackStart;
     return { trackStart, trackWidth };
   }
 
-  public setVertical(vertical: boolean) {
+  public setVertical(vertical: boolean): void {
     this.vertical = vertical;
   }
 
-  private bindEventListeners() {
+  private bindEventListeners(): void {
     this.$track.on('click', this.handleTrackClick.bind(this));
   }
 
-  private handleTrackClick(event: Event) {
+  private handleTrackClick(event: Event): void {
     const eventPosition = this.vertical ? (<MouseEvent>event).pageY : (<MouseEvent>event).pageX;
     const position = Math.round(eventPosition - this.trackStart);
     this.observer.notify('position', position);

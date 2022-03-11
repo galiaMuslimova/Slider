@@ -18,7 +18,6 @@ interface IOptions {
   vertical?: any,
   tip?: any,
   range?: any,
-  handleWidth?: any
 }
 
 interface ISettings {
@@ -30,13 +29,13 @@ interface IParameters {
   positions: number[],
 }
 
-interface IPosition {
+interface IStepsArr {
   value: number,
   x: number
 }
 
 interface IResult {
-  stepsArr: IPosition[],
+  stepsArr: IStepsArr[],
   parameters: IParameters
 }
 
@@ -45,12 +44,24 @@ interface IEventPosition {
   index: number
 }
 
+interface ITrackPosition {
+  trackStart: number,
+  trackWidth: number | undefined
+}
+
+interface IScaleArr {
+  item: IStepsArr,
+  index: number
+}
+
 export {
   IOptions,
   IConfig,
   ISettings,
   IParameters,
-  IPosition,
+  IStepsArr,
   IResult,
   IEventPosition,
+  ITrackPosition,
+  IScaleArr,
 };

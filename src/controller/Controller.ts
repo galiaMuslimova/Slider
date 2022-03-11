@@ -1,17 +1,20 @@
 import { IOptions, ISettings, IEventPosition } from '../interfaces/interfaces';
 import View from '../view/View';
+import IView from '../view/interface';
 import Model from '../model/Model';
+import IModel from '../model/interface';
+import IController from './interface';
 
-class Controller {
+class Controller implements IController {
   readonly options: IOptions;
 
   readonly $root: JQuery<HTMLElement>;
 
   private vertical: boolean;
 
-  private model: Model;
+  private model: IModel;
 
-  private view: View;
+  private view: IView;
 
   constructor(root: JQuery<HTMLElement>, options: IOptions) {
     this.options = options;
@@ -46,7 +49,7 @@ class Controller {
 
   private moveHandle(options: IEventPosition) {
     const parameters = this.model.takeParamHandleMove(options);
-    if (parameters) {
+    if (typeof parameters !== 'boolean') {
       this.view.setParameters(parameters);
     }
   }
@@ -54,8 +57,8 @@ class Controller {
   private moveEnd() {
     this.model.correctFromToByParams();
     const modelConfig = this.model.getConfig();
-    this.view.setSettings({ from: modelConfig.from }, 'from');
-    this.view.setSettings({ to: modelConfig.to }, 'to');
+    this.view.setSettings({ from: modelConfig.from });
+    this.view.setSettings({ to: modelConfig.to });
     this.view.setParameters(this.model.getParameters());
   }
 
@@ -77,33 +80,33 @@ class Controller {
       case 'step':
         this.model.correctMinMax();
         this.view.initScale(this.model.initStepsArr());
-        this.view.setSettings({ min: newConfig.min }, 'min');
-        this.view.setSettings({ max: newConfig.max }, 'max');
-        this.view.setSettings({ step: newConfig.step }, 'step');
+        this.view.setSettings({ min: newConfig.min });
+        this.view.setSettings({ max: newConfig.max });
+        this.view.setSettings({ step: newConfig.step });
         this.model.correctFromTo();
         this.view.setParameters(this.model.initParameters());
         break;
       case 'from':
       case 'to':
         this.model.correctFromTo();
-        this.view.setSettings({ from: newConfig.from }, 'from');
-        this.view.setSettings({ to: newConfig.to }, 'to');
+        this.view.setSettings({ from: newConfig.from });
+        this.view.setSettings({ to: newConfig.to });
         this.view.setParameters(this.model.initParameters());
         break;
       case 'range':
         this.model.correctFromTo();
-        this.view.setSettings({ range: newConfig.range }, 'range');
+        this.view.setSettings({ range: newConfig.range });
         this.view.correctHandlesByRange(newConfig.range);
         this.view.initTips(newConfig.tip);
         this.view.setParameters(this.model.initParameters());
         break;
       case 'tip':
-        this.view.setSettings({ tip: newConfig.tip }, 'tip');
+        this.view.setSettings({ tip: newConfig.tip });
         this.view.initTips(newConfig.tip);
         this.view.changeTips(this.model.getParameters().values);
         break;
       case 'vertical': {
-        this.view.setSettings({ vertical: newConfig.vertical }, 'vertical');
+        this.view.setSettings({ vertical: newConfig.vertical });
         this.vertical = !this.vertical;
         this.view.changeDirection(this.vertical);
         const { trackStart, trackWidth } = this.view.getTrackParameters();

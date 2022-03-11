@@ -1,8 +1,10 @@
 import {
-  IConfig, IEventPosition, IParameters, IPosition, ISettings,
+  IConfig, IEventPosition, IParameters, IStepsArr, ISettings, ITrackPosition,
 } from '../interfaces/interfaces';
 import Panel from '../panel/Panel';
+import IPanel from '../panel/interface';
 import Observer from '../observer/Observer';
+import IView from './interface';
 import './slider.scss';
 
 import Track from './elements/track/track';
@@ -10,8 +12,13 @@ import Scale from './elements/scale/scale';
 import Handle from './elements/handle/handle';
 import Interval from './elements/interval/interval';
 import Tip from './elements/tip/tip';
+import ITrack from './elements/track/interface';
+import IScale from './elements/scale/interface';
+import IHandle from './elements/handle/interface';
+import IInterval from './elements/interval/interface';
+import ITip from './elements/tip/interface';
 
-class View {
+class View implements IView {
   public observer: Observer;
 
   readonly $root: JQuery<HTMLElement>;
@@ -22,17 +29,17 @@ class View {
 
   private vertical: boolean;
 
-  private panel: Panel;
+  private panel: IPanel;
 
-  private track: Track;
+  private track: ITrack;
 
-  private scale: Scale;
+  private scale: IScale;
 
-  private handles: Handle;
+  private handles: IHandle;
 
-  private interval: Interval;
+  private interval: IInterval;
 
-  private tips: Tip;
+  private tips: ITip;
 
   constructor(root: JQuery<HTMLElement>, vertical: boolean) {
     this.$root = root;
@@ -55,27 +62,27 @@ class View {
     this.panel.observer.subscribe({ key: 'setting', observer: this.changeSettings.bind(this) });
   }
 
-  public getTrackParameters() {
+  public getTrackParameters(): ITrackPosition {
     return this.track.getTrackParameters();
   }
 
-  public initScale(stepsArr: IPosition[]) {
+  public initScale(stepsArr: IStepsArr[]): void {
     this.scale.initScale(stepsArr, this.vertical);
   }
 
-  public correctHandlesByRange(range:boolean) {
+  public correctHandlesByRange(range:boolean): void {
     this.handles.correctHandlesByRange(range);
   }
 
-  public initTips(tip: boolean) {
+  public initTips(tip: boolean): void {
     this.tips.initTips(tip);
   }
 
-  public changeTips(values: number[]) {
+  public changeTips(values: number[]): void {
     this.tips.changeTips(values);
   }
 
-  public changeDirection(vertical: boolean) {
+  public changeDirection(vertical: boolean): void {
     this.vertical = vertical;
     this.track.setVertical(vertical);
     this.scale.setVertical(vertical);
@@ -84,38 +91,38 @@ class View {
     this.$slider.removeClass(`meta-slider_${this.vertical ? 'horizontal' : 'vertical'}`).addClass(`meta-slider_${this.vertical ? 'vertical' : 'horizontal'}`);
   }
 
-  public setParameters(parameters: IParameters) {
+  public setParameters(parameters: IParameters): void {
     this.handles.moveHandles(parameters.positions);
     this.tips.changeTips(parameters.values);
     this.interval.moveInterval(parameters.positions, this.vertical);
     this.panel.initValues(parameters.values);
   }
 
-  public setSettings(setting: ISettings, key: string) {
+  public setSettings(setting: ISettings): void {
     this.panel.setValue(setting);
   }
 
-  public initPanel(config: IConfig) {
+  public initPanel(config: IConfig): void {
     this.panel.initPanel(config);
   }
 
-  private changePositionByTrack(position: number) {
+  private changePositionByTrack(position: number): void {
     this.observer.notify('position', position);
   }
 
-  private scaleClick(currentValue: number) {
+  private scaleClick(currentValue: number): void {
     this.observer.notify('click', currentValue);
   }
 
-  private changeSettings(setting: ISettings) {
+  private changeSettings(setting: ISettings): void {
     this.observer.notify('setting', setting);
   }
 
-  private mouseMove(options: IEventPosition) {
+  private mouseMove(options: IEventPosition): void {
     this.observer.notify('mousemove', options);
   }
 
-  private mouseMoveEnd(event: Event) {
+  private mouseMoveEnd(event: Event): void {
     this.observer.notify('moveend', event);
   }
 }

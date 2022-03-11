@@ -1,4 +1,6 @@
-class Interval {
+import IInterval from './interface';
+
+class Interval implements IInterval {
   readonly $slider: JQuery<HTMLElement>;
 
   readonly $interval: JQuery<HTMLElement>;
@@ -14,7 +16,7 @@ class Interval {
     this.$interval = this.$slider.find('.meta-slider__interval');
   }
 
-  public moveInterval(positions: number[], vertical: boolean) {
+  public moveInterval(positions: number[], vertical: boolean): void {
     let min: number;
     let width: number;
     const handleWidth = 20;

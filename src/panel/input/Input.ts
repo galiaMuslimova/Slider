@@ -1,9 +1,11 @@
 import { ISettings } from '../../interfaces/interfaces';
 import Observer from '../../observer/Observer';
+import IObserver from '../../observer/interface';
+import IInput from './interface';
 import './input.scss';
 
-class Input {
-  public observer: Observer;
+class Input implements IInput {
+  public observer: IObserver;
 
   readonly element: JQuery<HTMLElement>;
 
@@ -22,11 +24,11 @@ class Input {
     this.bindEventListeners();
   }
 
-  public getName() {
+  public getName(): string {
     return this.name;
   }
 
-  public getValue() {
+  public getValue(): number | boolean {
     const { value } = this;
     if (typeof value === 'number') {
       Number(value);
@@ -34,7 +36,7 @@ class Input {
     return value;
   }
 
-  public setValue(value: number | boolean) {
+  public setValue(value: number | boolean): void {
     this.value = value;
     if (typeof value === 'number') {
       this.element.val(value);
@@ -43,15 +45,15 @@ class Input {
     }
   }
 
-  public setProp(name: string, value: number | boolean) {
+  public setProp(name: string, value: number | boolean): void {
     this.element.prop(name, value);
   }
 
-  private bindEventListeners() {
+  private bindEventListeners(): void {
     $(this.element).on('change keyup', this.handleInputValueChange.bind(this));
   }
 
-  private handleInputValueChange(event: Event) {
+  private handleInputValueChange(event: Event): void {
     switch (this.type) {
       case 'number':
         this.value = Number((<HTMLInputElement>event.target).value);

@@ -14,14 +14,14 @@ describe('Model', () => {
       tip: true,
       range: true,
     });
-    expect(model.config.min).to.equal(15);
-    expect(model.config.max).to.equal(25);
-    expect(model.config.step).to.equal(1);
-    expect(model.config.from).to.equal(18);
-    expect(model.config.to).to.equal(20);
-    expect(model.config.vertical).to.equal(false);
-    expect(model.config.tip).to.equal(true);
-    expect(model.config.range).to.equal(true);
+    expect(model.getConfig().min).to.equal(15);
+    expect(model.getConfig().max).to.equal(25);
+    expect(model.getConfig().step).to.equal(1);
+    expect(model.getConfig().from).to.equal(18);
+    expect(model.getConfig().to).to.equal(20);
+    expect(model.getConfig().vertical).to.equal(false);
+    expect(model.getConfig().tip).to.equal(true);
+    expect(model.getConfig().range).to.equal(true);
   });
 
   it('установлены дефолтные значения в случае отсутствия опций', () => {
@@ -31,14 +31,14 @@ describe('Model', () => {
       from: 10,
       to: 20,
     });
-    expect(model.config.min).to.equal(10);
-    expect(model.config.max).to.equal(50);
-    expect(model.config.step).to.equal(10);
-    expect(model.config.from).to.equal(10);
-    expect(model.config.to).to.equal(20);
-    expect(model.config.vertical).to.equal(false);
-    expect(model.config.tip).to.equal(true);
-    expect(model.config.range).to.equal(true);
+    expect(model.getConfig().min).to.equal(10);
+    expect(model.getConfig().max).to.equal(50);
+    expect(model.getConfig().step).to.equal(10);
+    expect(model.getConfig().from).to.equal(10);
+    expect(model.getConfig().to).to.equal(20);
+    expect(model.getConfig().vertical).to.equal(false);
+    expect(model.getConfig().tip).to.equal(true);
+    expect(model.getConfig().range).to.equal(true);
   });
 
   it('скорректирован min и max', () => {
@@ -46,8 +46,8 @@ describe('Model', () => {
       min: 35,
       max: 25,
     });
-    expect(model.config.min).to.equal(25);
-    expect(model.config.max).to.equal(35);
+    expect(model.getConfig().min).to.equal(25);
+    expect(model.getConfig().max).to.equal(35);
   });
 
   it('скорректирован from', () => {
@@ -57,7 +57,7 @@ describe('Model', () => {
       step: 5,
       from: 5,
     });
-    expect(model.config.from).to.equal(10);
+    expect(model.getConfig().from).to.equal(10);
   });
 
   it('скорректирован to', () => {
@@ -68,13 +68,7 @@ describe('Model', () => {
       from: 1,
       to: 125,
     });
-    expect(model.config.to).to.equal(25);
-  });
-
-  it('установить параметры трека', () => {
-    const model = new Model({}, 100, 300);
-    expect(model.trackStart).to.equal(100);
-    expect(model.trackWidth).to.equal(300);
+    expect(model.getConfig().to).to.equal(25);
   });
 
   it('сделать массив шагов для шкалы', () => {
@@ -112,17 +106,8 @@ describe('Model', () => {
       from: -8,
       to: 19,
     });
-    model.changeConfig();
+    model.correctFromTo();
     expect(model.initParameters()).to.deep.equal({ values: [0, 10], positions: [0, 500] });
-  });
-
-  it('получить позицию x по значению value', () => {
-    const model = new Model({
-      min: 0,
-      max: 10,
-      step: 1,
-    });
-    expect(model.takeXByValue(5)).to.deep.equal(250);
   });
 
   it('получить параметры при движении handle 1', () => {
@@ -133,8 +118,7 @@ describe('Model', () => {
       from: 100,
       to: 400,
     });
-    const pagePositions = { pageX: 130, pageY: 50 };
-    const options = { eventPosition: pagePositions, index: 0 };
+    const options = { eventPosition: 130, index: 0 };
     const parameters = {
       values: [150, 400],
       positions: [150, 400],
@@ -150,8 +134,7 @@ describe('Model', () => {
       from: 10,
       to: 40,
     });
-    const pagePositions = { pageX: 130, pageY: 50 };
-    const options = { eventPosition: pagePositions, index: 1 };
+    const options = { eventPosition: 130, index: 1 };
     const parameters = {
       values: [10, 15],
       positions: [100, 150],
