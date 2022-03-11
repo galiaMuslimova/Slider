@@ -46,6 +46,7 @@ describe('Model', () => {
       min: 35,
       max: 25,
     });
+    model.correctMinMax();
     expect(model.getConfig().min).to.equal(25);
     expect(model.getConfig().max).to.equal(35);
   });
@@ -57,6 +58,7 @@ describe('Model', () => {
       step: 5,
       from: 5,
     });
+    model.correctFromTo();
     expect(model.getConfig().from).to.equal(10);
   });
 
@@ -68,6 +70,7 @@ describe('Model', () => {
       from: 1,
       to: 125,
     });
+    model.correctFromTo();
     expect(model.getConfig().to).to.equal(25);
   });
 
@@ -176,5 +179,68 @@ describe('Model', () => {
       range: false,
     });
     expect(model.takeParamScaleClick(5)).to.deep.equal({ values: [5], positions: [50] });
+  });
+
+  it('получить параметры при клике на трэк, при range=false', () => {
+    const model = new Model({
+      min: 0,
+      max: 50,
+      step: 5,
+      from: 10,
+      to: 40,
+      range: false,
+    });
+    expect(model.takeParamTrackClick(15)).to.deep.equal({ values: [15], positions: [150] });
+  });
+
+  it('получить параметры при клике на трэк, при range=true', () => {
+    const model = new Model({
+      min: 0,
+      max: 50,
+      step: 5,
+      from: 10,
+      to: 40,
+      range: true,
+    });
+    expect(model.takeParamTrackClick(5)).to.deep.equal({ values: [5, 40], positions: [50, 450] });
+  });
+
+  it('получить параметры', () => {
+    const config = {
+      min: 0,
+      max: 50,
+      step: 5,
+      from: 10,
+      to: 40,
+      range: true,
+      vertical: false,
+      tip: false,
+    };
+    const model = new Model(config);
+
+    expect(model.getConfig()).to.deep.equal(config);
+  });
+
+  it('установить параметры', () => {
+    const config = {
+      min: 10,
+      max: 50,
+      step: 15,
+      from: 10,
+      to: 40,
+      range: false,
+      vertical: false,
+      tip: false,
+    };
+    const model = new Model({
+      min: 0,
+      max: 50,
+      step: 5,
+      from: 10,
+      to: 40,
+      range: true,
+    });
+    model.setConfig(config);
+    expect(model.getConfig()).to.deep.equal(config);
   });
 });

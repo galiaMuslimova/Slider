@@ -15,7 +15,7 @@ describe('Scale', () => {
 
   before(() => {
     $slider = $(document).find('.meta-slider');
-    scaleClass = new Scale($slider);
+    scaleClass = new Scale($slider, false);
   });
 
   it('проверить соответствие значений шкалы массиву', () => {
@@ -41,9 +41,8 @@ describe('Scale', () => {
     scaleClass.initScale(stepsArr, true);
     const $scale = $slider.find('.meta-slider__scale');
     const $values = $scale.find('.meta-slider__value');
-    $values.each((index, element) => {
-      expect($(element).css('top')).to.equal(`${stepsArr[index].x - 10}px`);
-    });
+    const value = $values[2];
+    expect($(value).css('top')).to.equal('190px');
   });
 
   it('проверить соответствие позиций массиву для горизонтального', () => {
@@ -55,8 +54,7 @@ describe('Scale', () => {
     scaleClass.initScale(stepsArr, false);
     const $scale = $slider.find('.meta-slider__scale');
     const $values = $scale.find('.meta-slider__value');
-    $values.each((index, element) => {
-      expect($(element).css('left')).to.equal(`${stepsArr[index].x - 10}px`);
-    });
+    const value = $values[1];
+    expect($(value).css('left')).to.equal('90px');
   });
 });

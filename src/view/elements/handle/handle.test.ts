@@ -11,32 +11,31 @@ const { document } = dom.window;
 
 describe('Handle', () => {
   let $slider: JQuery<HTMLElement>;
+  let $track: JQuery<HTMLElement>;
   let handleClass: Handle;
 
   before(() => {
     $slider = $(document).find('.meta-slider');
-    jQuery('<div>', {
+    $track = jQuery('<div>', {
       class: 'meta-slider__track',
-    }).appendTo($slider);
-    handleClass = new Handle($slider);
+    });
   });
 
-  it('проверить количество handle = 2 при range=true', () => {
-    handleClass.initHandles(true);
-    const $handle = $slider.find('.meta-slider__handle');
-    expect($handle.length).to.equal(2);
-    expect(handleClass.handles.length).to.equal(2);
+  beforeEach(() => {
+    $track = jQuery('<div>', {
+      class: 'meta-slider__track',
+    });
+    $track.appendTo($slider);
   });
 
-  it('проверить количество handle = 1 при range=false', () => {
-    handleClass.initHandles(false);
-    const $handle = $slider.find('.meta-slider__handle');
-    expect($handle.length).to.equal(1);
-    expect(handleClass.handles.length).to.equal(1);
+  afterEach(() => {
+    $track.remove();
   });
 
   it('проверить позицию при handle = 1 при vertical=false', () => {
-    handleClass.moveHandles([100], false);
+    handleClass = new Handle($slider, false);
+    handleClass.correctHandlesByRange(false);
+    handleClass.moveHandles([100]);
     const $handle = $slider.find('.meta-slider__handle');
     $handle.each((index, element) => {
       expect($(element).css('left')).to.equal('90px');
@@ -44,7 +43,9 @@ describe('Handle', () => {
   });
 
   it('проверить позицию при handle = 1 при vertical=true', () => {
-    handleClass.moveHandles([150], true);
+    handleClass = new Handle($slider, true);
+    handleClass.correctHandlesByRange(false);
+    handleClass.moveHandles([150]);
     const $handle = $slider.find('.meta-slider__handle');
     $handle.each((index, element) => {
       expect($(element).css('top')).to.equal('140px');
@@ -52,8 +53,10 @@ describe('Handle', () => {
   });
 
   it('проверить позицию при handle = 2 при vertical=false', () => {
+    handleClass = new Handle($slider, false);
+    handleClass.correctHandlesByRange(true);
     const positions = [-10, 10];
-    handleClass.moveHandles(positions, false);
+    handleClass.moveHandles(positions);
     const $handle = $slider.find('.meta-slider__handle');
     $handle.each((index, element) => {
       expect($(element).css('left')).to.equal(`${positions[index] - 10}px`);
@@ -61,8 +64,10 @@ describe('Handle', () => {
   });
 
   it('проверить позицию при handle = 2 при vertical=true', () => {
+    handleClass = new Handle($slider, true);
+    handleClass.correctHandlesByRange(true);
     const positions = [50, 200];
-    handleClass.moveHandles(positions, true);
+    handleClass.moveHandles(positions);
     const $handle = $slider.find('.meta-slider__handle');
     $handle.each((index, element) => {
       expect($(element).css('top')).to.equal(`${positions[index] - 10}px`);

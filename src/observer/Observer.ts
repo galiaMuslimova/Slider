@@ -12,10 +12,6 @@ class Observer implements IObserver {
     this.observers.push(fn);
   }
 
-  public unsubscribe(fn: { key: string, observer: (data: any) => void }): void {
-    this.observers = this.observers.filter((item) => item !== fn);
-  }
-
   public notify(key: string, data: any): void {
     this.observers.forEach((item) => {
       if (item.key === key) {
