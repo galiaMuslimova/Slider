@@ -3,9 +3,9 @@ import Observer from '../../observer/Observer';
 import './input.scss';
 
 class Input {
-  readonly element: JQuery<HTMLElement>;
-
   public observer: Observer;
+
+  readonly element: JQuery<HTMLElement>;
 
   private name: string;
 
@@ -20,26 +20,6 @@ class Input {
     this.type = this.element.prop('type');
     this.value = (this.type === 'number') ? this.element.val() : this.element.prop('checked');
     this.bindEventListeners();
-  }
-
-  private bindEventListeners() {
-    $(this.element).on('change keyup', this.handleInputValueChange.bind(this));
-  }
-
-  private handleInputValueChange(event: Event) {
-    switch (this.type) {
-      case 'number':
-        this.value = Number((<HTMLInputElement>event.target).value);
-        break;
-      case 'checkbox':
-        this.value = (<HTMLInputElement>event.target).checked;
-        break;
-      default:
-        break;
-    }
-    const setting: ISettings = {};
-    setting[this.name] = this.value;
-    this.observer.notify('setting', setting);
   }
 
   public getName() {
@@ -65,6 +45,26 @@ class Input {
 
   public setProp(name: string, value: number | boolean) {
     this.element.prop(name, value);
+  }
+
+  private bindEventListeners() {
+    $(this.element).on('change keyup', this.handleInputValueChange.bind(this));
+  }
+
+  private handleInputValueChange(event: Event) {
+    switch (this.type) {
+      case 'number':
+        this.value = Number((<HTMLInputElement>event.target).value);
+        break;
+      case 'checkbox':
+        this.value = (<HTMLInputElement>event.target).checked;
+        break;
+      default:
+        break;
+    }
+    const setting: ISettings = {};
+    setting[this.name] = this.value;
+    this.observer.notify('setting', setting);
   }
 }
 

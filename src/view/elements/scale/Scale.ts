@@ -2,13 +2,13 @@ import { IPosition } from '../../../interfaces/interfaces';
 import Observer from '../../../observer/Observer';
 
 class Scale {
-  readonly $slider: JQuery<HTMLElement>;
-
-  private vertical: boolean;
-
   public observer: Observer;
 
+  readonly $slider: JQuery<HTMLElement>;
+
   readonly $scale: JQuery<HTMLElement>;
+
+  private vertical: boolean;
 
   constructor(slider: JQuery<HTMLElement>, vertical: boolean) {
     this.$slider = slider;
@@ -20,23 +20,15 @@ class Scale {
     this.bindEventListeners();
   }
 
-  private bindEventListeners() {
-    $(this.$slider).on('click touchstart', this.sendScaleClickValue.bind(this));
-  }
-
-  private sendScaleClickValue(event: Event) {
-    const { observer } = this;
-    if ((<HTMLInputElement>event.target).dataset.value) {
-      const currentValue = Number((<HTMLInputElement>event.target).dataset.value);
-      observer.notify('click', currentValue);
-    }
-  }
-
   public initScale(stepsArr: IPosition[], vertical:boolean = false) {
     this.vertical = vertical;
     this.$scale.empty();
     const valuesArr = Scale.takeValues(stepsArr);
     this.addValues(valuesArr);
+  }
+
+  public setVertical(vertical: boolean) {
+    this.vertical = vertical;
   }
 
   static takeValues(stepsArr: IPosition[]) {
@@ -58,6 +50,18 @@ class Scale {
     return valuesArr;
   }
 
+  private bindEventListeners() {
+    $(this.$slider).on('click touchstart', this.sendScaleClickValue.bind(this));
+  }
+
+  private sendScaleClickValue(event: Event) {
+    const { observer } = this;
+    if ((<HTMLInputElement>event.target).dataset.value) {
+      const currentValue = Number((<HTMLInputElement>event.target).dataset.value);
+      observer.notify('click', currentValue);
+    }
+  }
+
   private addValues(valuesArr: { item: IPosition, index: number }[]) {
     valuesArr.forEach((item) => {
       const line = jQuery('<div>', {
@@ -71,10 +75,6 @@ class Scale {
         text: item.item.value,
       }).appendTo(line);
     });
-  }
-
-  public setVertical(vertical: boolean) {
-    this.vertical = vertical;
   }
 }
 

@@ -12,8 +12,6 @@ import Interval from './elements/interval/interval';
 import Tip from './elements/tip/tip';
 
 class View {
-  private vertical: boolean;
-
   public observer: Observer;
 
   readonly $root: JQuery<HTMLElement>;
@@ -21,6 +19,8 @@ class View {
   readonly $container: JQuery<HTMLElement>;
 
   readonly $slider: JQuery<HTMLElement>;
+
+  private vertical: boolean;
 
   private panel: Panel;
 
@@ -53,26 +53,6 @@ class View {
     this.interval = new Interval(this.$slider);
     this.panel = new Panel(this.$container);
     this.panel.observer.subscribe({ key: 'setting', observer: this.changeSettings.bind(this) });
-  }
-
-  private changePositionByTrack(position: number) {
-    this.observer.notify('position', position);
-  }
-
-  private scaleClick(currentValue: number) {
-    this.observer.notify('click', currentValue);
-  }
-
-  private changeSettings(setting: ISettings) {
-    this.observer.notify('setting', setting);
-  }
-
-  private mouseMove(options: IEventPosition) {
-    this.observer.notify('mousemove', options);
-  }
-
-  private mouseMoveEnd(event: Event) {
-    this.observer.notify('moveend', event);
   }
 
   public getTrackParameters() {
@@ -117,6 +97,26 @@ class View {
 
   public initPanel(config: IConfig) {
     this.panel.initPanel(config);
+  }
+
+  private changePositionByTrack(position: number) {
+    this.observer.notify('position', position);
+  }
+
+  private scaleClick(currentValue: number) {
+    this.observer.notify('click', currentValue);
+  }
+
+  private changeSettings(setting: ISettings) {
+    this.observer.notify('setting', setting);
+  }
+
+  private mouseMove(options: IEventPosition) {
+    this.observer.notify('mousemove', options);
+  }
+
+  private mouseMoveEnd(event: Event) {
+    this.observer.notify('moveend', event);
   }
 }
 

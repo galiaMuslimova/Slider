@@ -3,15 +3,15 @@ import View from '../view/View';
 import Model from '../model/Model';
 
 class Controller {
-  private model: Model;
-
-  private view: View;
-
   readonly options: IOptions;
 
   readonly $root: JQuery<HTMLElement>;
 
   private vertical: boolean;
+
+  private model: Model;
+
+  private view: View;
 
   constructor(root: JQuery<HTMLElement>, options: IOptions) {
     this.options = options;

@@ -14,9 +14,9 @@ const defaults: IConfig = {
 };
 
 class Model {
-  private config: IConfig;
-
   readonly options: IOptions;
+
+  private config: IConfig;
 
   private stepsArr: IPosition[];
 
@@ -35,19 +35,6 @@ class Model {
     this.stepsArr = this.initStepsArr();
     this.correctFromTo();
     this.parameters = this.initParameters();
-  }
-
-  private correctOptionsType(options: IOptions = this.options) {
-    const correctConfig = { ...options };
-    correctConfig.max = Number.isInteger(options.max) ? Math.round(options.max) : defaults.max;
-    correctConfig.min = Number.isInteger(options.min) ? Math.round(options.min) : defaults.min;
-    correctConfig.step = Number.isInteger(options.step) ? Math.round(options.step) : defaults.step;
-    correctConfig.from = Number.isInteger(options.from) ? Math.round(options.from) : defaults.from;
-    correctConfig.to = Number.isInteger(options.to) ? Math.round(options.to) : defaults.to;
-    correctConfig.vertical = typeof options.vertical === 'boolean' ? options.vertical : defaults.vertical;
-    correctConfig.tip = typeof options.tip === 'boolean' ? options.tip : defaults.tip;
-    correctConfig.range = typeof options.range === 'boolean' ? options.range : defaults.range;
-    return correctConfig;
   }
 
   public correctMinMax(config: IConfig = this.config) {
@@ -77,10 +64,6 @@ class Model {
     return stepsArr;
   }
 
-  static round(num: number) {
-    return (Math.round(num * 10)) / 10;
-  }
-
   public correctFromTo(config: IConfig = this.config) {
     const correctConfig = { ...config };
     const valuesArr = this.stepsArr.map((item) => item.value);
@@ -97,16 +80,6 @@ class Model {
     return correctConfig;
   }
 
-  static takeClosestNum(num: number, array: number[]) {
-    const indexOfClosest = Model.takeClosestIndex(num, array);
-    return array[indexOfClosest];
-  }
-
-  static takeClosestIndex(num: number, array: number[]) {
-    const closest = array.reduce((a, b) => (Math.abs(b - num) < Math.abs(a - num) ? b : a));
-    return array.indexOf(closest);
-  }
-
   public initParameters() {
     const parameters: IParameters = { values: [], positions: [] };
     const element = this;
@@ -118,15 +91,6 @@ class Model {
     parameters.positions = parameters.values.map((x) => element.takeXByValue(x));
     this.parameters = parameters;
     return parameters;
-  }
-
-  private takeXByValue(val: number) {
-    const position = this.stepsArr.find((el) => el.value === val);
-    if (position) {
-      return position.x;
-    }
-
-    throw new Error('position for this value is not consist');
   }
 
   public takeParamHandleMove(options: IEventPosition) {
@@ -182,15 +146,6 @@ class Model {
     return this.parameters;
   }
 
-  private takeValueByX(x: number) {
-    const item = this.stepsArr.find((el) => el.x === x);
-    if (item) {
-      return item.value;
-    }
-
-    throw new Error('value for this position is not consist');
-  }
-
   public getConfig() {
     return this.config;
   }
@@ -213,6 +168,51 @@ class Model {
 
   public getStepsArr() {
     return this.stepsArr;
+  }
+
+  static takeClosestNum(num: number, array: number[]) {
+    const indexOfClosest = Model.takeClosestIndex(num, array);
+    return array[indexOfClosest];
+  }
+
+  static takeClosestIndex(num: number, array: number[]) {
+    const closest = array.reduce((a, b) => (Math.abs(b - num) < Math.abs(a - num) ? b : a));
+    return array.indexOf(closest);
+  }
+
+  static round(num: number) {
+    return (Math.round(num * 10)) / 10;
+  }
+
+  private correctOptionsType(options: IOptions = this.options) {
+    const correctConfig = { ...options };
+    correctConfig.max = Number.isInteger(options.max) ? Math.round(options.max) : defaults.max;
+    correctConfig.min = Number.isInteger(options.min) ? Math.round(options.min) : defaults.min;
+    correctConfig.step = Number.isInteger(options.step) ? Math.round(options.step) : defaults.step;
+    correctConfig.from = Number.isInteger(options.from) ? Math.round(options.from) : defaults.from;
+    correctConfig.to = Number.isInteger(options.to) ? Math.round(options.to) : defaults.to;
+    correctConfig.vertical = typeof options.vertical === 'boolean' ? options.vertical : defaults.vertical;
+    correctConfig.tip = typeof options.tip === 'boolean' ? options.tip : defaults.tip;
+    correctConfig.range = typeof options.range === 'boolean' ? options.range : defaults.range;
+    return correctConfig;
+  }
+
+  private takeXByValue(val: number) {
+    const position = this.stepsArr.find((el) => el.value === val);
+    if (position) {
+      return position.x;
+    }
+
+    throw new Error('position for this value is not consist');
+  }
+
+  private takeValueByX(x: number) {
+    const item = this.stepsArr.find((el) => el.x === x);
+    if (item) {
+      return item.value;
+    }
+
+    throw new Error('value for this position is not consist');
   }
 }
 

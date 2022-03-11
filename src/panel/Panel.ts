@@ -4,27 +4,27 @@ import Observer from '../observer/Observer';
 import './panel.scss';
 
 class Panel {
-  readonly $root: JQuery<HTMLElement>;
+  public inputs: Map<string, Input>;
 
   public observer: Observer;
+
+  readonly $root: JQuery<HTMLElement>;
 
   readonly $panel: JQuery<HTMLElement>;
 
   readonly $form: JQuery<HTMLElement>;
-
-  public inputs: Map<string, Input>;
-
-  private max: Input;
-
-  private min: Input;
-
-  private step: Input;
 
   readonly from: Input;
 
   readonly to: Input;
 
   readonly range: Input;
+
+  private max: Input;
+
+  private min: Input;
+
+  private step: Input;
 
   constructor(root: JQuery<HTMLElement>) {
     this.$root = root;
@@ -39,6 +39,51 @@ class Panel {
     this.to = this.takeInputFromArr('to');
     this.range = this.takeInputFromArr('range');
     this.bindEventListeners();
+  }
+
+  public initPanel(config: IConfig) {
+    const element = this;
+    Object.entries(config).forEach(([key, value]) => {
+      const input = element.inputs.get(key);
+      const setting: ISettings = {};
+      if (input) {
+        input.setValue(value);
+        setting[key] = value;
+        this.changeBounds(setting);
+      }
+    });
+  }
+
+  public initValues(values: number[]) {
+    switch (values.length) {
+      case 1: {
+        const max = this.max.getValue();
+        this.from.setValue(values[0]);
+        this.from.setProp('max', max);
+        break;
+      }
+      case 2: {
+        this.from.setValue(values[0]);
+        this.to.setValue(values[1]);
+        this.from.setProp('max', values[1]);
+        this.to.setProp('min', values[0]);
+        break;
+      }
+      default: {
+        throw new Error('undefined values');
+      }
+    }
+  }
+
+  public setValue(setting: ISettings) {
+    const key = Object.keys(setting)[0];
+    const value = Object.values(setting)[0];
+    const input = this.takeInputFromArr(key);
+    input.setValue(value);
+  }
+
+  static handlePanelFormSubmit() {
+    return false;
   }
 
   private initInputs() {
@@ -66,26 +111,9 @@ class Panel {
     this.$form.on('submit', Panel.handlePanelFormSubmit);
   }
 
-  static handlePanelFormSubmit() {
-    return false;
-  }
-
   private changeSettings(setting: ISettings) {
     this.changeBounds(setting);
     this.observer.notify('setting', setting);
-  }
-
-  public initPanel(config: IConfig) {
-    const element = this;
-    Object.entries(config).forEach(([key, value]) => {
-      const input = element.inputs.get(key);
-      const setting: ISettings = {};
-      if (input) {
-        input.setValue(value);
-        setting[key] = value;
-        this.changeBounds(setting);
-      }
-    });
   }
 
   private changeBounds(set: ISettings) {
@@ -126,34 +154,6 @@ class Panel {
       default:
         throw new Error('undefined setting');
     }
-  }
-
-  public initValues(values: number[]) {
-    switch (values.length) {
-      case 1: {
-        const max = this.max.getValue();
-        this.from.setValue(values[0]);
-        this.from.setProp('max', max);
-        break;
-      }
-      case 2: {
-        this.from.setValue(values[0]);
-        this.to.setValue(values[1]);
-        this.from.setProp('max', values[1]);
-        this.to.setProp('min', values[0]);
-        break;
-      }
-      default: {
-        throw new Error('undefined values');
-      }
-    }
-  }
-
-  public setValue(setting: ISettings) {
-    const key = Object.keys(setting)[0];
-    const value = Object.values(setting)[0];
-    const input = this.takeInputFromArr(key);
-    input.setValue(value);
   }
 }
 

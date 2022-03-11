@@ -1,13 +1,13 @@
 import Observer from '../../../observer/Observer';
 
 class Handle {
+  public observer: Observer;
+
   readonly $slider: JQuery<HTMLElement>;
 
   readonly $track: JQuery<HTMLElement>;
 
   private vertical: boolean;
-
-  public observer: Observer;
 
   private handles: JQuery<HTMLElement>[];
 
@@ -18,6 +18,35 @@ class Handle {
     this.observer = new Observer();
     this.handles = this.initHandles();
     this.bindEventListeners();
+  }
+
+  public correctHandlesByRange(range: boolean) {
+    if (range && this.handles.length === 1) {
+      const $handle2 = jQuery('<div>', {
+        class: 'meta-slider__handle meta-slider__handle_right',
+      }).appendTo(this.$track);
+      this.handles.push($handle2);
+    } else if (!range && this.handles.length === 2) {
+      const $handle2 = this.handles[1];
+      $handle2.remove();
+      this.handles.pop();
+    }
+    this.bindEventListeners();
+  }
+
+  public moveHandles(positions: number[]) {
+    this.handles.forEach((item, index) => {
+      item.css(this.vertical ? 'top' : 'left', `${positions[index] - 20 / 2}px`);
+      item.css(this.vertical ? 'left' : 'top', '-5px');
+    });
+  }
+
+  public setVertical(vertical: boolean) {
+    this.vertical = vertical;
+  }
+
+  static handleDragStart() {
+    return false;
   }
 
   private bindEventListeners() {
@@ -58,10 +87,6 @@ class Handle {
     $(document).off('mousemove mouseup touchmove touchend');
   }
 
-  static handleDragStart() {
-    return false;
-  }
-
   private initHandles() {
     const handles: JQuery<HTMLElement>[] = [];
     const $handle1 = jQuery('<div>', {
@@ -73,31 +98,6 @@ class Handle {
     }).appendTo(this.$track);
     handles.push($handle2);
     return handles;
-  }
-
-  public correctHandlesByRange(range: boolean) {
-    if (range && this.handles.length === 1) {
-      const $handle2 = jQuery('<div>', {
-        class: 'meta-slider__handle meta-slider__handle_right',
-      }).appendTo(this.$track);
-      this.handles.push($handle2);
-    } else if (!range && this.handles.length === 2) {
-      const $handle2 = this.handles[1];
-      $handle2.remove();
-      this.handles.pop();
-    }
-    this.bindEventListeners();
-  }
-
-  public moveHandles(positions: number[]) {
-    this.handles.forEach((item, index) => {
-      item.css(this.vertical ? 'top' : 'left', `${positions[index] - 20 / 2}px`);
-      item.css(this.vertical ? 'left' : 'top', '-5px');
-    });
-  }
-
-  public setVertical(vertical: boolean) {
-    this.vertical = vertical;
   }
 }
 

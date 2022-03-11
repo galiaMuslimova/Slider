@@ -1,15 +1,12 @@
 class Tip {
   readonly $slider: JQuery<HTMLElement>;
 
-  private $handles: JQuery<HTMLElement>[];
+  readonly $tip: JQuery<HTMLElement>;
 
   private $tips: JQuery<HTMLElement>[];
 
-  readonly $tip: JQuery<HTMLElement>;
-
   constructor(slider: JQuery<HTMLElement>) {
     this.$slider = slider;
-    this.$handles = [];
     this.$tips = [];
     this.$tip = jQuery('<div>', {
       class: 'meta-slider__tip',
