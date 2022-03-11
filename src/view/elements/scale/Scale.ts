@@ -35,23 +35,12 @@ class Scale {
   public initScale(stepsArr: IPosition[], vertical:boolean = false) {
     this.vertical = vertical;
     this.$scale.empty();
-    this.addLines(stepsArr);
-    this.addValues(stepsArr);
+    const valuesArr = Scale.takeValues(stepsArr);
+    this.addValues(valuesArr);
   }
 
-  private addLines(stepsArr: IPosition[]) {
-    stepsArr.forEach((item) => {
-      jQuery('<div>', {
-        class: 'meta-slider__line',
-        text: this.vertical ? '\u2014' : '|',
-        style: this.vertical ? `top: ${item.x - 10}px` : `left: ${item.x - 10}px`,
-      }).appendTo(this.$scale);
-    });
-  }
-
-  private addValues(stepsArr: IPosition[]) {
+  static takeValues(stepsArr: IPosition[]) {
     const valuesArr: { item: IPosition, index: number }[] = [];
-    const $lines = this.$scale.find('.meta-slider__line');
     const emptyStepsLength = Math.round(stepsArr.length / 10);
     const isStepsArrLengthBig = stepsArr.length > 10;
     stepsArr.forEach((item, i) => {
@@ -66,13 +55,21 @@ class Scale {
       valuesArr.pop();
       valuesArr.push({ item: stepsArr[stepsArr.length - 1], index: stepsArr.length - 1 });
     }
+    return valuesArr;
+  }
+
+  private addValues(valuesArr: { item: IPosition, index: number }[]) {
     valuesArr.forEach((item) => {
-      const value = jQuery('<div>', {
+      const line = jQuery('<div>', {
+        class: 'meta-slider__line',
+        text: this.vertical ? '\u2014' : '|',
+        style: this.vertical ? `top: ${item.item.x - 10}px` : `left: ${item.item.x - 10}px`,
+      }).appendTo(this.$scale);
+      jQuery('<div>', {
         class: 'meta-slider__value js-meta-slider__value',
         'data-value': item.item.value,
         text: item.item.value,
-      });
-      value.appendTo($lines[item.index]);
+      }).appendTo(line);
     });
   }
 
