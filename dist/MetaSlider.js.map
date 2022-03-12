@@ -1,0 +1,1 @@
+{"version":3,"file":"MetaSlider.js","sourceRoot":"","sources":["../src/MetaSlider.ts"],"names":[],"mappings":"AAAA,OAAO,UAAU,MAAM,yBAAyB,CAAC;AAGjD,MAAM,UAAU;IAGd,YAAY,OAA4B,EAAE,OAAiB;QACzD,IAAI,CAAC,UAAU,GAAG,IAAI,UAAU,CAAC,OAAO,EAAE,OAAO,CAAC,CAAC;IACrD,CAAC;CACF;AAED,eAAe,UAAU,CAAC"}

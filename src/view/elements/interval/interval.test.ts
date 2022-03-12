@@ -4,7 +4,12 @@ import Interval from './Interval';
 
 const { JSDOM } = require('jsdom');
 
-const dom = new JSDOM('<!DOCTYPE html><body><div class=\'testSlider\'><div class=\'meta-slider\'><div class=\'meta-slider__slider\'></div></div></body>');
+const dom = new JSDOM(`<!DOCTYPE html>
+<body>
+  <div class='testSlider'>
+    <div class='meta-slider'></div>
+  </div>
+</body>`);
 global.window = dom.window;
 
 const { document } = dom.window;
@@ -15,7 +20,7 @@ describe('Interval', () => {
   let $interval: JQuery<HTMLElement>;
 
   before(() => {
-    $slider = $(document).find('.meta-slider__slider');
+    $slider = $(document).find('.meta-slider');
     jQuery('<div>', {
       class: 'meta-slider__track',
     }).appendTo($slider);

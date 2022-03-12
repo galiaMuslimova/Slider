@@ -5,37 +5,37 @@ import Panel from './Panel';
 
 const { JSDOM } = require('jsdom');
 
-const dom = new JSDOM('<!DOCTYPE html><body><div class=\'testSlider\'></div></body>');
+const dom = new JSDOM(`<!DOCTYPE html>
+<body>
+  <div class='testSlider'>
+    <div class='body__container js-body__container'>
+      <div class='body__slider js-body__slider'></div>
+        <div class='panel js-panel'>
+          <form class='panel__form js-panel__form'>            
+            <input class='input__field js-input__field', type='number', name='max'></input>
+            <input class='input__field js-input__field', type='number', name='min'></input>
+            <input class='input__field js-input__field', type='number', name='step'></input>
+            <input class='input__field js-input__field', type='number', name='from'></input>
+            <input class='input__field js-input__field', type='number', name='to'></input>
+            <input class='input__field js-input__field', type='checkbox', name='tip'></input>
+            <input class='input__field js-input__field', type='checkbox', name='range'></input>
+            <input class='input__field js-input__field', type='checkbox', name='vertical'></input>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>`);
 global.window = dom.window;
 const { document } = dom.window;
 
 describe('Panel', () => {
   let $root: JQuery<HTMLElement>;
   let panelClass: Panel;
-  let $panel: JQuery<HTMLElement>;
-  let $form: JQuery<HTMLElement>;
   let config: IConfig;
-  let $min: JQuery<HTMLElement>;
-  let $max: JQuery<HTMLElement>;
-  let $step: JQuery<HTMLElement>;
-  let $from: JQuery<HTMLElement>;
-  let $to: JQuery<HTMLElement>;
-  let $vertical: JQuery<HTMLElement>;
-  let $range: JQuery<HTMLElement>;
-  let $tip: JQuery<HTMLElement>;
 
   before(() => {
-    $root = $(document).find('.testSlider');
-    $panel = jQuery('<div>', { class: 'js-panel' }).appendTo($root);
-    $form = jQuery('<form>', { class: 'js-panel__form' }).appendTo($panel);
-    $min = jQuery('<input>', { class: 'js-input__field', type: 'number', name: 'min' }).appendTo($form);
-    $max = jQuery('<input>', { class: 'js-input__field', type: 'number', name: 'max' }).appendTo($form);
-    $step = jQuery('<input>', { class: 'js-input__field', type: 'number', name: 'step' }).appendTo($form);
-    $from = jQuery('<input>', { class: 'js-input__field', type: 'number', name: 'from' }).appendTo($form);
-    $to = jQuery('<input>', { class: 'js-input__field', type: 'number', name: 'to' }).appendTo($form);
-    $vertical = jQuery('<input>', { class: 'js-input__field', type: 'checkbox', name: 'vertical' }).appendTo($form);
-    $range = jQuery('<input>', { class: 'js-input__field', type: 'checkbox', name: 'range' }).appendTo($form);
-    $tip = jQuery('<input>', { class: 'js-input__field', type: 'checkbox', name: 'tip' }).appendTo($form);
+    $root = $(document).find('.js-body__container');
   });
 
   beforeEach(() => {

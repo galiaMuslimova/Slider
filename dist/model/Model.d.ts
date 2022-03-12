@@ -1,0 +1,32 @@
+import { IOptions, IConfig, IParameters, IStepsArr, IEventPosition } from '../interfaces/interfaces';
+import IModel from './interface';
+declare class Model implements IModel {
+    readonly options: IOptions;
+    private config;
+    private stepsArr;
+    private parameters;
+    private trackStart;
+    private trackWidth;
+    constructor(options: IOptions, trackStart?: number, trackWidth?: number);
+    correctMinMax(config?: IConfig): IConfig;
+    initStepsArr(): IStepsArr[];
+    correctFromTo(config?: IConfig): IConfig;
+    initParameters(): IParameters;
+    takeParamHandleMove(options: IEventPosition): IParameters | boolean;
+    correctFromToByParams(): void;
+    takeParamScaleClick(value: number): IParameters;
+    takeParamTrackClick(position: number): IParameters;
+    getConfig(): IConfig;
+    setConfig(config: IConfig): void;
+    getParameters(): IParameters;
+    setTrackStart(trackStart?: number): void;
+    settrackWidth(trackWidth: number | undefined): void;
+    getStepsArr(): IStepsArr[];
+    static takeClosestNum(num: number, array: number[]): number;
+    static takeClosestIndex(num: number, array: number[]): number;
+    static round(num: number): number;
+    private correctOptionsType;
+    private takeXByValue;
+    private takeValueByX;
+}
+export default Model;

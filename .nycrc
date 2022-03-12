@@ -1,0 +1,18 @@
+{
+  "extends": "@istanbuljs/nyc-config-typescript",
+  "all": true,
+  "check-coverage": true,
+  "include": [
+    "src/controller/Controller.ts",
+    "src/model/Model.ts",
+    "src/view/View.ts",
+    "src/observer/Observer.ts",
+    "src/panel/Panel.ts",
+    "src/panel/input/Input.ts",
+    "src/view/elements/handle/Handle.ts",
+    "src/view/elements/interval/Interval.ts",
+    "src/view/elements/scale/Scale.ts",
+    "src/view/elements/tip/Tip.ts",
+    "src/view/elements/track/Track.ts"
+  ]
+}

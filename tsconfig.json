@@ -6,7 +6,8 @@
     "moduleResolution": "node",
     "declaration": true,
     "strict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "inlineSourceMap": true,
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "webpack.config.js"],
