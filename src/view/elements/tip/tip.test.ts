@@ -37,12 +37,6 @@ describe('Tip', () => {
     expect($tips.length).to.eq(0);
   });
 
-  it('проверяет создание одной подсказки tips=1 при handle=1', () => {
-    tipClass.initTips(true);// tips true
-    const $tips = $slider.find('.meta-slider__tip');
-    expect($tips.length).to.eq(1);
-  });
-
   it('проверяет отсутствие подсказок tips=0 при handle=1', () => {
     tipClass.initTips(false);// tips false
     const $tips = $slider.find('.meta-slider__tip');

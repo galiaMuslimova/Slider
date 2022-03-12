@@ -190,7 +190,7 @@ describe('Model', () => {
       to: 40,
       range: false,
     });
-    expect(model.takeParamTrackClick(15)).to.deep.equal({ values: [15], positions: [150] });
+    expect(model.takeParamTrackClick(150)).to.deep.equal({ values: [15], positions: [150] });
   });
 
   it('получить параметры при клике на трэк, при range=true', () => {
@@ -198,11 +198,11 @@ describe('Model', () => {
       min: 0,
       max: 50,
       step: 5,
-      from: 10,
+      from: 5,
       to: 40,
       range: true,
     });
-    expect(model.takeParamTrackClick(5)).to.deep.equal({ values: [5, 40], positions: [50, 450] });
+    expect(model.takeParamTrackClick(350)).to.deep.equal({ values: [5, 35], positions: [50, 350] });
   });
 
   it('получить параметры', () => {

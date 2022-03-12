@@ -64,7 +64,8 @@ describe('Handle', () => {
   });
 
   it('проверить позицию при handle = 2 при vertical=true', () => {
-    handleClass = new Handle($slider, true);
+    handleClass = new Handle($slider, false);
+    handleClass.setVertical(true);
     handleClass.correctHandlesByRange(true);
     const positions = [50, 200];
     handleClass.moveHandles(positions);
@@ -72,5 +73,12 @@ describe('Handle', () => {
     $handle.each((index, element) => {
       expect($(element).css('top')).to.equal(`${positions[index] - 10}px`);
     });
+  });
+
+  it('проверить изменение количества handles', () => {
+    handleClass = new Handle($slider, true);
+    handleClass.correctHandlesByRange(false);
+    const $handle = $slider.find('.meta-slider__handle');
+    expect($handle.length).to.equal(1);
   });
 });

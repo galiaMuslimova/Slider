@@ -15,19 +15,12 @@ describe('Track', () => {
 
   before(() => {
     $slider = $(document).find('.meta-slider__slider');
-  });
-
-  it('проверяет параметры', () => {
     $slider.css('width', '500');
-    trackClass = new Track($slider, false);
-    const { $track } = trackClass;
-    expect(trackClass.getTrackParameters()).to.deep.equal({ trackStart: 50, trackWidth: 500 });
+    $slider.css('left', '10');
   });
 
   it('проверяет параметры', () => {
-    $slider.css('width', '600');
     trackClass = new Track($slider, false);
-    const { $track } = trackClass;
-    expect(trackClass.getTrackParameters()).to.deep.equal({ trackStart: 30, trackWidth: 600 });
+    expect(trackClass.position.top).to.deep.equal(0);
   });
 });
