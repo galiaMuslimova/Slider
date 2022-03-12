@@ -10,8 +10,8 @@
     "start": "webpack-dev-server --mode development --open --hot",
     "test": "tsc && nyc mocha",
     "compile": "webpack",
-    "elint": "eslint src",
-    "elint-fix": "eslint --fix src"
+    "eslint": "eslint src",
+    "eslint-fix": "eslint --fix src"
   },
   "author": "G.M.",
   "license": "ISC",
