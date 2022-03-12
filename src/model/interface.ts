@@ -17,7 +17,7 @@ interface IModel {
   setConfig(config: IConfig): void
   getParameters(): IParameters
   setTrackStart(trackStart: number): void
-  settrackWidth(trackWidth: number | undefined): void
+  setTrackWidth(trackWidth: number | undefined): void
   getStepsArr(): IStepsArr[]
 }
 

@@ -28,8 +28,8 @@ class Controller implements IController {
 
   private init() {
     this.initElements();
-    this.view.observer.subscribe({ key: 'mousemove', observer: this.moveHandle.bind(this) });
-    this.view.observer.subscribe({ key: 'moveend', observer: this.moveEnd.bind(this) });
+    this.view.observer.subscribe({ key: 'mouseMove', observer: this.moveHandle.bind(this) });
+    this.view.observer.subscribe({ key: 'moveEnd', observer: this.moveEnd.bind(this) });
     this.view.observer.subscribe({ key: 'click', observer: this.clickOnScale.bind(this) });
     this.view.initPanel(this.model.getConfig());
     this.view.observer.subscribe({ key: 'setting', observer: this.changeSettings.bind(this) });
@@ -111,7 +111,7 @@ class Controller implements IController {
         this.view.changeDirection(this.vertical);
         const { trackStart, trackWidth } = this.view.getTrackParameters();
         this.model.setTrackStart(trackStart);
-        this.model.settrackWidth(trackWidth);
+        this.model.setTrackWidth(trackWidth);
         this.model.initStepsArr();
         this.initElements();
         break;

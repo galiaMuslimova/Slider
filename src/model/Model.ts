@@ -163,7 +163,7 @@ class Model implements IModel {
     this.trackStart = trackStart;
   }
 
-  public settrackWidth(trackWidth: number | undefined): void {
+  public setTrackWidth(trackWidth: number | undefined): void {
     this.trackWidth = trackWidth === undefined ? 500 : trackWidth;
   }
 

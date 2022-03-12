@@ -70,7 +70,7 @@ class Handle implements IHandle {
     const index = $(eventTarget).hasClass('meta-slider__handle_right') ? 1 : 0;
     const eventPosition = this.vertical ? (<MouseEvent>event).pageY : (<MouseEvent>event).pageX;
     const options = { eventPosition, index };
-    this.observer.notify('mousemove', options);
+    this.observer.notify('mouseMove', options);
   }
 
   private handleTouchMove(eventTarget: EventTarget, event: Event): void {
@@ -80,12 +80,12 @@ class Handle implements IHandle {
       const touch = touches[0];
       const eventPosition = this.vertical ? touch.pageY : touch.pageX;
       const options = { eventPosition, index };
-      this.observer.notify('mousemove', options);
+      this.observer.notify('mouseMove', options);
     }
   }
 
   private handleMoveEnd(event: Event): void {
-    this.observer.notify('moveend', event);
+    this.observer.notify('moveEnd', event);
     $(document).off('mousemove mouseup touchmove touchend');
   }
 

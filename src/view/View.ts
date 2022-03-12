@@ -54,8 +54,8 @@ class View implements IView {
     this.scale = new Scale(this.$slider, this.vertical);
     this.scale.observer.subscribe({ key: 'click', observer: this.scaleClick.bind(this) });
     this.handles = new Handle(this.$slider, this.vertical);
-    this.handles.observer.subscribe({ key: 'mousemove', observer: this.mouseMove.bind(this) });
-    this.handles.observer.subscribe({ key: 'moveend', observer: this.mouseMoveEnd.bind(this) });
+    this.handles.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this) });
+    this.handles.observer.subscribe({ key: 'moveEnd', observer: this.mouseMoveEnd.bind(this) });
     this.tips = new Tip(this.$slider);
     this.interval = new Interval(this.$slider);
     this.panel = new Panel(this.$container);
@@ -119,11 +119,11 @@ class View implements IView {
   }
 
   private mouseMove(options: IEventPosition): void {
-    this.observer.notify('mousemove', options);
+    this.observer.notify('mouseMove', options);
   }
 
   private mouseMoveEnd(event: Event): void {
-    this.observer.notify('moveend', event);
+    this.observer.notify('moveEnd', event);
   }
 }
 
