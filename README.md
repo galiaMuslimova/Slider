@@ -39,7 +39,7 @@ new MetaSlider(element, {
 Команда для запуска приложений локально **npm start**
 
 ## Линтер
-Команды для запуска линтера **npm run elint**, **npm run elint-fix**
+Команды для запуска линтера **npm run eslint**, **npm run eslint-fix**
 
 ## Совместимость
 Использованы jquery version 3.6.0, node version 14.16.0, typescript version 4.5.5, pug version 3.0.2.
