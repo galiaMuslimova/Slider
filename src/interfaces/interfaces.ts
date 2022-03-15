@@ -49,11 +49,6 @@ interface ITrackPosition {
   trackWidth: number | undefined
 }
 
-interface IScaleArr {
-  item: IStepsArr,
-  index: number
-}
-
 export {
   IOptions,
   IConfig,
@@ -63,5 +58,4 @@ export {
   IResult,
   IEventPosition,
   ITrackPosition,
-  IScaleArr,
 };

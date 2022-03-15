@@ -20,8 +20,12 @@
         height: 40px;
       }
 
-      &__value {
-        width: 100%;
+      &__scale-item {
+        grid-template-rows: 1fr 1fr;
+      }
+
+      &__line {
+        text-align: center;
       }
 
       &__interval {
@@ -56,6 +60,10 @@
       &__scale {
         height: 100%;
         width: 40px;
+      }
+
+      &__scale-item {
+        grid-template-columns: 1fr 1fr;
       }
 
       &__value {
@@ -99,15 +107,17 @@
     position: relative;
   }
 
-  &__line {
-    width: 20px;
+  &__scale-item {
+    display: grid;
     position: absolute;
-    cursor: pointer;
-    text-align: center;
   }
 
+
+
   &__value {
-    position: absolute;
+    width: min-content;
+    text-align: center;
+    cursor: pointer;
   }
 
   &__handle {
