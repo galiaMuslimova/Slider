@@ -108,7 +108,7 @@ const dist = Object.assign({}, config, {
   },
   plugins: [
     new MiniCssExtractPlugin({
-      filename: 'index.[contenthash].css'
+      filename: 'index.css'
     }),
     new CleanWebpackPlugin(),
   ],

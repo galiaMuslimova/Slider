@@ -3,9 +3,7 @@
 
 ## Установка приложения
 Установите с помощью
-`npm install git+https://galiamuslimova.github.io/Slider.git`
-или
-`npm install meta-slider`
+`npm install git+https://github.com/galiaMuslimova/Slider.git`
 Затем, для подключения на страницу 
 ```
   import MetaSlider from 'meta-slider
