@@ -1,4 +1,4 @@
-import { IStepsArr, IScaleArr } from '../../../interfaces/interfaces';
+import { IStepsArr } from '../../../interfaces/interfaces';
 import IObserver from '../../../observer/interface';
 
 interface IScale {

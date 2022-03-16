@@ -47,6 +47,14 @@ class Handle implements IHandle {
     this.vertical = vertical;
   }
 
+  public getVertical(): boolean {
+    return this.vertical;
+  }
+
+  public getHandles(): JQuery<HTMLElement>[] {
+    return this.handles;
+  }
+
   static handleDragStart(): boolean {
     return false;
   }

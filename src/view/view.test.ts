@@ -53,6 +53,10 @@ describe('View', () => {
     };
   });
 
+  afterEach(() => {
+    $root.empty();
+  });
+
   it('проверяет параметры трэка', () => {
     const view = new View($root, true);
     const trackParameters = view.getTrackParameters();

@@ -3,8 +3,8 @@ import IObserver from '../../../observer/interface';
 
 interface ITrack {
   observer: IObserver;
-  readonly $slider: JQuery<HTMLElement>;
-  readonly $track: JQuery<HTMLElement>;
+  $slider: JQuery<HTMLElement>;
+  $track: JQuery<HTMLElement>;
   readonly position: { top: number, left: number };
 
   getTrackParameters(): ITrackPosition

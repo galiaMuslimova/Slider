@@ -11,23 +11,23 @@ class Panel implements IPanel {
 
   public observer: IObserver;
 
+  public from: Input;
+
+  public to: Input;
+
+  public range: Input;
+
+  public max: Input;
+
+  public min: Input;
+
+  public step: Input;
+
   readonly $root: JQuery<HTMLElement>;
 
   readonly $panel: JQuery<HTMLElement>;
 
   readonly $form: JQuery<HTMLElement>;
-
-  private from: Input;
-
-  private to: Input;
-
-  private range: Input;
-
-  private max: Input;
-
-  private min: Input;
-
-  private step: Input;
 
   constructor(root: JQuery<HTMLElement>) {
     this.$root = root;

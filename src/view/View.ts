@@ -21,6 +21,18 @@ import ITip from './elements/tip/interface';
 class View implements IView {
   public observer: Observer;
 
+  public scale: IScale;
+
+  public handles: IHandle;
+
+  public panel: IPanel;
+
+  public track: ITrack;
+
+  public interval: IInterval;
+
+  public tips: ITip;
+
   readonly $root: JQuery<HTMLElement>;
 
   readonly $container: JQuery<HTMLElement>;
@@ -29,18 +41,6 @@ class View implements IView {
 
   private vertical: boolean;
 
-  private panel: IPanel;
-
-  private track: ITrack;
-
-  private scale: IScale;
-
-  private handles: IHandle;
-
-  private interval: IInterval;
-
-  private tips: ITip;
-
   constructor(root: JQuery<HTMLElement>, vertical: boolean) {
     this.$root = root;
     this.vertical = vertical;
@@ -48,7 +48,7 @@ class View implements IView {
     this.$container = this.$root.closest('.js-body__container').addClass(this.vertical ? 'body__container_vertical' : 'body__container_horizontal');
     this.$slider = jQuery('<div>', {
       class: 'meta-slider',
-    }).appendTo(this.$root).addClass(this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
+    }).addClass(this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal').appendTo(this.$root);
     this.track = new Track(this.$slider, this.vertical);
     this.track.observer.subscribe({ key: 'position', observer: this.changePositionByTrack.bind(this) });
     this.scale = new Scale(this.$slider, this.vertical);

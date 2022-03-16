@@ -86,4 +86,29 @@ describe('Handle', () => {
     const $handle = $slider.find('.meta-slider__handle');
     expect($handle.length).to.equal(1);
   });
+
+  it('проверить handleDragStart', () => {
+    handleClass = new Handle($slider, true);
+    Handle.handleDragStart();
+    expect(Handle.handleDragStart()).to.equal(false);
+  });
+
+  it('проверить изменение vertical', () => {
+    handleClass = new Handle($slider, true);
+    handleClass.setVertical(false);
+    expect(handleClass.getVertical()).to.equal(false);
+  });
+
+  it('проверить изменение handles', () => {
+    handleClass = new Handle($slider, true);
+    handleClass.correctHandlesByRange(false);
+    expect(handleClass.getHandles().length).to.equal(1);
+  });
+
+  it('проверить изменение handles', () => {
+    handleClass = new Handle($slider, true);
+    handleClass.correctHandlesByRange(false);
+    handleClass.correctHandlesByRange(true);
+    expect(handleClass.getHandles().length).to.equal(2);
+  });
 });

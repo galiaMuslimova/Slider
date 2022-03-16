@@ -6,9 +6,9 @@ import IScale from './interface';
 class Scale implements IScale {
   public observer: IObserver;
 
-  readonly $slider: JQuery<HTMLElement>;
+  public $slider: JQuery<HTMLElement>;
 
-  readonly $scale: JQuery<HTMLElement>;
+  public $scale: JQuery<HTMLElement>;
 
   private stepsArr: IStepsArr[];
 
@@ -49,7 +49,7 @@ class Scale implements IScale {
       }).appendTo(this.$scale);
       scaleItem.css(this.vertical ? 'height' : 'width', 'min-content');
       const itemWidth = this.vertical ? $(scaleItem).height() : $(scaleItem).width();
-      if (itemWidth) {
+      if (itemWidth !== undefined) {
         widthArr.push(itemWidth);
         scaleItem.remove();
       } else {
@@ -87,7 +87,7 @@ class Scale implements IScale {
 
   private takeMaxStepsCount(): number {
     const scaleWidth = this.vertical ? this.$scale.height() : this.$scale.width();
-    if (scaleWidth) {
+    if (scaleWidth !== undefined) {
       const stepsCount = scaleWidth / (this.itemWidth + 4);
       return Math.floor(stepsCount);
     }
@@ -115,7 +115,7 @@ class Scale implements IScale {
   }
 
   private bindEventListeners(): void {
-    $(this.$slider).on('click touchstart', this.sendScaleClickValue.bind(this));
+    $(this.$scale).on('click touchstart', this.sendScaleClickValue.bind(this));
   }
 
   private sendScaleClickValue(event: Event): void {

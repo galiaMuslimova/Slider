@@ -50,7 +50,7 @@ class Input implements IInput {
   }
 
   private bindEventListeners(): void {
-    $(this.element).on('change keyup', this.handleInputValueChange.bind(this));
+    this.element.on('change keyup', this.handleInputValueChange.bind(this));
   }
 
   private handleInputValueChange(event: Event): void {

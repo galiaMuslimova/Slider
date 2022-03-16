@@ -6,9 +6,9 @@ import ITrack from './interface';
 class Track implements ITrack {
   public observer: IObserver;
 
-  readonly $slider: JQuery<HTMLElement>;
+  public $slider: JQuery<HTMLElement>;
 
-  readonly $track: JQuery<HTMLElement>;
+  public $track: JQuery<HTMLElement>;
 
   readonly position: { top: number, left: number };
 

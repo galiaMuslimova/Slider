@@ -7,6 +7,12 @@ import IObserver from '../observer/interface';
 interface IPanel {
   inputs: Map<string, IInput>
   observer: IObserver
+  max: IInput
+  min: IInput
+  step: IInput
+  from: IInput
+  to: IInput
+  range: IInput
   readonly $root: JQuery<HTMLElement>
   readonly $panel: JQuery<HTMLElement>
   readonly $form: JQuery<HTMLElement>

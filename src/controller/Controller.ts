@@ -10,11 +10,11 @@ class Controller implements IController {
 
   readonly $root: JQuery<HTMLElement>;
 
+  public view: IView;
+
+  public model: IModel;
+
   private vertical: boolean;
-
-  private model: IModel;
-
-  private view: IView;
 
   constructor(root: JQuery<HTMLElement>, options: IOptions) {
     this.options = options;
@@ -26,7 +26,7 @@ class Controller implements IController {
     this.init();
   }
 
-  private init() {
+  public init() {
     this.initElements();
     this.view.observer.subscribe({ key: 'mouseMove', observer: this.moveHandle.bind(this) });
     this.view.observer.subscribe({ key: 'moveEnd', observer: this.moveEnd.bind(this) });
