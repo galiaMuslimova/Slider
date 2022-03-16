@@ -53,7 +53,7 @@ describe('Input', () => {
 
   it('проверяет установку prop', () => {
     inputClass.setProp('max', 10);
-    const max = Number(inputClass.element.prop('max'));
+    const max = Number(inputClass.$input.prop('max'));
     expect(max).to.equal(10);
   });
 });

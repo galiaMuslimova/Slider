@@ -6,7 +6,7 @@ interface IConfig {
   to: number,
   vertical: boolean,
   tip: boolean,
-  range: boolean
+  range: boolean,
 }
 
 interface IOptions {

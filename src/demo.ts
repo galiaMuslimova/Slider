@@ -11,8 +11,9 @@ const options1: IOptions = {
   tip: 'gg',
   range: true,
 };
-const element1 = $('.js-body__container_first').find('.js-body__slider');
+const element1 = $('.js-body__slider_first');
 const slider1 = new MetaSlider(element1, options1);
+slider1.addPanel();
 
 const options2: IOptions = {
   min: 100000,
@@ -24,8 +25,9 @@ const options2: IOptions = {
   tip: true,
   range: false,
 };
-const element2 = $('.js-body__container_second').find('.js-body__slider');
+const element2 = $('.js-body__slider_second');
 const slider2 = new MetaSlider(element2, options2);
+slider2.addPanel();
 
 const options3: IOptions = {
   min: 1,
@@ -36,5 +38,6 @@ const options3: IOptions = {
   vertical: true,
   tip: false,
 };
-const element3 = $('.js-body__container_third').find('.js-body__slider');
+const element3 = $('.js-body__slider_third');
 const slider3 = new MetaSlider(element3, options3);
+slider3.addPanel();

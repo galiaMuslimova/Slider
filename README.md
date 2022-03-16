@@ -19,6 +19,15 @@ new MetaSlider(element, {
   max: 16
 })
 ```
+чтобы добавить панель конфигурации используйте метод
+`addPanel()`
+let element = $(".mySlider")
+let slider = new MetaSlider(element, {
+  min: 5,
+  max: 16
+})
+slider.addPanel();
+```
 
 ## Параметры слайдера
 В options можно задать следующие параметры:    

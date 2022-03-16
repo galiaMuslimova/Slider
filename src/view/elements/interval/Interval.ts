@@ -10,9 +10,7 @@ class Interval implements IInterval {
   constructor(slider: JQuery<HTMLElement>) {
     this.$slider = slider;
     this.$track = $(this.$slider).find('.meta-slider__track');
-    jQuery('<div>', {
-      class: 'meta-slider__interval',
-    }).appendTo(this.$track);
+    jQuery('<div>', { class: 'meta-slider__interval' }).appendTo(this.$track);
     this.$interval = this.$slider.find('.meta-slider__interval');
   }
 
@@ -25,10 +23,8 @@ class Interval implements IInterval {
       min = 0;
       width = positions[0] - handleWidth / 2 - gap;
     } else if (positions.length === 2) {
-      const minHandle = Math.min(positions[0], positions[1]);
-      const maxHandle = Math.max(positions[0], positions[1]);
-      min = minHandle + handleWidth / 2;
-      width = maxHandle - minHandle - handleWidth - gap;
+      min = Math.min(positions[0], positions[1]) + handleWidth / 2;
+      width = Math.abs(positions[1] - positions[0]) - handleWidth - gap;
     } else {
       throw new Error('wrong number of handles');
     }

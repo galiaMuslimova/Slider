@@ -25,41 +25,37 @@ class View implements IView {
 
   public handles: IHandle;
 
-  public panel: IPanel;
-
   public track: ITrack;
 
   public interval: IInterval;
 
   public tips: ITip;
 
-  readonly $root: JQuery<HTMLElement>;
-
-  readonly $container: JQuery<HTMLElement>;
+  public panel: IPanel | undefined;
 
   readonly $slider: JQuery<HTMLElement>;
 
+  readonly $container: JQuery<HTMLElement>;
+
   private vertical: boolean;
 
-  constructor(root: JQuery<HTMLElement>, vertical: boolean) {
-    this.$root = root;
+  constructor(slider: JQuery<HTMLElement>, vertical: boolean) {
+    this.$slider = slider;
     this.vertical = vertical;
     this.observer = new Observer();
-    this.$container = this.$root.closest('.js-body__container').addClass(this.vertical ? 'body__container_vertical' : 'body__container_horizontal');
-    this.$slider = jQuery('<div>', {
-      class: 'meta-slider',
-    }).addClass(this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal').appendTo(this.$root);
-    this.track = new Track(this.$slider, this.vertical);
+    this.$container = jQuery('<div>', {
+      class: 'meta-slider__container',
+    }).addClass(this.vertical ? 'meta-slider__container_vertical' : 'meta-slider__container_horizontal').appendTo(this.$slider);
+    this.track = new Track(this.$container, this.vertical);
     this.track.observer.subscribe({ key: 'position', observer: this.changePositionByTrack.bind(this) });
-    this.scale = new Scale(this.$slider, this.vertical);
+    this.scale = new Scale(this.$container, this.vertical);
     this.scale.observer.subscribe({ key: 'click', observer: this.scaleClick.bind(this) });
-    this.handles = new Handle(this.$slider, this.vertical);
+    this.handles = new Handle(this.$container, this.vertical);
     this.handles.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this) });
     this.handles.observer.subscribe({ key: 'moveEnd', observer: this.mouseMoveEnd.bind(this) });
-    this.tips = new Tip(this.$slider);
-    this.interval = new Interval(this.$slider);
-    this.panel = new Panel(this.$container);
-    this.panel.observer.subscribe({ key: 'setting', observer: this.changeSettings.bind(this) });
+    this.tips = new Tip(this.$container);
+    this.interval = new Interval(this.$container);
+    this.panel = undefined;
   }
 
   public getTrackParameters(): ITrackPosition {
@@ -95,15 +91,22 @@ class View implements IView {
     this.handles.moveHandles(parameters.positions);
     this.tips.changeTips(parameters.values);
     this.interval.moveInterval(parameters.positions, this.vertical);
-    this.panel.initValues(parameters.values);
+    if (this.panel !== undefined) {
+      this.panel.initValues(parameters.values);
+    }
   }
 
   public setSettings(setting: ISettings): void {
-    this.panel.setValue(setting);
+    if (this.panel !== undefined) {
+      this.panel.setValue(setting);
+    }
   }
 
   public initPanel(config: IConfig): void {
+    this.panel = new Panel(this.$slider);
+    this.panel.observer.subscribe({ key: 'setting', observer: this.changeSettings.bind(this) });
     this.panel.initPanel(config);
+    this.panel.initBounds(config);
   }
 
   private changePositionByTrack(position: number): void {

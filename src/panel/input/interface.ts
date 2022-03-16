@@ -2,7 +2,9 @@ import IObserver from '../../observer/interface';
 
 interface IInput {
   observer: IObserver;
-  readonly element: JQuery<HTMLElement>;
+  $input: JQuery<HTMLElement>;
+  readonly $form: JQuery<HTMLElement>;
+  readonly $element: JQuery<HTMLElement>;
 
   getName(): string
   getValue(): number | boolean

@@ -1,3 +1,5 @@
+import pug from 'pug';
+
 import { IOptions, ISettings, IEventPosition } from '../interfaces/interfaces';
 import View from '../view/View';
 import IView from '../view/interface';
@@ -14,13 +16,18 @@ class Controller implements IController {
 
   public model: IModel;
 
+  private $slider: JQuery<HTMLElement>;
+
   private vertical: boolean;
 
   constructor(root: JQuery<HTMLElement>, options: IOptions) {
     this.options = options;
     this.$root = root;
     this.vertical = (options.vertical !== undefined) ? options.vertical : false;
-    this.view = new View(this.$root, this.vertical);
+    this.$slider = jQuery('<div>', {
+      class: 'meta-slider',
+    }).addClass(this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal').prependTo(this.$root);
+    this.view = new View(this.$slider, this.vertical);
     const { trackStart, trackWidth } = this.view.getTrackParameters();
     this.model = new Model(this.options, trackStart, trackWidth);
     this.init();
@@ -31,9 +38,12 @@ class Controller implements IController {
     this.view.observer.subscribe({ key: 'mouseMove', observer: this.moveHandle.bind(this) });
     this.view.observer.subscribe({ key: 'moveEnd', observer: this.moveEnd.bind(this) });
     this.view.observer.subscribe({ key: 'click', observer: this.clickOnScale.bind(this) });
+    this.view.observer.subscribe({ key: 'position', observer: this.changePositionByTrack.bind(this) });
+  }
+
+  public addPanel() {
     this.view.initPanel(this.model.getConfig());
     this.view.observer.subscribe({ key: 'setting', observer: this.changeSettings.bind(this) });
-    this.view.observer.subscribe({ key: 'position', observer: this.changePositionByTrack.bind(this) });
   }
 
   private initElements() {
@@ -106,8 +116,8 @@ class Controller implements IController {
         this.view.changeTips(this.model.getParameters().values);
         break;
       case 'vertical': {
+        this.changeVertical();
         this.view.setSettings({ vertical: newConfig.vertical });
-        this.vertical = !this.vertical;
         this.view.changeDirection(this.vertical);
         const { trackStart, trackWidth } = this.view.getTrackParameters();
         this.model.setTrackStart(trackStart);
@@ -127,6 +137,12 @@ class Controller implements IController {
     if (parameters) {
       this.view.setParameters(parameters);
     }
+  }
+
+  private changeVertical():void {
+    this.vertical = !this.vertical;
+    this.$slider.removeClass(this.vertical ? 'meta-slider_horizontal' : 'meta-slider_vertical');
+    this.$slider.addClass(this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
   }
 }
 

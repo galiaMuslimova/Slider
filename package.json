@@ -24,6 +24,7 @@
     "@types/jsdom": "^16.2.13",
     "@types/mocha": "^9.0.0",
     "@types/node": "^16.11.9",
+    "@types/pug": "^2.0.6",
     "@typescript-eslint/eslint-plugin": "^5.11.0",
     "@typescript-eslint/parser": "^5.11.0",
     "airbnb-browser-shims": "^3.3.0",
@@ -66,7 +67,11 @@
   },
   "dependencies": {
     "autoprefixer": "^10.4.2",
+    "fs": "0.0.1-security",
+    "os": "^0.1.2",
+    "path": "^0.12.7",
     "pug": "^3.0.2",
-    "pug-loader": "^2.4.0"
+    "pug-loader": "^2.4.0",
+    "resolve": "^1.22.0"
   }
 }

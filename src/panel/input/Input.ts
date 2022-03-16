@@ -7,7 +7,11 @@ import './input.scss';
 class Input implements IInput {
   public observer: IObserver;
 
-  readonly element: JQuery<HTMLElement>;
+  public $input: JQuery<HTMLElement>;
+
+  readonly $form: JQuery<HTMLElement>;
+
+  readonly $element: JQuery<HTMLElement>;
 
   private name: string;
 
@@ -15,12 +19,14 @@ class Input implements IInput {
 
   private value: number | boolean;
 
-  constructor(element: JQuery<HTMLElement>) {
-    this.element = element;
+  constructor(form: JQuery<HTMLElement>, key: string, value: number | boolean) {
+    this.$form = form;
+    this.value = value;
+    this.name = key;
+    this.type = (typeof value === 'number') ? 'number' : 'checkbox';
+    this.$element = this.createInput();
+    this.$input = this.$element.find('.js-input__field');
     this.observer = new Observer();
-    this.name = this.element.prop('name');
-    this.type = this.element.prop('type');
-    this.value = (this.type === 'number') ? this.element.val() : this.element.prop('checked');
     this.bindEventListeners();
   }
 
@@ -39,18 +45,34 @@ class Input implements IInput {
   public setValue(value: number | boolean): void {
     this.value = value;
     if (typeof value === 'number') {
-      this.element.val(value);
+      this.$input.val(value);
     } else {
-      this.element.prop('checked', value);
+      this.$input.prop('checked', value);
     }
   }
 
   public setProp(name: string, value: number | boolean): void {
-    this.element.prop(name, value);
+    this.$input.prop(name, value);
+  }
+
+  private createInput() {
+    const input = jQuery('<div>', { class: 'input js-input' }).appendTo(this.$form);
+    const label = jQuery('<label>', { class: 'input__label' }).appendTo(input);
+    jQuery('<p>', { class: 'input__text', text: this.name }).appendTo(label);
+    jQuery('<input>', {
+      class: `input__field js-input__field input__field_with-${this.type}`,
+      type: this.type,
+      name: this.name,
+      value: this.value,
+    }).appendTo(label);
+    if (this.type === 'checkbox') {
+      jQuery('<span>', { class: 'input__box' }).appendTo(label);
+    }
+    return input;
   }
 
   private bindEventListeners(): void {
-    this.element.on('change keyup', this.handleInputValueChange.bind(this));
+    this.$input.on('change keyup', this.handleInputValueChange.bind(this));
   }
 
   private handleInputValueChange(event: Event): void {

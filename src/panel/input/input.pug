@@ -1,7 +1,0 @@
-mixin input({type, name, value, min, step})
-  .input.js-input
-    label.input__label
-      p.input__text= name
-      input.input__field.js-input__field(class=`input__field_with-${type}`, type=type, name=name, value=value, min=min, step=step)
-      if(type === 'checkbox')
-        span.input__box
