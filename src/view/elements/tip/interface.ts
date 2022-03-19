@@ -1,9 +1,11 @@
+import { IParameters } from '../../../interfaces/interfaces';
+
 interface ITip{
   $slider: JQuery<HTMLElement>;
   $tip: JQuery<HTMLElement>;
 
-  initTips(tip: boolean): void
-  changeTips(values: number[]): void
+  init(tip: boolean): void
+  changeTips(parameters: IParameters[]): void
 }
 
 export default ITip;

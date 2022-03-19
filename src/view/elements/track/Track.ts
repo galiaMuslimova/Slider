@@ -10,19 +10,25 @@ class Track implements ITrack {
 
   public $track: JQuery<HTMLElement>;
 
-  readonly position: { top: number, left: number };
+  private position: { top: number, left: number };
 
   private vertical: boolean;
 
   private trackStart: number;
 
-  constructor(slider: JQuery<HTMLElement>, vertical: boolean) {
+  constructor(slider: JQuery<HTMLElement>) {
     this.$slider = slider;
-    this.vertical = vertical;
-    this.$track = jQuery('<div>', {
-      class: 'meta-slider__track',
-    }).appendTo(this.$slider);
+    this.vertical = false;
+    this.$track = jQuery('<div>', { class: 'meta-slider__track' }).appendTo(this.$slider);
     this.observer = new Observer();
+    this.position = { top: 0, left: 0 };
+    this.trackStart = 0;
+  }
+
+  public init(vertical: boolean): void {
+    this.vertical = vertical;
+    this.$track.css('width', `${vertical ? '10px' : '100%'}`);
+    this.$track.css('height', `${vertical ? '100%' : '10px'}`);
     this.position = this.$track.position();
     this.trackStart = this.vertical ? Number(this.position.top) : Number(this.position.left);
     this.bindEventListeners();

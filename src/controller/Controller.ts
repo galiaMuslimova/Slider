@@ -1,6 +1,6 @@
-import pug from 'pug';
-
-import { IOptions, ISettings, IEventPosition } from '../interfaces/interfaces';
+import {
+  IOptions, ISettings, IEventPosition, IConfig,
+} from '../interfaces/interfaces';
 import View from '../view/View';
 import IView from '../view/interface';
 import Model from '../model/Model';
@@ -23,38 +23,31 @@ class Controller implements IController {
   constructor(root: JQuery<HTMLElement>, options: IOptions) {
     this.options = options;
     this.$root = root;
-    this.vertical = (options.vertical !== undefined) ? options.vertical : false;
-    this.$slider = jQuery('<div>', {
-      class: 'meta-slider',
-    }).addClass(this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal').prependTo(this.$root);
-    this.view = new View(this.$slider, this.vertical);
-    const { trackStart, trackWidth } = this.view.getTrackParameters();
-    this.model = new Model(this.options, trackStart, trackWidth);
-    this.init();
-  }
-
-  public init() {
-    this.initElements();
+    this.$slider = jQuery('<div>', { class: 'meta-slider' }).prependTo(this.$root);
+    this.model = new Model(this.options);
+    this.vertical = this.model.getConfig().vertical;
+    this.view = new View(this.$slider, this.model.getConfig());
     this.view.observer.subscribe({ key: 'mouseMove', observer: this.moveHandle.bind(this) });
     this.view.observer.subscribe({ key: 'moveEnd', observer: this.moveEnd.bind(this) });
     this.view.observer.subscribe({ key: 'click', observer: this.clickOnScale.bind(this) });
     this.view.observer.subscribe({ key: 'position', observer: this.changePositionByTrack.bind(this) });
+    this.init();
+  }
+
+  public init() {
+    this.$slider.addClass(this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
+    const { trackStart, trackWidth } = this.view.getTrackParameters();
+    this.model.setTrackParameters(trackStart, trackWidth);
+    const stepsArr = this.model.initStepsArr();
+    this.view.init(stepsArr);
+    this.model.correctFromTo();
+    const parameters = this.model.initParameters();
+    this.view.setParameters(parameters);
   }
 
   public addPanel() {
     this.view.initPanel(this.model.getConfig());
     this.view.observer.subscribe({ key: 'setting', observer: this.changeSettings.bind(this) });
-  }
-
-  private initElements() {
-    const stepsArr = this.model.getStepsArr();
-    this.view.initScale(stepsArr);
-    const { range } = this.model.getConfig();
-    this.view.correctHandlesByRange(range);
-    const { tip } = this.model.getConfig();
-    this.view.initTips(tip);
-    const parameters = this.model.getParameters();
-    this.view.setParameters(parameters);
   }
 
   private moveHandle(options: IEventPosition) {
@@ -65,10 +58,9 @@ class Controller implements IController {
   }
 
   private moveEnd() {
-    this.model.correctFromToByParams();
-    const modelConfig = this.model.getConfig();
-    this.view.setSettings({ from: modelConfig.from });
-    this.view.setSettings({ to: modelConfig.to });
+    const { from, to } = this.model.correctFromToByParams();
+    this.view.setSettings({ from });
+    this.view.setSettings({ to });
     this.view.setParameters(this.model.getParameters());
   }
 
@@ -80,50 +72,38 @@ class Controller implements IController {
   }
 
   private changeSettings(setting: ISettings) {
-    const modelConfig = this.model.getConfig();
-    const newConfig = $.extend({}, modelConfig, setting);
-    this.model.setConfig(newConfig);
+    this.model.setSetting(setting);
+    const newConfig = this.model.getConfig();
     const key = Object.keys(setting)[0];
     switch (key) {
       case 'min':
       case 'max':
       case 'step':
-        this.model.correctMinMax();
+        console.time('scale'); 
         this.view.initScale(this.model.initStepsArr());
-        this.view.setSettings({ min: newConfig.min });
-        this.view.setSettings({ max: newConfig.max });
-        this.view.setSettings({ step: newConfig.step });
+        console.timeEnd('scale');        
         this.model.correctFromTo();
-        this.view.setParameters(this.model.initParameters());
+        this.view.setParameters(this.model.initParameters());        
         break;
       case 'from':
       case 'to':
-        this.model.correctFromTo();
-        this.view.setSettings({ from: newConfig.from });
-        this.view.setSettings({ to: newConfig.to });
         this.view.setParameters(this.model.initParameters());
         break;
       case 'range':
-        this.model.correctFromTo();
-        this.view.setSettings({ range: newConfig.range });
         this.view.correctHandlesByRange(newConfig.range);
         this.view.initTips(newConfig.tip);
         this.view.setParameters(this.model.initParameters());
         break;
       case 'tip':
-        this.view.setSettings({ tip: newConfig.tip });
         this.view.initTips(newConfig.tip);
-        this.view.changeTips(this.model.getParameters().values);
+        this.view.changeTips(this.model.getParameters());
         break;
       case 'vertical': {
-        this.changeVertical();
-        this.view.setSettings({ vertical: newConfig.vertical });
+        this.vertical = !this.vertical;
+        this.model.setVertical(this.vertical);
+        this.$slider.removeClass(this.vertical ? 'meta-slider_horizontal' : 'meta-slider_vertical');
         this.view.changeDirection(this.vertical);
-        const { trackStart, trackWidth } = this.view.getTrackParameters();
-        this.model.setTrackStart(trackStart);
-        this.model.setTrackWidth(trackWidth);
-        this.model.initStepsArr();
-        this.initElements();
+        this.init();
         break;
       }
       default: {
@@ -137,12 +117,6 @@ class Controller implements IController {
     if (parameters) {
       this.view.setParameters(parameters);
     }
-  }
-
-  private changeVertical():void {
-    this.vertical = !this.vertical;
-    this.$slider.removeClass(this.vertical ? 'meta-slider_horizontal' : 'meta-slider_vertical');
-    this.$slider.addClass(this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
   }
 }
 

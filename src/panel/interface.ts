@@ -1,5 +1,5 @@
 import {
-  ISettings, IConfig,
+  ISettings, IConfig, IParameters,
 } from '../interfaces/interfaces';
 import IInput from './input/interface';
 import IObserver from '../observer/interface';
@@ -13,7 +13,7 @@ interface IPanel {
 
   initPanel(config: IConfig): void
   initBounds(config: IConfig): void
-  initValues(values: number[]): void
+  initValues(parameters: IParameters[]): void
   setValue(setting: ISettings): void
 }
 

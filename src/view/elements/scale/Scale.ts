@@ -1,4 +1,4 @@
-import { IStepsArr } from '../../../interfaces/interfaces';
+import { IParameters } from '../../../interfaces/interfaces';
 import Observer from '../../../observer/Observer';
 import IObserver from '../../../observer/interface';
 import IScale from './interface';
@@ -10,59 +10,53 @@ class Scale implements IScale {
 
   public $scale: JQuery<HTMLElement>;
 
-  private stepsArr: IStepsArr[];
+  private stepsArr: IParameters[];
 
   private itemWidth: number;
 
   private vertical: boolean;
 
-  constructor(slider: JQuery<HTMLElement>, vertical: boolean) {
+  constructor(slider: JQuery<HTMLElement>) {
     this.$slider = slider;
-    this.vertical = vertical;
+    this.vertical = false;
     this.observer = new Observer();
-    this.$scale = jQuery('<div>', {
-      class: 'meta-slider__scale',
-    }).appendTo(this.$slider);
+    this.$scale = jQuery('<div>', { class: 'meta-slider__scale' }).appendTo(this.$slider);
     this.stepsArr = [];
-    this.itemWidth = 0;
-    this.bindEventListeners();
+    this.itemWidth = 20;
   }
 
-  public setVertical(vertical: boolean): void {
+  public init(stepsArr: IParameters[], vertical: boolean): void {
     this.vertical = vertical;
-  }
-
-  public initScale(stepsArr: IStepsArr[], vertical:boolean = false): void {
-    this.vertical = vertical;
+    this.$scale.css('width', `${this.vertical ? '40px' : '100%'}`);
+    this.$scale.css('height', `${this.vertical ? '100%' : '40px'}`);
     this.stepsArr = stepsArr;
     this.$scale.empty();
     this.itemWidth = this.takeWidth();
     this.addValues();
+    this.bindEventListeners();
   }
 
   private takeWidth(): number {
     const widthArr: number[] = [];
     const randomItemsArr = [...this.stepsArr.slice(0, 3), ...this.stepsArr.slice(-3)];
     randomItemsArr.forEach((item) => {
-      const scaleItem = jQuery('<div>', {
-        text: item.value,
-      }).appendTo(this.$scale);
+      const scaleItem = jQuery('<div>', { text: item.value }).appendTo(this.$scale);
       scaleItem.css(this.vertical ? 'height' : 'width', 'min-content');
       const itemWidth = this.vertical ? $(scaleItem).height() : $(scaleItem).width();
       if (itemWidth !== undefined) {
         widthArr.push(itemWidth);
-        scaleItem.remove();
       } else {
         throw new Error('wrong width of item');
       }
+      scaleItem.remove();
     });
     return Math.max.apply(null, widthArr);
   }
 
   private addValues(): void {
     const scaleArr = this.correctScaleArr();
-    const lastItemPosition = scaleArr[scaleArr.length - 1].x;
-    const prevLastItemPosition = scaleArr[scaleArr.length - 2].x;
+    const lastItemPosition = scaleArr[scaleArr.length - 1].position;
+    const prevLastItemPosition = scaleArr[scaleArr.length - 2].position;
     if (Math.abs(prevLastItemPosition - lastItemPosition) < this.itemWidth) {
       scaleArr.splice((scaleArr.length - 2), 1);
     }
@@ -71,8 +65,8 @@ class Scale implements IScale {
     });
   }
 
-  private correctScaleArr(): IStepsArr[] {
-    const scaleArr: IStepsArr[] = [];
+  private correctScaleArr(): IParameters[] {
+    const scaleArr: IParameters[] = [];
     const maxStepsCount = this.takeMaxStepsCount();
     const scaleStep = Math.round(this.stepsArr.length / maxStepsCount);
     this.stepsArr.forEach((item, i) => {
@@ -94,8 +88,8 @@ class Scale implements IScale {
     throw new Error('wrong scale width');
   }
 
-  private addItem(item: IStepsArr): JQuery<HTMLElement> {
-    const position = item.x - this.itemWidth / 2;
+  private addItem(item: IParameters): JQuery<HTMLElement> {
+    const position = item.position - this.itemWidth / 2;
     const scaleItem = jQuery('<div>', {
       class: 'meta-slider__scale-item',
       style: this.vertical ? `top: ${position}px` : `left: ${position}px`,

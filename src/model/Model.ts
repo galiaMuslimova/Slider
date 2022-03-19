@@ -1,5 +1,5 @@
 import {
-  IOptions, IConfig, IParameters, IStepsArr, IEventPosition,
+  IOptions, IConfig, IParameters, IEventPosition, ISettings,
 } from '../interfaces/interfaces';
 import IModel from './interface';
 
@@ -19,23 +19,22 @@ class Model implements IModel {
 
   private config: IConfig;
 
-  private stepsArr: IStepsArr[];
+  private stepsArr: IParameters[];
 
-  private parameters: IParameters;
+  private parameters: IParameters[];
 
   private trackStart: number;
 
   private trackWidth: number;
 
-  constructor(options: IOptions, trackStart: number = 0, trackWidth: number = 500) {
-    this.trackStart = trackStart;
-    this.trackWidth = trackWidth;
+  constructor(options: IOptions) {
     this.options = this.correctOptionsType(options);
     this.config = $.extend({}, defaults, this.options);
     this.correctMinMax();
-    this.stepsArr = this.initStepsArr();
-    this.correctFromTo();
-    this.parameters = this.initParameters();
+    this.trackStart = 0;
+    this.trackWidth = 500;
+    this.stepsArr = [];
+    this.parameters = [];
   }
 
   public correctMinMax(config: IConfig = this.config): IConfig {
@@ -47,19 +46,25 @@ class Model implements IModel {
     return correctConfig;
   }
 
-  public initStepsArr(): IStepsArr[] {
+  public initStepsArr(): IParameters[] {
     const { min, max, step } = this.config;
     const range = max - min;
     const stepLength = (this.trackWidth / range) * step;
     const stepsCount = Math.floor(range / step);
     const emptyArr = Array(stepsCount + 1);
-    const valuesArr = Array.from(emptyArr, (_, i) => (Model.round(min + Model.round(step * i))));
-    const stepsArr: IStepsArr[] = [];
-    valuesArr.map((el, index) => stepsArr.push({ value: el, x: Math.round(stepLength * index) }));
+    let stepsArr: IParameters[] = [];
+    const valuesArr = Array.from(emptyArr, (_, i) => (Math.round((min + step * i) * 10)) / 10);
+    stepsArr = valuesArr.map((el, i) => ({ value: el, position: Math.round(stepLength * i) }));
     if (valuesArr.indexOf(max) === -1) {
-      valuesArr.push(max);
-      stepsArr.push({ value: max, x: this.trackWidth });
+      stepsArr.push({ value: max, position: this.trackWidth });
     }
+
+    console.time('newArr'); 
+    const newArr: { [index: number]: number } = {};
+    valuesArr.forEach((el, i) => {
+      newArr[el] = Math.round(stepLength * i);
+    });
+    console.timeEnd('newArr'); 
 
     this.stepsArr = stepsArr;
     return stepsArr;
@@ -81,69 +86,81 @@ class Model implements IModel {
     return correctConfig;
   }
 
-  public initParameters(): IParameters {
-    const parameters: IParameters = { values: [], positions: [] };
-    const element = this;
-    parameters.values[0] = this.config.from;
+  public initParameters(): IParameters[] {
+    const parameters: IParameters[] = [];
+    const item: IParameters = {
+      value: this.config.from,
+      position: 0,
+    };
+    item.position = this.takeXByValue(item.value);
+    parameters.push(item);
     if (this.config.range) {
-      parameters.values[1] = this.config.to;
+      const secondItem: IParameters = {
+        value: this.config.to,
+        position: 0,
+      };
+      secondItem.position = this.takeXByValue(secondItem.value);
+      parameters.push(secondItem);
     }
 
-    parameters.positions = parameters.values.map((x) => element.takeXByValue(x));
     this.parameters = parameters;
     return parameters;
   }
 
-  public takeParamHandleMove(options: IEventPosition): IParameters | boolean {
+  public takeParamHandleMove(options: IEventPosition): IParameters[] | boolean {
     const { eventPosition } = options;
     const { index } = options;
     const position = Math.round(eventPosition - this.trackStart);
     const isInScale = (position >= 0) && (position <= this.trackWidth);
     if (isInScale) {
-      const positionsArr = this.stepsArr.map((item) => item.x);
+      const positionsArr = this.stepsArr.map((item) => item.position);
       const stepsArrClosestIndex = Model.takeClosestIndex(position, positionsArr);
       const stepsArrItem = this.stepsArr[stepsArrClosestIndex];
-      this.parameters.values[index] = stepsArrItem.value;
-      this.parameters.positions[index] = stepsArrItem.x;
+      this.parameters[index].value = stepsArrItem.value;
+      this.parameters[index].position = stepsArrItem.position;
       return this.parameters;
     }
 
     return false;
   }
 
-  public correctFromToByParams(): void {
-    this.parameters.values.sort();
-    this.parameters.positions.sort();
-    const value = this.parameters.values[0];
-    this.config.from = value;
-    this.config.to = this.parameters.values[1] ? this.parameters.values[1] : this.config.to;
+  public correctFromToByParams(): { from: number, to: number } {
+    if (this.config.range) {
+      this.config.from = Math.min(this.parameters[0].value, this.parameters[1].value);
+      this.config.to = Math.max(this.parameters[0].value, this.parameters[1].value);
+    } else {
+      this.config.from = this.parameters[0].value;
+    }
+    return { from: this.config.from, to: this.config.to };
   }
 
-  public takeParamScaleClick(value: number): IParameters {
+  public takeParamScaleClick(value: number): IParameters[] {
     if (this.config.range) {
-      const index = Model.takeClosestIndex(value, this.parameters.values);
-      this.parameters.values[index] = value;
-      this.parameters.positions[index] = this.takeXByValue(value);
+      const values = [this.parameters[0].value, this.parameters[1].value];
+      const index = Model.takeClosestIndex(value, values);
+      this.parameters[index].value = value;
+      this.parameters[index].position = this.takeXByValue(value);
       return this.parameters;
     }
 
-    this.parameters.values = [value];
-    this.parameters.positions = [this.takeXByValue(value)];
+    this.parameters[0].value = value;
+    this.parameters[0].position = this.takeXByValue(value);
     return this.parameters;
   }
 
-  public takeParamTrackClick(position: number): IParameters {
-    const positionsArr = this.stepsArr.map((item) => item.x);
+  public takeParamTrackClick(position: number): IParameters[] {
+    const positionsArr = this.stepsArr.map((item) => item.position);
     const closestPosition = Model.takeClosestNum(position, positionsArr);
     if (this.config.range) {
-      const index = Model.takeClosestIndex(closestPosition, this.parameters.positions);
-      this.parameters.positions[index] = closestPosition;
-      this.parameters.values[index] = this.takeValueByX(closestPosition);
+      const positions = [this.parameters[0].position, this.parameters[1].position];
+      const index = Model.takeClosestIndex(closestPosition, positions);
+      this.parameters[index].position = closestPosition;
+      this.parameters[index].value = this.takeValueByX(closestPosition);
       return this.parameters;
     }
 
-    this.parameters.positions = [closestPosition];
-    this.parameters.values = [this.takeValueByX(closestPosition)];
+    this.parameters[0].position = closestPosition;
+    this.parameters[0].value = this.takeValueByX(closestPosition);
     return this.parameters;
   }
 
@@ -155,19 +172,24 @@ class Model implements IModel {
     this.config = config;
   }
 
-  public getParameters(): IParameters {
+  public setSetting(setting: ISettings): void {
+    this.config = $.extend({}, this.config, setting);
+  }
+
+  public getParameters(): IParameters[] {
     return this.parameters;
   }
 
-  public setTrackStart(trackStart: number = 0): void {
-    this.trackStart = trackStart;
+  public setVertical(vertical: boolean): void {
+    this.config.vertical = vertical;
   }
 
-  public setTrackWidth(trackWidth: number | undefined): void {
+  public setTrackParameters(trackStart: number, trackWidth: number | undefined): void {
+    this.trackStart = trackStart;
     this.trackWidth = trackWidth === undefined ? 500 : trackWidth;
   }
 
-  public getStepsArr(): IStepsArr[] {
+  public getStepsArr(): IParameters[] {
     return this.stepsArr;
   }
 
@@ -179,10 +201,6 @@ class Model implements IModel {
   static takeClosestIndex(num: number, array: number[]): number {
     const closest = array.reduce((a, b) => (Math.abs(b - num) < Math.abs(a - num) ? b : a));
     return array.indexOf(closest);
-  }
-
-  static round(num: number): number {
-    return (Math.round(num * 10)) / 10;
   }
 
   private correctOptionsType(options: IOptions = this.options):IOptions {
@@ -199,16 +217,16 @@ class Model implements IModel {
   }
 
   private takeXByValue(val: number): number {
-    const position = this.stepsArr.find((el) => el.value === val);
-    if (position) {
-      return position.x;
+    const item = this.stepsArr.find((el) => el.value === val);
+    if (item) {
+      return item.position;
     }
 
     throw new Error('position for this value is not consist');
   }
 
   private takeValueByX(x: number): number {
-    const item = this.stepsArr.find((el) => el.x === x);
+    const item = this.stepsArr.find((el) => el.position === x);
     if (item) {
       return item.value;
     }

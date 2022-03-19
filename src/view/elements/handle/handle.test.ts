@@ -69,7 +69,7 @@ describe('Handle', () => {
   });
 
   it('проверить позицию при handle = 2 при vertical=true', () => {
-    handleClass = new Handle($slider, false);
+    handleClass = new Handle($slider);
     handleClass.setVertical(true);
     handleClass.correctHandlesByRange(true);
     const positions = [50, 200];
@@ -81,32 +81,32 @@ describe('Handle', () => {
   });
 
   it('проверить изменение количества handles', () => {
-    handleClass = new Handle($slider, true);
+    handleClass = new Handle($slider);
     handleClass.correctHandlesByRange(false);
     const $handle = $slider.find('.meta-slider__handle');
     expect($handle.length).to.equal(1);
   });
 
   it('проверить handleDragStart', () => {
-    handleClass = new Handle($slider, true);
+    handleClass = new Handle($slider);
     Handle.handleDragStart();
     expect(Handle.handleDragStart()).to.equal(false);
   });
 
   it('проверить изменение vertical', () => {
-    handleClass = new Handle($slider, true);
+    handleClass = new Handle($slider);
     handleClass.setVertical(false);
     expect(handleClass.getVertical()).to.equal(false);
   });
 
   it('проверить изменение handles', () => {
-    handleClass = new Handle($slider, true);
+    handleClass = new Handle($slider);
     handleClass.correctHandlesByRange(false);
     expect(handleClass.getHandles().length).to.equal(1);
   });
 
   it('проверить изменение handles', () => {
-    handleClass = new Handle($slider, true);
+    handleClass = new Handle($slider);
     handleClass.correctHandlesByRange(false);
     handleClass.correctHandlesByRange(true);
     expect(handleClass.getHandles().length).to.equal(2);

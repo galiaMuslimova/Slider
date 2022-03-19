@@ -1,5 +1,5 @@
 import {
-  ISettings, IParameters, IStepsArr, ITrackPosition, IConfig,
+  ISettings, IParameters, ITrackPosition, IConfig,
 } from '../interfaces/interfaces';
 import IObserver from '../observer/interface';
 import IPanel from '../panel/interface';
@@ -19,13 +19,14 @@ interface IView {
   interval: IInterval
   tips: ITip
 
+  init(stepsArr: IParameters[]): void
   getTrackParameters(): ITrackPosition
-  initScale(stepsArr: IStepsArr[]): void
+  initScale(stepsArr: IParameters[]): void
   correctHandlesByRange(range:boolean): void
   initTips(tip: boolean): void
-  changeTips(values: number[]): void
+  changeTips(parameters: IParameters[]): void
   changeDirection(vertical: boolean): void
-  setParameters(parameters: IParameters): void
+  setParameters(parameters: IParameters[]): void
   setSettings(setting: ISettings): void
   initPanel(config: IConfig): void
 }

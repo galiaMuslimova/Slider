@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { IStepsArr } from '../../../interfaces/interfaces';
+import { IParameters } from '../../../interfaces/interfaces';
 
 import Scale from './Scale';
 
@@ -19,7 +19,7 @@ describe('Scale', () => {
   let $slider: JQuery<HTMLElement>;
   let scaleClass: Scale;
   let $scale: JQuery<HTMLElement>;
-  let stepsArr: IStepsArr[];
+  let stepsArr: IParameters[];
 
   before(() => {
     $slider = $(document).find('.meta-slider');

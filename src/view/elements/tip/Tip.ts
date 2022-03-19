@@ -1,3 +1,4 @@
+import { IParameters } from '../../../interfaces/interfaces';
 import ITip from './interface';
 
 class Tip implements ITip {
@@ -10,12 +11,10 @@ class Tip implements ITip {
   constructor(slider: JQuery<HTMLElement>) {
     this.$slider = slider;
     this.$tips = [];
-    this.$tip = jQuery('<div>', {
-      class: 'meta-slider__tip',
-    });
+    this.$tip = jQuery('<div>', { class: 'meta-slider__tip' });
   }
 
-  public initTips(tip: boolean = true): void {
+  public init(tip: boolean = true): void {
     const element = this;
     this.$slider.find('.meta-slider__tip').remove();
     this.$tips = [];
@@ -29,9 +28,9 @@ class Tip implements ITip {
     }
   }
 
-  public changeTips(values: number[]): void {
+  public changeTips(parameters: IParameters[]): void {
     this.$tips.forEach((item, index) => {
-      item.html(`${values[index]}`);
+      item.html(`${parameters[index].value}`);
     });
   }
 }

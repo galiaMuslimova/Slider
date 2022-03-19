@@ -5,8 +5,8 @@ interface ITrack {
   observer: IObserver;
   $slider: JQuery<HTMLElement>;
   $track: JQuery<HTMLElement>;
-  readonly position: { top: number, left: number };
 
+  init(vertical: boolean): void
   getTrackParameters(): ITrackPosition
   setVertical(vertical: boolean): void
 }

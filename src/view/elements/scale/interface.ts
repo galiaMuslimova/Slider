@@ -1,4 +1,4 @@
-import { IStepsArr } from '../../../interfaces/interfaces';
+import { IParameters } from '../../../interfaces/interfaces';
 import IObserver from '../../../observer/interface';
 
 interface IScale {
@@ -6,8 +6,7 @@ interface IScale {
   $slider: JQuery<HTMLElement>;
   $scale: JQuery<HTMLElement>;
 
-  initScale(stepsArr: IStepsArr[], vertical:boolean): void
-  setVertical(vertical: boolean): void
+  init(stepsArr: IParameters[], vertical:boolean): void
 }
 
 export default IScale;

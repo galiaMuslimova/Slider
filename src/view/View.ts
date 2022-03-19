@@ -1,5 +1,5 @@
 import {
-  IConfig, IEventPosition, IParameters, IStepsArr, ISettings, ITrackPosition,
+  IConfig, IEventPosition, IParameters, ISettings, ITrackPosition,
 } from '../interfaces/interfaces';
 import Panel from '../panel/Panel';
 import IPanel from '../panel/interface';
@@ -37,33 +37,52 @@ class View implements IView {
 
   readonly $container: JQuery<HTMLElement>;
 
-  private vertical: boolean;
+  private config: IConfig;
 
-  constructor(slider: JQuery<HTMLElement>, vertical: boolean) {
+  constructor(slider: JQuery<HTMLElement>, config: IConfig) {
     this.$slider = slider;
-    this.vertical = vertical;
+    this.config = config;
     this.observer = new Observer();
     this.$container = jQuery('<div>', {
-      class: 'meta-slider__container',
-    }).addClass(this.vertical ? 'meta-slider__container_vertical' : 'meta-slider__container_horizontal').appendTo(this.$slider);
-    this.track = new Track(this.$container, this.vertical);
-    this.track.observer.subscribe({ key: 'position', observer: this.changePositionByTrack.bind(this) });
-    this.scale = new Scale(this.$container, this.vertical);
-    this.scale.observer.subscribe({ key: 'click', observer: this.scaleClick.bind(this) });
-    this.handles = new Handle(this.$container, this.vertical);
-    this.handles.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this) });
-    this.handles.observer.subscribe({ key: 'moveEnd', observer: this.mouseMoveEnd.bind(this) });
+      class: `meta-slider__container meta-slider__container_${this.config.vertical ? 'vertical' : 'horizontal'}`,
+    }).appendTo(this.$slider);
+    this.track = new Track(this.$container);
+    this.track.init(this.config.vertical);
+    this.scale = new Scale(this.$container);
+    this.handles = new Handle(this.$container);
     this.tips = new Tip(this.$container);
     this.interval = new Interval(this.$container);
     this.panel = undefined;
+  }
+
+  public init(stepsArr: IParameters[]): void {
+    this.track.init(this.config.vertical);
+    this.track.observer.subscribe({ key: 'position', observer: this.changePositionByTrack.bind(this) });
+    this.handles.init(this.config.vertical, this.config.range);
+    this.handles.correctHandlesByRange(this.config.range);
+    this.handles.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this) });
+    this.handles.observer.subscribe({ key: 'moveEnd', observer: this.mouseMoveEnd.bind(this) });
+    this.tips.init(this.config.tip);
+    this.interval.init(this.config.vertical);
+    this.scale.init(stepsArr, this.config.vertical);
+    this.scale.observer.subscribe({ key: 'click', observer: this.scaleClick.bind(this) });
   }
 
   public getTrackParameters(): ITrackPosition {
     return this.track.getTrackParameters();
   }
 
-  public initScale(stepsArr: IStepsArr[]): void {
-    this.scale.initScale(stepsArr, this.vertical);
+  public setParameters(parameters: IParameters[]): void {
+    this.handles.moveHandles(parameters);
+    this.tips.changeTips(parameters);
+    this.interval.moveInterval(parameters);
+    if (this.panel !== undefined) {
+      this.panel.initValues(parameters);
+    }
+  }
+
+  public initScale(stepsArr: IParameters[]): void {
+    this.scale.init(stepsArr, this.config.vertical);
   }
 
   public correctHandlesByRange(range:boolean): void {
@@ -71,29 +90,17 @@ class View implements IView {
   }
 
   public initTips(tip: boolean): void {
-    this.tips.initTips(tip);
+    this.tips.init(tip);
   }
 
-  public changeTips(values: number[]): void {
-    this.tips.changeTips(values);
+  public changeTips(parameters: IParameters[]): void {
+    this.tips.changeTips(parameters);
   }
 
   public changeDirection(vertical: boolean): void {
-    this.vertical = vertical;
-    this.track.setVertical(vertical);
-    this.scale.setVertical(vertical);
-    this.handles.setVertical(vertical);
-    this.$container.removeClass(`body__container_${this.vertical ? 'horizontal' : 'vertical'}`).addClass(`body__container_${this.vertical ? 'vertical' : 'horizontal'}`);
-    this.$slider.removeClass(`meta-slider_${this.vertical ? 'horizontal' : 'vertical'}`).addClass(`meta-slider_${this.vertical ? 'vertical' : 'horizontal'}`);
-  }
-
-  public setParameters(parameters: IParameters): void {
-    this.handles.moveHandles(parameters.positions);
-    this.tips.changeTips(parameters.values);
-    this.interval.moveInterval(parameters.positions, this.vertical);
-    if (this.panel !== undefined) {
-      this.panel.initValues(parameters.values);
-    }
+    this.config.vertical = vertical;
+    this.track.init(this.config.vertical);
+    this.$container.removeClass(`meta-slider__container_${this.config.vertical ? 'horizontal' : 'vertical'}`).addClass(`meta-slider__container_${this.config.vertical ? 'vertical' : 'horizontal'}`);
   }
 
   public setSettings(setting: ISettings): void {

@@ -1,3 +1,4 @@
+import { IParameters } from '../../../interfaces/interfaces';
 import IInterval from './interface';
 
 class Interval implements IInterval {
@@ -7,33 +8,39 @@ class Interval implements IInterval {
 
   readonly $track: JQuery<HTMLElement>;
 
+  private vertical: boolean;
+
   constructor(slider: JQuery<HTMLElement>) {
     this.$slider = slider;
     this.$track = $(this.$slider).find('.meta-slider__track');
-    jQuery('<div>', { class: 'meta-slider__interval' }).appendTo(this.$track);
-    this.$interval = this.$slider.find('.meta-slider__interval');
+    this.$interval = jQuery('<div>', { class: 'meta-slider__interval' }).appendTo(this.$track);
+    this.vertical = false;
   }
 
-  public moveInterval(positions: number[], vertical: boolean): void {
+  public init(vertical: boolean): void {
+    this.vertical = vertical;
+  }
+
+  public moveInterval(parameters: IParameters[]): void {
     let min: number;
     let width: number;
     const handleWidth = 20;
     const gap = 2; // to make a gap between interval and handle
-    if (positions.length === 1) {
+    if (parameters.length === 1) {
       min = 0;
-      width = positions[0] - handleWidth / 2 - gap;
-    } else if (positions.length === 2) {
-      min = Math.min(positions[0], positions[1]) + handleWidth / 2;
-      width = Math.abs(positions[1] - positions[0]) - handleWidth - gap;
+      width = parameters[0].position - handleWidth / 2 - gap;
+    } else if (parameters.length === 2) {
+      min = Math.min(parameters[0].position, parameters[1].position) + handleWidth / 2;
+      width = Math.abs(parameters[1].position - parameters[0].position) - handleWidth - gap;
     } else {
       throw new Error('wrong number of handles');
     }
 
     width = (width > 0) ? width : 0;
-    this.$interval.css(vertical ? 'height' : 'width', `${width}px`);
-    this.$interval.css(vertical ? 'width' : 'height', '10px');
-    this.$interval.css(vertical ? 'top' : 'left', `${min}px`);
-    this.$interval.css(vertical ? 'left' : 'top', '0px');
+    this.$interval.css(this.vertical ? 'height' : 'width', `${width}px`);
+    this.$interval.css(this.vertical ? 'width' : 'height', '10px');
+    this.$interval.css(this.vertical ? 'top' : 'left', `${min}px`);
+    this.$interval.css(this.vertical ? 'left' : 'top', '0px');
   }
 }
 

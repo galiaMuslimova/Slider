@@ -25,18 +25,13 @@ interface ISettings {
 }
 
 interface IParameters {
-  values: number[],
-  positions: number[],
-}
-
-interface IStepsArr {
   value: number,
-  x: number
+  position: number
 }
 
 interface IResult {
-  stepsArr: IStepsArr[],
-  parameters: IParameters
+  stepsArr: IParameters[],
+  parameters: IParameters[]
 }
 
 interface IEventPosition {
@@ -54,7 +49,6 @@ export {
   IConfig,
   ISettings,
   IParameters,
-  IStepsArr,
   IResult,
   IEventPosition,
   ITrackPosition,

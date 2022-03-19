@@ -1,4 +1,4 @@
-import { IConfig, ISettings } from '../interfaces/interfaces';
+import { IConfig, IParameters, ISettings } from '../interfaces/interfaces';
 import Observer from '../observer/Observer';
 import IObserver from '../observer/interface';
 import Input from './input/Input';
@@ -33,6 +33,10 @@ class Panel implements IPanel {
       const input = new Input(this.$form, key, value);
       input.observer.subscribe({ key: 'setting', observer: element.changeSettings.bind(element) });
       inputs.set(key, input);
+      if (key === 'step') {
+        input.setProp('min', 0.1);
+        input.setProp('step', 0.1);
+      }
     });
     this.inputs = inputs;
   }
@@ -45,19 +49,19 @@ class Panel implements IPanel {
     });
   }
 
-  public initValues(values: number[]): void {
-    switch (values.length) {
+  public initValues(parameters: IParameters[]): void {
+    switch (parameters.length) {
       case 1: {
         const max = this.takeInputFromArr('max').getValue();
-        this.takeInputFromArr('from').setValue(values[0]);
+        this.takeInputFromArr('from').setValue(parameters[0].value);
         this.takeInputFromArr('from').setProp('max', max);
         break;
       }
       case 2: {
-        this.takeInputFromArr('from').setValue(values[0]);
-        this.takeInputFromArr('to').setValue(values[1]);
-        this.takeInputFromArr('from').setProp('max', values[1]);
-        this.takeInputFromArr('to').setProp('min', values[0]);
+        this.takeInputFromArr('from').setValue(parameters[0].value);
+        this.takeInputFromArr('to').setValue(parameters[1].value);
+        this.takeInputFromArr('from').setProp('max', parameters[1].value);
+        this.takeInputFromArr('to').setProp('min', parameters[0].value);
         break;
       }
       default: {

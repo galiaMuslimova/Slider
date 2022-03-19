@@ -1,3 +1,4 @@
+import { IParameters } from '../../../interfaces/interfaces';
 import IObserver from '../../../observer/interface';
 
 interface IHandle {
@@ -5,8 +6,9 @@ interface IHandle {
   readonly $slider: JQuery<HTMLElement>;
   readonly $track: JQuery<HTMLElement>;
 
+  init(vertical: boolean, range: boolean): void
   correctHandlesByRange(range: boolean): void
-  moveHandles(positions: number[]): void
+  moveHandles(parameters: IParameters[]): void
   setVertical(vertical: boolean): void
   getVertical(): boolean
   getHandles(): JQuery<HTMLElement>[]
