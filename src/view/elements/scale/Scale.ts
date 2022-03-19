@@ -55,8 +55,8 @@ class Scale implements IScale {
 
   private addValues(): void {
     const scaleArr = this.correctScaleArr();
-    const lastItemPosition = scaleArr[scaleArr.length - 1].position;
-    const prevLastItemPosition = scaleArr[scaleArr.length - 2].position;
+    const lastItemPosition = Number(scaleArr.at(-1)?.position);
+    const prevLastItemPosition = Number(scaleArr.at(-2)?.position);
     if (Math.abs(prevLastItemPosition - lastItemPosition) < this.itemWidth) {
       scaleArr.splice((scaleArr.length - 2), 1);
     }
@@ -66,15 +66,14 @@ class Scale implements IScale {
   }
 
   private correctScaleArr(): IParameters[] {
-    const scaleArr: IParameters[] = [];
     const maxStepsCount = this.takeMaxStepsCount();
     const scaleStep = Math.round(this.stepsArr.length / maxStepsCount);
-    this.stepsArr.forEach((item, i) => {
+    const isStepsArrSmall = this.stepsArr.length < maxStepsCount;
+    const scaleArr: IParameters[] = this.stepsArr.filter((item, i) => {
       const isLineInStep = (i % scaleStep === 0) || (i === (this.stepsArr.length - 1));
-      const isStepsArrSmall = this.stepsArr.length < maxStepsCount;
       if (isLineInStep || isStepsArrSmall) {
-        scaleArr.push(item);
-      }
+        return item;
+      } return false;
     });
     return scaleArr;
   }

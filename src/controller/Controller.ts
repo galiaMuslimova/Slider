@@ -79,11 +79,11 @@ class Controller implements IController {
       case 'min':
       case 'max':
       case 'step':
-        console.time('scale'); 
+        console.time('scale');
         this.view.initScale(this.model.initStepsArr());
-        console.timeEnd('scale');        
+        console.timeEnd('scale');
         this.model.correctFromTo();
-        this.view.setParameters(this.model.initParameters());        
+        this.view.setParameters(this.model.initParameters());
         break;
       case 'from':
       case 'to':
