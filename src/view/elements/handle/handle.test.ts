@@ -38,9 +38,10 @@ describe('Handle', () => {
   });
 
   it('проверить позицию при handle = 1 при vertical=false', () => {
-    handleClass = new Handle($slider, false);
+    handleClass = new Handle($slider);
+    handleClass.init(false, false);
     handleClass.correctHandlesByRange(false);
-    handleClass.moveHandles([100]);
+    handleClass.moveHandles([{ value: 10, position: 100 }]);
     const $handle = $slider.find('.meta-slider__handle');
     $handle.each((index, element) => {
       expect($(element).css('left')).to.equal('90px');
@@ -48,9 +49,10 @@ describe('Handle', () => {
   });
 
   it('проверить позицию при handle = 1 при vertical=true', () => {
-    handleClass = new Handle($slider, true);
+    handleClass = new Handle($slider);
+    handleClass.init(true, false);
     handleClass.correctHandlesByRange(false);
-    handleClass.moveHandles([150]);
+    handleClass.moveHandles([{ value: 15, position: 150 }]);
     const $handle = $slider.find('.meta-slider__handle');
     $handle.each((index, element) => {
       expect($(element).css('top')).to.equal('140px');
@@ -58,25 +60,26 @@ describe('Handle', () => {
   });
 
   it('проверить позицию при handle = 2 при vertical=false', () => {
-    handleClass = new Handle($slider, false);
+    handleClass = new Handle($slider);
+    handleClass.init(false, true);
     handleClass.correctHandlesByRange(true);
-    const positions = [-10, 10];
-    handleClass.moveHandles(positions);
+    const parameters = [{ value: 1, position: 10 }, { value: 2, position: 20 }];
+    handleClass.moveHandles(parameters);
     const $handle = $slider.find('.meta-slider__handle');
     $handle.each((index, element) => {
-      expect($(element).css('left')).to.equal(`${positions[index] - 10}px`);
+      expect($(element).css('left')).to.equal(`${parameters[index].position - 10}px`);
     });
   });
 
   it('проверить позицию при handle = 2 при vertical=true', () => {
     handleClass = new Handle($slider);
-    handleClass.setVertical(true);
+    handleClass.init(true, true);
     handleClass.correctHandlesByRange(true);
-    const positions = [50, 200];
-    handleClass.moveHandles(positions);
+    const parameters = [{ value: 5, position: 50 }, { value: 20, position: 200 }];
+    handleClass.moveHandles(parameters);
     const $handle = $slider.find('.meta-slider__handle');
     $handle.each((index, element) => {
-      expect($(element).css('top')).to.equal(`${positions[index] - 10}px`);
+      expect($(element).css('top')).to.equal(`${parameters[index].position - 10}px`);
     });
   });
 

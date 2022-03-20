@@ -18,6 +18,7 @@ interface IView {
   track: ITrack
   interval: IInterval
   tips: ITip
+  panel: IPanel | undefined
 
   init(stepsArr: IParameters[]): void
   getTrackParameters(): ITrackPosition

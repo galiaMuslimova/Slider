@@ -28,7 +28,6 @@ class Input implements IInput {
     this.$input = this.$element.find('.js-input__field');
     this.observer = new Observer();
     this.bindEventListeners();
-    this.setValue(this.value);
   }
 
   public getName(): string {

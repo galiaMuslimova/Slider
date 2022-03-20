@@ -58,14 +58,14 @@ describe('View', () => {
   });
 
   it('проверяет параметры трэка', () => {
-    const view = new View($root, true);
+    const view = new View($root, config);
     const trackParameters = view.getTrackParameters();
     expect(trackParameters).to.deep.equal({ trackStart: 0, trackWidth: 0 });
   });
 
   it('проверяет изменился на горизонтальный', () => {
-    const view = new View($root, true);
+    const view = new View($root, config);
     view.changeDirection(false);
-    expect(view.$container.hasClass('body__container_horizontal')).to.equal(true);
+    expect(view.$container.hasClass('meta-slider__container_horizontal')).to.equal(true);
   });
 });

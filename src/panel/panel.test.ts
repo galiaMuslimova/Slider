@@ -59,7 +59,7 @@ describe('Panel', () => {
   });
 
   it('проверяет установку значений from, to', () => {
-    panelClass.initValues([5, 10]);
+    panelClass.initValues([{ value: 5, position: 50 }, { value: 10, position: 100 }]);
     const fromInput = panelClass.inputs.get('from');
     expect(fromInput?.getValue()).to.equal(5);
     const toInput = panelClass.inputs.get('to');

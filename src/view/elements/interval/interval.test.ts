@@ -29,31 +29,36 @@ describe('Interval', () => {
   });
 
   it('проверяет создание интервала при range=true, vertical=false', () => {
-    intervalClass.moveInterval([100, 200], false);
+    intervalClass.init(false);
+    intervalClass.moveInterval([{ value: 100, position: 100 }, { value: 200, position: 200 }]);
     expect($interval.css('width')).to.eq('78px');
     expect($interval.css('left')).to.eq('110px');
   });
 
-  it('проверяет создание интервала при range=false, vertical=false маленькое значение positions', () => {
-    intervalClass.moveInterval([10], false);
-    expect($interval.css('width')).to.eq('0px');
+  it('проверяет создание интервала при range=false, vertical=false', () => {
+    intervalClass.init(false);
+    intervalClass.moveInterval([{ value: 10, position: 100 }]);
+    expect($interval.css('width')).to.eq('88px');
     expect($interval.css('left')).to.eq('0px');
   });
 
   it('проверяет создание интервала при range=false, vertical=false', () => {
-    intervalClass.moveInterval([120], false);
+    intervalClass.init(false);
+    intervalClass.moveInterval([{ value: 120, position: 120 }]);
     expect($interval.css('width')).to.eq('108px');
     expect($interval.css('left')).to.eq('0px');
   });
 
   it('проверяет создание интервала при range=true, vertical=true', () => {
-    intervalClass.moveInterval([120, 230], true);
+    intervalClass.init(true);
+    intervalClass.moveInterval([{ value: 120, position: 120 }, { value: 230, position: 230 }]);
     expect($interval.css('height')).to.eq('88px');
     expect($interval.css('top')).to.eq('130px');
   });
 
   it('проверяет создание интервала при range=false, vertical=true', () => {
-    intervalClass.moveInterval([155], true);
+    intervalClass.init(true);
+    intervalClass.moveInterval([{ value: 155, position: 155 }]);
     expect($interval.css('height')).to.eq('143px');
     expect($interval.css('top')).to.eq('0px');
   });

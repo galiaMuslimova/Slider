@@ -97,7 +97,7 @@ class Handle implements IHandle {
   }
 
   private handleMoveEnd(event: Event): void {
-    this.observer.notify('moveEnd', event);
+    this.observer.notify('moveEnd', 0);
     $(document).off('mousemove mouseup touchmove touchend');
   }
 

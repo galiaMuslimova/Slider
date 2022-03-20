@@ -47,25 +47,16 @@ class Model implements IModel {
   }
 
   public initStepsArr(): IParameters[] {
-    console.time('initstepsarr');
     const { min, max, step } = this.config;
     const range = max - min;
     const stepLength = (this.trackWidth / range) * step;
     const stepsCount = Math.floor(range / step);
     const emptyArr = Array(stepsCount + 1);
-    let stepsArr: IParameters[] = [];
     const multiplyStep = step * 10;
-    console.time('valuesArr');
-    const valuesArr = Array.from(emptyArr, (_, i) => (min + Math.round(multiplyStep * i)) / 10);
-    console.timeEnd('valuesArr');
-    console.time('stepsArr');
+    let stepsArr: IParameters[] = [];
+    const valuesArr = Array.from(emptyArr, (_, i) => (min + Math.round(multiplyStep * i) / 10));
     stepsArr = valuesArr.map((el, i) => ({ value: el, position: Math.round(stepLength * i) }));
-    console.timeEnd('stepsArr');
-    if (valuesArr.indexOf(max) === -1) {
-      stepsArr.push({ value: max, position: this.trackWidth });
-    }
     this.stepsArr = stepsArr;
-    console.timeEnd('initstepsarr');
     return stepsArr;
   }
 

@@ -15,6 +15,7 @@ interface IPanel {
   initBounds(config: IConfig): void
   initValues(parameters: IParameters[]): void
   setValue(setting: ISettings): void
+  takeInputFromArr(name: string): IInput
 }
 
 export default IPanel;

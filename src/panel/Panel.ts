@@ -77,17 +77,17 @@ class Panel implements IPanel {
     input.setValue(value);
   }
 
-  static handlePanelFormSubmit(): boolean {
-    return false;
-  }
-
-  private takeInputFromArr(name: string): Input {
+  public takeInputFromArr(name: string): Input {
     const input = this.inputs.get(name);
     if (input) {
       return input;
     }
 
     throw new Error('no such input');
+  }
+
+  static handlePanelFormSubmit(): boolean {
+    return false;
   }
 
   private bindEventListeners(): void {

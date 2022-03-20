@@ -16,7 +16,7 @@ class Controller implements IController {
 
   public model: IModel;
 
-  private $slider: JQuery<HTMLElement>;
+  public $slider: JQuery<HTMLElement>;
 
   private vertical: boolean;
 
@@ -79,9 +79,7 @@ class Controller implements IController {
       case 'min':
       case 'max':
       case 'step':
-        console.time('scale');
         this.view.initScale(this.model.initStepsArr());
-        console.timeEnd('scale');
         this.model.correctFromTo();
         this.view.setParameters(this.model.initParameters());
         break;

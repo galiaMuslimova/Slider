@@ -27,8 +27,6 @@ class Scale implements IScale {
 
   public init(stepsArr: IParameters[], vertical: boolean): void {
     this.vertical = vertical;
-    this.$scale.css('width', `${this.vertical ? '40px' : '100%'}`);
-    this.$scale.css('height', `${this.vertical ? '100%' : '40px'}`);
     this.stepsArr = stepsArr;
     this.$scale.empty();
     this.itemWidth = this.takeWidth();
@@ -55,8 +53,8 @@ class Scale implements IScale {
 
   private addValues(): void {
     const scaleArr = this.correctScaleArr();
-    const lastItemPosition = Number(scaleArr.at(-1)?.position);
-    const prevLastItemPosition = Number(scaleArr.at(-2)?.position);
+    const lastItemPosition = Number(scaleArr[scaleArr.length - 1].position);
+    const prevLastItemPosition = Number(scaleArr[scaleArr.length - 2].position);
     if (Math.abs(prevLastItemPosition - lastItemPosition) < this.itemWidth) {
       scaleArr.splice((scaleArr.length - 2), 1);
     }

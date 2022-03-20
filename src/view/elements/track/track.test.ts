@@ -21,12 +21,13 @@ describe('Track', () => {
 
   before(() => {
     $slider = $(document).find('.meta-slider');
-    trackClass = new Track($slider, false);
+    trackClass = new Track($slider);
+    trackClass.init(false);
     $track = trackClass.$track;
     $track.css('width', '500');
     $track.css('height', '400');
-    trackClass.position.top = 20;
-    trackClass.position.left = 10;
+    $track.css('top', '20');
+    $track.css('left', '10');
   });
 
   it('устанавливает корневой элемент', () => {
@@ -43,16 +44,5 @@ describe('Track', () => {
     trackClass.setVertical(false);
     const trackParameters = trackClass.getTrackParameters();
     expect(trackParameters.trackWidth).to.equal(500);
-  });
-
-  it('проверяет начало трэка для вертикального', () => {
-    trackClass.setVertical(true);
-    const trackParameters = trackClass.getTrackParameters();
-    expect(trackParameters.trackStart).to.equal(20);
-  });
-
-  it('проверяет начало трэка для горизонтального', () => {
-    trackClass.setVertical(false);
-    expect(trackClass.getTrackParameters().trackStart).to.equal(10);
   });
 });

@@ -29,15 +29,15 @@ global.window = dom.window;
 const { document } = dom.window;
 
 describe('Input', () => {
-  let $inputMin: JQuery<HTMLElement>;
+  let $form: JQuery<HTMLElement>;
   let inputClass: Input;
 
   before(() => {
-    $inputMin = $(document).find("input[name='min']");
+    $form = $(document).find('.panel__form');
   });
 
   beforeEach(() => {
-    inputClass = new Input($inputMin);
+    inputClass = new Input($form, 'min', 0);
   });
 
   it('проверяет получение name', () => {
