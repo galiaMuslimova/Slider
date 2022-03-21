@@ -29,13 +29,12 @@ class Controller implements IController {
     this.view = new View(this.$slider, this.model.getConfig());
     this.view.observer.subscribe({ key: 'mouseMove', observer: this.moveHandle.bind(this) });
     this.view.observer.subscribe({ key: 'moveEnd', observer: this.moveEnd.bind(this) });
-    this.view.observer.subscribe({ key: 'click', observer: this.clickOnScale.bind(this) });
-    this.view.observer.subscribe({ key: 'position', observer: this.changePositionByTrack.bind(this) });
-    this.init();
+    this.view.observer.subscribe({ key: 'scaleClick', observer: this.clickOnScale.bind(this) });
+    this.view.observer.subscribe({ key: 'trackClick', observer: this.changePositionByTrack.bind(this) });
+    this.$slider.addClass(this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
   }
 
   public init() {
-    this.$slider.addClass(this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
     const { trackStart, trackWidth } = this.view.getTrackParameters();
     this.model.setTrackParameters(trackStart, trackWidth);
     const stepsArr = this.model.initStepsArr();
@@ -100,6 +99,7 @@ class Controller implements IController {
         this.vertical = !this.vertical;
         this.model.setVertical(this.vertical);
         this.$slider.removeClass(this.vertical ? 'meta-slider_horizontal' : 'meta-slider_vertical');
+        this.$slider.addClass(this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
         this.view.changeDirection(this.model.getConfig());
         this.init();
         break;

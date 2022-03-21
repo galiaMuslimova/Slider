@@ -31,6 +31,11 @@
 
       .meta-slider {
 
+        &__track {
+          width: 100%;
+          height: 10px;
+        }
+
         &__scale {
           width: 100%;
           height: 40px;
@@ -69,8 +74,13 @@
       padding: 0px 25px;
 
       .meta-slider {
+        &__track {
+          width: 10px;
+          height: 100%;
+        }
+
         &__scale {
-          width: 60px;
+          width: 70px;
           height: 100%;
         }
 

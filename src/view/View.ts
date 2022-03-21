@@ -57,7 +57,7 @@ class View implements IView {
 
   public init(stepsArr: IParameters[]): void {
     this.track.init(this.config.vertical);
-    this.track.observer.subscribe({ key: 'position', observer: this.changePositionByTrack.bind(this) });
+    this.track.observer.subscribe({ key: 'trackClick', observer: this.changePositionByTrack.bind(this) });
     this.handles.init(this.config.vertical, this.config.range);
     this.handles.correctHandlesByRange(this.config.range);
     this.handles.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this) });
@@ -65,7 +65,7 @@ class View implements IView {
     this.tips.init(this.config.tip);
     this.interval.init(this.config.vertical);
     this.scale.init(stepsArr, this.config.vertical);
-    this.scale.observer.subscribe({ key: 'click', observer: this.scaleClick.bind(this) });
+    this.scale.observer.subscribe({ key: 'scaleClick', observer: this.scaleClick.bind(this) });
   }
 
   public getTrackParameters(): ITrackPosition {
@@ -117,11 +117,11 @@ class View implements IView {
   }
 
   private changePositionByTrack(position: number): void {
-    this.observer.notify('position', position);
+    this.observer.notify('trackClick', position);
   }
 
   private scaleClick(currentValue: number): void {
-    this.observer.notify('click', currentValue);
+    this.observer.notify('scaleClick', currentValue);
   }
 
   private changeSettings(setting: ISettings): void {

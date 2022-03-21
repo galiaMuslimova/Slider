@@ -46,15 +46,19 @@ describe('Controller', () => {
 
   beforeEach(() => {
     controller = new Controller($rootEl, options);
-    controller.addPanel();
-    $slider = controller.$slider;
     scale = controller.view.scale;
     scale.$scale.css('width', '500px');
+    scale.$scale.css('height', '500px');
     scale.$scale.css('left', '0px');
+    scale.$scale.css('top', '0px');
     track = controller.view.track;
     track.$track.css('width', '500px');
+    track.$track.css('height', '500px');
     track.$track.css('left', '0px');
+    track.$track.css('top', '0px');
+    $slider = controller.$slider;
     controller.init();
+    controller.addPanel();
     handle = controller.view.handles;
     panel = controller.view.panel;
   });
@@ -71,18 +75,20 @@ describe('Controller', () => {
     expect(controller.$root).to.deep.equal($rootEl);
   });
 
-  it('устанавливает stepsArr', () => {
+  it('устанавливает новый config', () => {
     controller.model.setConfig({
       min: 0,
-      max: 1000,
+      max: 1001,
       step: 1,
       from: 2,
-      to: 8,
+      to: 7,
       tip: true,
       range: true,
       vertical: false,
     });
-    expect(controller.view.scale.$scale.find('.meta-slider__scale-item').length).below(20);
+    controller.init();
+    const stepsArr = controller.model.initStepsArr();
+    expect(stepsArr.length).below(503);
   });
 
   it('устанавливает stepsArr', () => {
@@ -161,17 +167,19 @@ describe('Controller', () => {
   it('проверяет change input vertical', () => {
     const vertical = panel?.takeInputFromArr('vertical');
     vertical?.observer.notify('setting', { vertical: true });
+    controller.init();
     expect($slider.hasClass('meta-slider_vertical')).to.deep.equal(true);
+    expect($slider.hasClass('meta-slider_horizontal')).to.deep.equal(false);
   });
 
   it('проверяет click scale', () => {
-    controller.view.scale.observer.notify('click', 6);
+    controller.view.scale.observer.notify('scaleClick', 6);
     const expectParameters = [{ value: 2, position: 100 }, { value: 6, position: 300 }];
     expect(controller.model.getParameters()).to.deep.equal(expectParameters);
   });
 
   it('проверяет click track', () => {
-    controller.view.track.observer.notify('position', 160);
+    controller.view.track.observer.notify('trackClick', 160);
     const expectParameters = [{ value: 3, position: 150 }, { value: 8, position: 400 }];
     expect(controller.model.getParameters()).to.deep.equal(expectParameters);
   });

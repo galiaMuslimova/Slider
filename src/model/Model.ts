@@ -57,17 +57,15 @@ class Model implements IModel {
     const positionLength = stepLength * arrStep;
     let stepsArr: IParameters[] = [];
     const valuesArr = Array.from(emptyArr, (_, i) => (min + Math.round(multiplyStep * i) / 10));
-    if (valuesArr[valuesArr.length - 1] !== max) {
-      valuesArr.push(max);
-    }
     stepsArr = valuesArr.map((el, i) => {
       const value = Math.round(el * 10) / 10;
       const position = Math.round(positionLength * i);
       return { value, position };
     });
+    if (valuesArr[valuesArr.length - 1] !== max) {
+      stepsArr.push({ value: max, position: this.trackWidth });
+    }
     this.stepsArr = stepsArr;
-    console.log(valuesArr)
-    console.log(stepsArr)
     return stepsArr;
   }
 

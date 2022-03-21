@@ -27,8 +27,6 @@ class Track implements ITrack {
 
   public init(vertical: boolean): void {
     this.vertical = vertical;
-    this.$track.css('width', `${vertical ? '10px' : '100%'}`);
-    this.$track.css('height', `${vertical ? '100%' : '10px'}`);
     this.position = this.$track.position();
     this.trackStart = this.vertical ? Number(this.position.top) : Number(this.position.left);
     this.bindEventListeners();
@@ -52,7 +50,7 @@ class Track implements ITrack {
   private handleTrackClick(event: Event): void {
     const eventPosition = this.vertical ? (<MouseEvent>event).pageY : (<MouseEvent>event).pageX;
     const position = Math.round(eventPosition - this.trackStart);
-    this.observer.notify('position', position);
+    this.observer.notify('trackClick', position);
   }
 }
 

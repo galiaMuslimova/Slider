@@ -65,7 +65,9 @@ describe('View', () => {
 
   it('проверяет изменился на горизонтальный', () => {
     const view = new View($root, config);
-    view.changeDirection(false);
-    expect(view.$container.hasClass('meta-slider__container_horizontal')).to.equal(true);
+    config.vertical = true;
+    view.changeDirection(config);
+    expect(view.$container.hasClass('meta-slider__container_horizontal')).to.equal(false);
+    expect(view.$container.hasClass('meta-slider__container_vertical')).to.equal(true);
   });
 });

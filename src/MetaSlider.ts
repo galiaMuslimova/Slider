@@ -6,6 +6,7 @@ class MetaSlider {
 
   constructor(element: JQuery<HTMLElement>, options: IOptions) {
     this.controller = new Controller(element, options);
+    this.controller.init();
   }
 
   public addPanel() {

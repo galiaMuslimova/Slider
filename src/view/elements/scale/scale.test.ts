@@ -22,7 +22,10 @@ describe('Scale', () => {
   let stepsArr: IParameters[];
 
   before(() => {
-    $slider = $(document).find('.meta-slider');    
+    $slider = $(document).find('.meta-slider');
+  });
+
+  beforeEach(() => {
     scaleClass = new Scale($slider);
     $scale = scaleClass.$scale;
     $scale.css('width', '300px');
@@ -54,7 +57,7 @@ describe('Scale', () => {
     scaleClass.init(stepsArr, false);
     const $items = $scale.find('.meta-slider__scale-item');
     $items.each((index, element) => {
-      expect($(element).css('left')).to.equal(`${stepsArr[index].position}px`);
+      expect($(element).css('left')).to.equal(`${stepsArr[index].position - 5}px`);
     });
   });
 });

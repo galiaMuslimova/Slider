@@ -49,7 +49,7 @@ class Scale implements IScale {
       scaleItem.remove();
     });
     const maxWidth = Math.max.apply(null, widthArr);
-    return maxWidth + 10;
+    return this.vertical ? maxWidth : maxWidth + 10;
   }
 
   private addValues(): void {
@@ -114,7 +114,7 @@ class Scale implements IScale {
     const { observer } = this;
     if ((<HTMLInputElement>event.target).dataset.value) {
       const currentValue = Number((<HTMLInputElement>event.target).dataset.value);
-      observer.notify('click', currentValue);
+      observer.notify('scaleClick', currentValue);
     }
   }
 }
