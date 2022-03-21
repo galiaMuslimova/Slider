@@ -27,6 +27,7 @@ class Input implements IInput {
     this.$element = this.createInput();
     this.$input = this.$element.find('.js-input__field');
     this.observer = new Observer();
+    this.setValue(this.value);
     this.bindEventListeners();
   }
 
@@ -63,7 +64,6 @@ class Input implements IInput {
       class: `input__field js-input__field input__field_with-${this.type}`,
       type: this.type,
       name: this.name,
-      value: this.value,
     }).appendTo(label);
     if (this.type === 'checkbox') {
       jQuery('<span>', { class: 'input__box' }).appendTo(label);

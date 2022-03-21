@@ -100,7 +100,7 @@ class Controller implements IController {
         this.vertical = !this.vertical;
         this.model.setVertical(this.vertical);
         this.$slider.removeClass(this.vertical ? 'meta-slider_horizontal' : 'meta-slider_vertical');
-        this.view.changeDirection(this.vertical);
+        this.view.changeDirection(this.model.getConfig());
         this.init();
         break;
       }

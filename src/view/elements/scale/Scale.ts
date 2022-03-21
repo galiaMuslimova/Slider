@@ -48,7 +48,8 @@ class Scale implements IScale {
       }
       scaleItem.remove();
     });
-    return Math.max.apply(null, widthArr);
+    const maxWidth = Math.max.apply(null, widthArr);
+    return maxWidth + 10;
   }
 
   private addValues(): void {
@@ -79,7 +80,7 @@ class Scale implements IScale {
   private takeMaxStepsCount(): number {
     const scaleWidth = this.vertical ? this.$scale.height() : this.$scale.width();
     if (scaleWidth !== undefined) {
-      const stepsCount = scaleWidth / (this.itemWidth + 4);
+      const stepsCount = scaleWidth / this.itemWidth;
       return Math.floor(stepsCount);
     }
     throw new Error('wrong scale width');

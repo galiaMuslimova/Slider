@@ -69,14 +69,13 @@
       padding: 0px 25px;
 
       .meta-slider {
-
         &__scale {
-          width: 40px;
+          width: 60px;
           height: 100%;
         }
 
         &__scale-item {
-          grid-template-columns: 1fr 1fr;
+          grid-template-columns: 20px 1fr;
         }
 
         &__value {

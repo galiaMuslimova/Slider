@@ -50,13 +50,24 @@ class Model implements IModel {
     const { min, max, step } = this.config;
     const range = max - min;
     const stepLength = (this.trackWidth / range) * step;
-    const stepsCount = Math.floor(range / step);
+    const arrStep = stepLength < 1 ? Math.floor(1 / stepLength) : 1;
+    const stepsCount = Math.floor((range / step) / arrStep);
     const emptyArr = Array(stepsCount + 1);
-    const multiplyStep = step * 10;
+    const multiplyStep = step * 10 * arrStep;
+    const positionLength = stepLength * arrStep;
     let stepsArr: IParameters[] = [];
     const valuesArr = Array.from(emptyArr, (_, i) => (min + Math.round(multiplyStep * i) / 10));
-    stepsArr = valuesArr.map((el, i) => ({ value: el, position: Math.round(stepLength * i) }));
+    if (valuesArr[valuesArr.length - 1] !== max) {
+      valuesArr.push(max);
+    }
+    stepsArr = valuesArr.map((el, i) => {
+      const value = Math.round(el * 10) / 10;
+      const position = Math.round(positionLength * i);
+      return { value, position };
+    });
     this.stepsArr = stepsArr;
+    console.log(valuesArr)
+    console.log(stepsArr)
     return stepsArr;
   }
 
@@ -82,14 +93,17 @@ class Model implements IModel {
       value: this.config.from,
       position: 0,
     };
-    item.position = this.takeXByValue(item.value);
+    const stepValues = this.stepsArr.map((el) => el.value);
+    const firstIndex = Model.takeClosestIndex(item.value, stepValues);
+    item.position = this.stepsArr[firstIndex].position;
     parameters.push(item);
     if (this.config.range) {
       const secondItem: IParameters = {
         value: this.config.to,
         position: 0,
       };
-      secondItem.position = this.takeXByValue(secondItem.value);
+      const secondIndex = Model.takeClosestIndex(secondItem.value, stepValues);
+      secondItem.position = this.stepsArr[secondIndex].position;
       parameters.push(secondItem);
     }
 

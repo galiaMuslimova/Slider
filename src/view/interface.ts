@@ -26,7 +26,7 @@ interface IView {
   correctHandlesByRange(range:boolean): void
   initTips(tip: boolean): void
   changeTips(parameters: IParameters[]): void
-  changeDirection(vertical: boolean): void
+  changeDirection(config: IConfig): void
   setParameters(parameters: IParameters[]): void
   setSettings(setting: ISettings): void
   initPanel(config: IConfig): void

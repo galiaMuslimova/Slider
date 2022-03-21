@@ -97,10 +97,10 @@ class View implements IView {
     this.tips.changeTips(parameters);
   }
 
-  public changeDirection(vertical: boolean): void {
-    this.config.vertical = vertical;
-    this.track.init(this.config.vertical);
-    this.$container.removeClass(`meta-slider__container_${this.config.vertical ? 'horizontal' : 'vertical'}`).addClass(`meta-slider__container_${this.config.vertical ? 'vertical' : 'horizontal'}`);
+  public changeDirection(config: IConfig): void {
+    this.config = config;
+    this.track.init(config.vertical);
+    this.$container.removeClass(`meta-slider__container_${config.vertical ? 'horizontal' : 'vertical'}`).addClass(`meta-slider__container_${config.vertical ? 'vertical' : 'horizontal'}`);
   }
 
   public setSettings(setting: ISettings): void {
