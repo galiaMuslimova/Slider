@@ -142,11 +142,13 @@ class Model implements IModel {
       const index = Model.takeClosestIndex(value, values);
       this.parameters[index].value = value;
       this.parameters[index].position = this.takeXByValue(value);
+      this.correctFromToByParams();
       return this.parameters;
     }
 
     this.parameters[0].value = value;
     this.parameters[0].position = this.takeXByValue(value);
+    this.correctFromToByParams();
     return this.parameters;
   }
 
@@ -158,11 +160,13 @@ class Model implements IModel {
       const index = Model.takeClosestIndex(closestPosition, positions);
       this.parameters[index].position = closestPosition;
       this.parameters[index].value = this.takeValueByX(closestPosition);
+      this.correctFromToByParams();
       return this.parameters;
     }
 
     this.parameters[0].position = closestPosition;
     this.parameters[0].value = this.takeValueByX(closestPosition);
+    this.correctFromToByParams();
     return this.parameters;
   }
 

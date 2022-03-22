@@ -21,6 +21,7 @@ new MetaSlider(element, {
 ```
 чтобы добавить панель конфигурации используйте метод
 `addPanel()`
+```
 let element = $(".mySlider")
 let slider = new MetaSlider(element, {
   min: 5,

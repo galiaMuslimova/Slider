@@ -1,5 +1,10 @@
+const webpack = require('webpack');
+const { merge } = require('webpack-merge');
 const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+const common = require('./webpack.common.js')
+const HTMLWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {  
   resolve: {
@@ -15,9 +20,6 @@ module.exports = {
   },
   module: {
     rules: [
-      {
-        test: require.resolve('jquery')
-      },
       {
         test: /\.ts$/,
         exclude: /node_modules/,
@@ -44,24 +46,7 @@ module.exports = {
       {
         test: /\.pug$/,
         use: ['pug-loader'],
-      },
-      {
-        test: /\.css$/,
-        use: [
-          {
-            loader: MiniCssExtractPlugin.loader
-          },
-          'style-loader', 'css-loader',
-        ]
-      },
-      {
-        test: /\.s[ac]ss$/,
-        use: [{
-          loader: MiniCssExtractPlugin.loader
-        },
-          'css-loader', 'postcss-loader', 'sass-loader'
-        ]
-      }
+      },      
     ]
   },
 }

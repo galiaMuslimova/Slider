@@ -6,10 +6,8 @@
   "scripts": {
     "dev": "webpack --mode development --config webpack.dev.js",
     "build": "webpack --mode production --config webpack.prod.js",
-    "watch": "webpack --mode development --watch",
-    "start": "webpack-dev-server --mode development --config webpack.dev.js",
+    "start": "webpack serve --mode development --config webpack.dev.js",
     "test": "tsc && nyc mocha",
-    "compile": "webpack",
     "eslint": "eslint src",
     "eslint-fix": "eslint --fix src"
   },
@@ -28,6 +26,7 @@
     "@typescript-eslint/eslint-plugin": "^5.11.0",
     "@typescript-eslint/parser": "^5.11.0",
     "airbnb-browser-shims": "^3.3.0",
+    "autoprefixer": "^10.4.4",
     "babel-core": "^6.26.3",
     "babel-loader": "^8.2.3",
     "babel-preset-airbnb": "^5.0.0",
@@ -54,6 +53,8 @@
     "nyc": "^15.1.0",
     "postcss": "^8.4.6",
     "postcss-loader": "^6.2.1",
+    "pug": "^3.0.2",
+    "pug-loader": "^2.4.0",
     "sass": "^1.43.4",
     "sass-loader": "^12.3.0",
     "source-map-support": "^0.5.21",
@@ -61,18 +62,10 @@
     "ts-loader": "^9.2.6",
     "ts-node": "^10.7.0",
     "typescript": "^4.5.5",
-    "webpack": "^5.64.4",
-    "webpack-cli": "^4.9.1",
-    "webpack-dev-server": "^4.4.0",
+    "webpack": "^5.70.0",
+    "webpack-cli": "^4.9.2",
+    "webpack-dev-server": "^4.7.4",
     "webpack-merge": "^5.8.0"
   },
-  "dependencies": {
-    "autoprefixer": "^10.4.2",
-    "fs": "0.0.1-security",
-    "os": "^0.1.2",
-    "path": "^0.12.7",
-    "pug": "^3.0.2",
-    "pug-loader": "^2.4.0",
-    "resolve": "^1.22.0"
-  }
+  "dependencies": {}
 }

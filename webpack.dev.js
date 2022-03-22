@@ -18,11 +18,11 @@ module.exports = merge(common, {
   devServer: {
     static: './docs',
     port: 4000,
-    open: true
+    open: true,
   },
   plugins: [ 
     new MiniCssExtractPlugin({
-      filename: '[name].css'
+      filename: '[name].[contenthash].css'
     }),
     new webpack.ProvidePlugin({
       $: 'jquery',
@@ -35,5 +35,17 @@ module.exports = merge(common, {
       filename: 'index.html'
     }),
     new CleanWebpackPlugin(),
-  ] 
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        use: [ 'style-loader', 'css-loader' ]
+      },
+      {
+        test: /\.s[ac]ss$/,
+        use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader']
+      }
+    ]
+  }   
 })
