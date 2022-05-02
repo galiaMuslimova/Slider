@@ -13,16 +13,17 @@ class Panel implements IPanel {
 
   readonly $root: JQuery<HTMLElement>;
 
-  readonly $panel: JQuery<HTMLElement>;
+  private $panel: JQuery<HTMLElement>;
 
-  readonly $form: JQuery<HTMLElement>;
+  private $form: JQuery<HTMLElement>;
 
   constructor(root: JQuery<HTMLElement>) {
     this.$root = root;
     this.observer = new Observer();
-    this.$panel = jQuery('<div>', { class: 'panel js-panel' }).appendTo(this.$root);
-    this.$form = jQuery('<form>', { class: 'panel__form js-panel__form' }).appendTo(this.$panel);
+    this.$panel = jQuery('<div>');
+    this.$form = jQuery('<form>');
     this.inputs = new Map<string, Input>();
+    this.init();
     this.bindEventListeners();
   }
 
@@ -88,6 +89,13 @@ class Panel implements IPanel {
 
   static handlePanelFormSubmit(): boolean {
     return false;
+  }
+
+  private init() {
+    this.$panel.addClass('panel js-panel');
+    this.$form.addClass('panel__form js-panel__form');
+    this.$panel.appendTo(this.$root);
+    this.$form.appendTo(this.$panel);
   }
 
   private bindEventListeners(): void {

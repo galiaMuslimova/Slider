@@ -18,23 +18,27 @@ class Controller implements IController {
 
   public $slider: JQuery<HTMLElement>;
 
+  private config: IConfig;
+
   private vertical: boolean;
 
   constructor(root: JQuery<HTMLElement>, options: IOptions) {
     this.options = options;
     this.$root = root;
-    this.$slider = jQuery('<div>', { class: 'meta-slider' }).prependTo(this.$root);
+    this.$slider = jQuery('<div>');
+    this.initSlider();
     this.model = new Model(this.options);
-    this.vertical = this.model.getConfig().vertical;
-    this.view = new View(this.$slider, this.model.getConfig());
+    this.config = this.model.getConfig();
+    this.vertical = this.config.vertical;
+    this.view = new View(this.$slider, this.config);
+  }
+
+  public init() {
     this.view.observer.subscribe({ key: 'mouseMove', observer: this.moveHandle.bind(this) });
     this.view.observer.subscribe({ key: 'moveEnd', observer: this.moveEnd.bind(this) });
     this.view.observer.subscribe({ key: 'scaleClick', observer: this.clickOnScale.bind(this) });
     this.view.observer.subscribe({ key: 'trackClick', observer: this.changePositionByTrack.bind(this) });
     this.$slider.addClass(this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
-  }
-
-  public init() {
     const { trackStart, trackWidth } = this.view.getTrackParameters();
     this.model.setTrackParameters(trackStart, trackWidth);
     const stepsArr = this.model.initStepsArr();
@@ -45,8 +49,14 @@ class Controller implements IController {
   }
 
   public addPanel() {
-    this.view.initPanel(this.model.getConfig());
+    const config = this.model.getConfig();
+    this.view.initPanel(config);
     this.view.observer.subscribe({ key: 'setting', observer: this.changeSettings.bind(this) });
+  }
+
+  private initSlider() {
+    this.$slider.addClass('meta-slider');
+    this.$slider.prependTo(this.$root);
   }
 
   private moveHandle(options: IEventPosition) {

@@ -4,7 +4,6 @@ interface IInput {
   observer: IObserver;
   $input: JQuery<HTMLElement>;
   readonly $form: JQuery<HTMLElement>;
-  readonly $element: JQuery<HTMLElement>;
 
   getName(): string
   getValue(): number | boolean

@@ -11,8 +11,6 @@ class Input implements IInput {
 
   readonly $form: JQuery<HTMLElement>;
 
-  readonly $element: JQuery<HTMLElement>;
-
   private name: string;
 
   private type: string;
@@ -24,8 +22,7 @@ class Input implements IInput {
     this.value = value;
     this.name = key;
     this.type = (typeof value === 'number') ? 'number' : 'checkbox';
-    this.$element = this.createInput();
-    this.$input = this.$element.find('.js-input__field');
+    this.$input = this.createInput();
     this.observer = new Observer();
     this.setValue(this.value);
     this.bindEventListeners();
@@ -57,18 +54,23 @@ class Input implements IInput {
   }
 
   private createInput() {
-    const input = jQuery('<div>', { class: 'input js-input' }).appendTo(this.$form);
-    const label = jQuery('<label>', { class: 'input__label' }).appendTo(input);
-    jQuery('<p>', { class: 'input__text', text: this.name }).appendTo(label);
-    jQuery('<input>', {
+    const $input = jQuery('<div>', { class: 'input js-input' });
+    $input.appendTo(this.$form);
+    const $label = jQuery('<label>', { class: 'input__label' });
+    $label.appendTo($input);
+    const $text = jQuery('<p>', { class: 'input__text', text: this.name });
+    $text.appendTo($label);
+    const $field = jQuery('<input>', {
       class: `input__field js-input__field input__field_with-${this.type}`,
       type: this.type,
       name: this.name,
-    }).appendTo(label);
+    });
+    $field.appendTo($label);
     if (this.type === 'checkbox') {
-      jQuery('<span>', { class: 'input__box' }).appendTo(label);
+      const $box = jQuery('<span>', { class: 'input__box' });
+      $box.appendTo($label);
     }
-    return input;
+    return $field;
   }
 
   private bindEventListeners(): void {

@@ -19,13 +19,15 @@ class Track implements ITrack {
   constructor(slider: JQuery<HTMLElement>) {
     this.$slider = slider;
     this.vertical = false;
-    this.$track = jQuery('<div>', { class: 'meta-slider__track' }).appendTo(this.$slider);
+    this.$track = jQuery('<div>');
     this.observer = new Observer();
     this.position = { top: 0, left: 0 };
     this.trackStart = 0;
   }
 
   public init(vertical: boolean): void {
+    this.$track.addClass('meta-slider__track');
+    this.$track.appendTo(this.$slider);
     this.vertical = vertical;
     this.position = this.$track.position();
     this.trackStart = this.vertical ? Number(this.position.top) : Number(this.position.left);

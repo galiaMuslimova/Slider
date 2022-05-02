@@ -8,7 +8,7 @@ class Handle implements IHandle {
 
   readonly $slider: JQuery<HTMLElement>;
 
-  readonly $track: JQuery<HTMLElement>;
+  private $track: JQuery<HTMLElement>;
 
   private vertical: boolean;
 
@@ -16,22 +16,23 @@ class Handle implements IHandle {
 
   constructor(slider: JQuery<HTMLElement>) {
     this.$slider = slider;
-    this.$track = this.$slider.find('.meta-slider__track');
+    this.$track = jQuery('<div>');
     this.vertical = false;
     this.observer = new Observer();
-    this.handles = this.initHandles();
+    this.handles = [];
   }
 
   public init(vertical: boolean, range: boolean): void {
+    this.$track = this.$slider.find('.meta-slider__track');
     this.vertical = vertical;
+    this.handles = this.initHandles();
     this.correctHandlesByRange(range);
   }
 
   public correctHandlesByRange(range: boolean): void {
     if (range && this.handles.length === 1) {
-      const $handle2 = jQuery('<div>', {
-        class: 'meta-slider__handle meta-slider__handle_right',
-      }).appendTo(this.$track);
+      const $handle2 = jQuery('<div>', { class: 'meta-slider__handle meta-slider__handle_right' });
+      $handle2.appendTo(this.$track);
       this.handles.push($handle2);
     } else if (!range && this.handles.length === 2) {
       const $handle2 = this.handles[1];
@@ -103,13 +104,11 @@ class Handle implements IHandle {
 
   private initHandles(): JQuery<HTMLElement>[] {
     const handles: JQuery<HTMLElement>[] = [];
-    const $handle1 = jQuery('<div>', {
-      class: 'meta-slider__handle meta-slider__handle_left',
-    }).appendTo(this.$track);
+    const $handle1 = jQuery('<div>', { class: 'meta-slider__handle meta-slider__handle_left' });
+    $handle1.appendTo(this.$track);
     handles.push($handle1);
-    const $handle2 = jQuery('<div>', {
-      class: 'meta-slider__handle meta-slider__handle_right',
-    }).appendTo(this.$track);
+    const $handle2 = jQuery('<div>', { class: 'meta-slider__handle meta-slider__handle_right' });
+    $handle2.appendTo(this.$track);
     handles.push($handle2);
     return handles;
   }

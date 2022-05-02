@@ -85,32 +85,35 @@ describe('Handle', () => {
 
   it('проверить изменение количества handles', () => {
     handleClass = new Handle($slider);
-    handleClass.correctHandlesByRange(false);
+    handleClass.init(true, false);
     const $handle = $slider.find('.meta-slider__handle');
     expect($handle.length).to.equal(1);
   });
 
   it('проверить handleDragStart', () => {
     handleClass = new Handle($slider);
+    handleClass.init(true, false);
     Handle.handleDragStart();
     expect(Handle.handleDragStart()).to.equal(false);
   });
 
   it('проверить изменение vertical', () => {
     handleClass = new Handle($slider);
+    handleClass.init(false, true);
     handleClass.setVertical(false);
     expect(handleClass.getVertical()).to.equal(false);
   });
 
   it('проверить изменение handles', () => {
     handleClass = new Handle($slider);
+    handleClass.init(true, false);
     handleClass.correctHandlesByRange(false);
     expect(handleClass.getHandles().length).to.equal(1);
   });
 
   it('проверить изменение handles', () => {
     handleClass = new Handle($slider);
-    handleClass.correctHandlesByRange(false);
+    handleClass.init(true, false);
     handleClass.correctHandlesByRange(true);
     expect(handleClass.getHandles().length).to.equal(2);
   });

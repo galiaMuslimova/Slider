@@ -4,7 +4,6 @@ import IObserver from '../../../observer/interface';
 interface IHandle {
   observer: IObserver;
   readonly $slider: JQuery<HTMLElement>;
-  readonly $track: JQuery<HTMLElement>;
 
   init(vertical: boolean, range: boolean): void
   correctHandlesByRange(range: boolean): void

@@ -31,7 +31,7 @@ class View implements IView {
 
   public tips: ITip;
 
-  public panel: IPanel | undefined;
+  public panel: IPanel | null;
 
   readonly $slider: JQuery<HTMLElement>;
 
@@ -43,16 +43,15 @@ class View implements IView {
     this.$slider = slider;
     this.config = config;
     this.observer = new Observer();
-    this.$container = jQuery('<div>', {
-      class: `meta-slider__container meta-slider__container_${this.config.vertical ? 'vertical' : 'horizontal'}`,
-    }).appendTo(this.$slider);
+    this.$container = jQuery('<div>');
+    this.initContainer();
     this.track = new Track(this.$container);
     this.track.init(this.config.vertical);
     this.scale = new Scale(this.$container);
     this.handles = new Handle(this.$container);
     this.tips = new Tip(this.$container);
     this.interval = new Interval(this.$container);
-    this.panel = undefined;
+    this.panel = null;
   }
 
   public init(stepsArr: IParameters[]): void {
@@ -76,7 +75,7 @@ class View implements IView {
     this.handles.moveHandles(parameters);
     this.tips.changeTips(parameters);
     this.interval.moveInterval(parameters);
-    if (this.panel !== undefined) {
+    if (this.panel !== null) {
       this.panel.initValues(parameters);
     }
   }
@@ -104,7 +103,7 @@ class View implements IView {
   }
 
   public setSettings(setting: ISettings): void {
-    if (this.panel !== undefined) {
+    if (this.panel !== null) {
       this.panel.setValue(setting);
     }
   }
@@ -114,6 +113,11 @@ class View implements IView {
     this.panel.observer.subscribe({ key: 'setting', observer: this.changeSettings.bind(this) });
     this.panel.initPanel(config);
     this.panel.initBounds(config);
+  }
+
+  private initContainer() {
+    this.$container.addClass(`meta-slider__container meta-slider__container_${this.config.vertical ? 'vertical' : 'horizontal'}`);
+    this.$container.appendTo(this.$slider);
   }
 
   private changePositionByTrack(position: number): void {

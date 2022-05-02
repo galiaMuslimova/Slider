@@ -11,10 +11,11 @@ class Tip implements ITip {
   constructor(slider: JQuery<HTMLElement>) {
     this.$slider = slider;
     this.$tips = [];
-    this.$tip = jQuery('<div>', { class: 'meta-slider__tip' });
+    this.$tip = jQuery('<div>');
   }
 
   public init(tip: boolean = true): void {
+    this.$tip.addClass('meta-slider__tip');
     const element = this;
     this.$slider.find('.meta-slider__tip').remove();
     this.$tips = [];

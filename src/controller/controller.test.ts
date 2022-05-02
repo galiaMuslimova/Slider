@@ -29,7 +29,7 @@ describe('Controller', () => {
   let scale: IScale;
   let track: ITrack;
   let handle: IHandle;
-  let panel: IPanel | undefined;
+  let panel: IPanel | null;
 
   before(() => {
     $rootEl = $(document).find('.body__slider');
@@ -73,22 +73,6 @@ describe('Controller', () => {
 
   it('устанавливает корневой элемент', () => {
     expect(controller.$root).to.deep.equal($rootEl);
-  });
-
-  it('устанавливает новый config', () => {
-    controller.model.setConfig({
-      min: 0,
-      max: 1001,
-      step: 1,
-      from: 2,
-      to: 7,
-      tip: true,
-      range: true,
-      vertical: false,
-    });
-    controller.init();
-    const stepsArr = controller.model.initStepsArr();
-    expect(stepsArr.length).below(503);
   });
 
   it('устанавливает stepsArr', () => {
@@ -162,14 +146,6 @@ describe('Controller', () => {
     tip?.observer.notify('setting', { tip: false });
     const tipsLength = controller.$slider.find('.meta-slider__tip').length;
     expect(tipsLength).to.deep.equal(0);
-  });
-
-  it('проверяет change input vertical', () => {
-    const vertical = panel?.takeInputFromArr('vertical');
-    vertical?.observer.notify('setting', { vertical: true });
-    controller.init();
-    expect($slider.hasClass('meta-slider_vertical')).to.deep.equal(true);
-    expect($slider.hasClass('meta-slider_horizontal')).to.deep.equal(false);
   });
 
   it('проверяет click scale', () => {

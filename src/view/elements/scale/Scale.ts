@@ -20,12 +20,14 @@ class Scale implements IScale {
     this.$slider = slider;
     this.vertical = false;
     this.observer = new Observer();
-    this.$scale = jQuery('<div>', { class: 'meta-slider__scale' }).appendTo(this.$slider);
+    this.$scale = jQuery('<div>');
     this.stepsArr = [];
     this.itemWidth = 20;
   }
 
   public init(stepsArr: IParameters[], vertical: boolean): void {
+    this.$scale.addClass('meta-slider__scale');
+    this.$scale.appendTo(this.$slider);
     this.vertical = vertical;
     this.stepsArr = stepsArr;
     this.$scale.empty();
@@ -56,7 +58,8 @@ class Scale implements IScale {
     const scaleArr = this.correctScaleArr();
     const lastItemPosition = Number(scaleArr[scaleArr.length - 1].position);
     const prevLastItemPosition = Number(scaleArr[scaleArr.length - 2].position);
-    if (Math.abs(prevLastItemPosition - lastItemPosition) < this.itemWidth) {
+    const isSmallPlaceInEnd = Math.abs(prevLastItemPosition - lastItemPosition) < this.itemWidth;
+    if (isSmallPlaceInEnd) {
       scaleArr.splice((scaleArr.length - 2), 1);
     }
     scaleArr.forEach((item) => {
@@ -69,8 +72,10 @@ class Scale implements IScale {
     const scaleStep = Math.round(this.stepsArr.length / maxStepsCount);
     const isStepsArrSmall = this.stepsArr.length < maxStepsCount;
     const scaleArr: IParameters[] = this.stepsArr.filter((item, i) => {
-      const isLineInStep = (i % scaleStep === 0) || (i === (this.stepsArr.length - 1));
-      if (isLineInStep || isStepsArrSmall) {
+      const isItemEquivalentStep = i % scaleStep === 0;
+      const isLastItem = i === (this.stepsArr.length - 1);
+      const shouldItemBeInScale = isItemEquivalentStep || isLastItem;
+      if (shouldItemBeInScale || isStepsArrSmall) {
         return item;
       } return false;
     });
@@ -92,25 +97,24 @@ class Scale implements IScale {
       class: 'meta-slider__scale-item',
       style: this.vertical ? `top: ${position}px` : `left: ${position}px`,
     });
-    jQuery('<div>', {
-      class: 'meta-slider__line',
-      text: this.vertical ? '\u2014' : '|',
-    }).appendTo(scaleItem);
-    jQuery('<div>', {
+    const $line = jQuery('<div>', { class: 'meta-slider__line', text: this.vertical ? '\u2014' : '|' });
+    $line.appendTo(scaleItem);
+    const $value = jQuery('<div>', {
       class: 'meta-slider__value js-meta-slider__value',
       'data-value': item.value,
       text: item.value,
       style: this.vertical ? `height: ${this.itemWidth}px` : `width: ${this.itemWidth}px`,
-    }).appendTo(scaleItem);
+    });
+    $value.appendTo(scaleItem);
     scaleItem.appendTo(this.$scale);
     return scaleItem;
   }
 
   private bindEventListeners(): void {
-    $(this.$scale).on('click touchstart', this.sendScaleClickValue.bind(this));
+    $(this.$scale).on('click touchstart', this.handleScaleClick.bind(this));
   }
 
-  private sendScaleClickValue(event: Event): void {
+  private handleScaleClick(event: Event): void {
     const { observer } = this;
     if ((<HTMLInputElement>event.target).dataset.value) {
       const currentValue = Number((<HTMLInputElement>event.target).dataset.value);

@@ -8,8 +8,6 @@ interface IPanel {
   inputs: Map<string, IInput>
   observer: IObserver
   readonly $root: JQuery<HTMLElement>
-  readonly $panel: JQuery<HTMLElement>
-  readonly $form: JQuery<HTMLElement>
 
   initPanel(config: IConfig): void
   initBounds(config: IConfig): void

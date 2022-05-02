@@ -26,7 +26,7 @@ describe('Tip', () => {
       class: 'meta-slider__track',
     }).appendTo($slider);
     handleClass = new Handle($slider);
-    handleClass.correctHandlesByRange(true);
+    handleClass.init(false, true);
     tipClass = new Tip($slider);
   });
 
