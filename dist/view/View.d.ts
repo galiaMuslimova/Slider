@@ -1,0 +1,42 @@
+/// <reference types="jquery" />
+import { IConfig, IParameters, ISettings, ITrackPosition } from '../interfaces/interfaces';
+import IPanel from '../panel/interface';
+import Observer from '../observer/Observer';
+import IView from './interface';
+import './slider.scss';
+import ITrack from './elements/track/interface';
+import IScale from './elements/scale/interface';
+import IHandle from './elements/handle/interface';
+import IInterval from './elements/interval/interface';
+import ITip from './elements/tip/interface';
+declare class View implements IView {
+    observer: Observer;
+    scale: IScale;
+    handles: IHandle;
+    track: ITrack;
+    interval: IInterval;
+    tips: ITip;
+    panel: IPanel | null;
+    readonly $slider: JQuery<HTMLElement>;
+    readonly $container: JQuery<HTMLElement>;
+    private config;
+    constructor(slider: JQuery<HTMLElement>, config: IConfig);
+    correctView(stepsArr: IParameters[]): void;
+    getTrackParameters(): ITrackPosition;
+    setParameters(parameters: IParameters[]): void;
+    initScale(stepsArr: IParameters[]): void;
+    correctHandlesByRange(range: boolean): void;
+    initTips(tip: boolean): void;
+    changeTips(parameters: IParameters[]): void;
+    changeDirection(config: IConfig): void;
+    setSettings(setting: ISettings): void;
+    initPanel(config: IConfig): void;
+    private init;
+    private initContainer;
+    private changePositionByTrack;
+    private scaleClick;
+    private changeSettings;
+    private mouseMove;
+    private mouseMoveEnd;
+}
+export default View;
