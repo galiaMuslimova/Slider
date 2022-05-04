@@ -12,15 +12,15 @@ class Tip implements ITip {
     this.$slider = slider;
     this.$tips = [];
     this.$tip = jQuery('<div>');
+    this.init();
   }
 
-  public init(tip: boolean = true): void {
-    this.$tip.addClass('meta-slider__tip');
+  public correctTips(tip: boolean = true): void {
     const element = this;
-    this.$slider.find('.meta-slider__tip').remove();
+    this.$slider.find('.js-meta-slider__tip').remove();
     this.$tips = [];
     if (tip) {
-      const $handles = this.$slider.find('.meta-slider__handle');
+      const $handles = this.$slider.find('.js-meta-slider__handle');
       $handles.each(function () {
         const $tipClone = element.$tip.clone();
         $tipClone.appendTo($(this));
@@ -33,6 +33,10 @@ class Tip implements ITip {
     this.$tips.forEach((item, index) => {
       item.html(`${parameters[index].value}`);
     });
+  }
+
+  private init() {
+    this.$tip.addClass('meta-slider__tip js-meta-slider__tip');
   }
 }
 

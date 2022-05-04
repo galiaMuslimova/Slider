@@ -20,7 +20,7 @@ interface IView {
   tips: ITip
   panel: IPanel | null
 
-  init(stepsArr: IParameters[]): void
+  correctView(stepsArr: IParameters[]): void
   getTrackParameters(): ITrackPosition
   initScale(stepsArr: IParameters[]): void
   correctHandlesByRange(range:boolean): void

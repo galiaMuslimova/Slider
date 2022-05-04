@@ -32,7 +32,7 @@ describe('Controller', () => {
   let panel: IPanel | null;
 
   before(() => {
-    $rootEl = $(document).find('.body__slider');
+    $rootEl = $(document).find('.js-body__slider');
     options = {
       min: 0,
       max: 10,
@@ -57,7 +57,7 @@ describe('Controller', () => {
     track.$track.css('left', '0px');
     track.$track.css('top', '0px');
     $slider = controller.$slider;
-    controller.init();
+    controller.correctSlider();
     controller.addPanel();
     handle = controller.view.handles;
     panel = controller.view.panel;
@@ -127,7 +127,7 @@ describe('Controller', () => {
       { value: 10, position: 500 },
     ];
     const stepsArr = controller.model.getStepsArr();
-    const scaleItemsCount = scale.$scale.find('.meta-slider__scale-item').length;
+    const scaleItemsCount = scale.$scale.find('.js-meta-slider__scale-item').length;
     expect(stepsArr).to.deep.equal(expectedStepsArr);
     expect(scaleItemsCount).to.deep.equal(6);
   });
@@ -144,8 +144,14 @@ describe('Controller', () => {
   it('проверяет change input tip', () => {
     const tip = panel?.takeInputFromArr('tip');
     tip?.observer.notify('setting', { tip: false });
-    const tipsLength = controller.$slider.find('.meta-slider__tip').length;
+    const tipsLength = controller.$slider.find('.js-meta-slider__tip').length;
     expect(tipsLength).to.deep.equal(0);
+  });
+
+  it('проверяет change input vertical', () => {
+    const vertical = panel?.takeInputFromArr('vertical');
+    vertical?.observer.notify('setting', { vertical: true });
+    expect($slider.hasClass('meta-slider_vertical')).to.deep.equal(true);
   });
 
   it('проверяет click scale', () => {

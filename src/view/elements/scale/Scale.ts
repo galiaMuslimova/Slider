@@ -14,6 +14,8 @@ class Scale implements IScale {
 
   private itemWidth: number;
 
+  private scaleSize: number;
+
   private vertical: boolean;
 
   constructor(slider: JQuery<HTMLElement>) {
@@ -23,79 +25,92 @@ class Scale implements IScale {
     this.$scale = jQuery('<div>');
     this.stepsArr = [];
     this.itemWidth = 20;
+    this.scaleSize = 500;
+    this.init();
   }
 
-  public init(stepsArr: IParameters[], vertical: boolean): void {
-    this.$scale.addClass('meta-slider__scale');
-    this.$scale.appendTo(this.$slider);
+  public correctScale(stepsArr: IParameters[], vertical: boolean): void {
     this.vertical = vertical;
     this.stepsArr = stepsArr;
     this.$scale.empty();
     this.itemWidth = this.takeWidth();
+    this.scaleSize = this.takeScaleSize();
     this.addValues();
     this.bindEventListeners();
   }
 
+  static reduceArray(array: IParameters[], size: number): IParameters[] {
+    const isStepsArrSmall = array.length < size;
+    if (isStepsArrSmall) {
+      return array;
+    }
+    const arrayStep = Math.round(array.length / size);
+    const correctedArray = array.filter((item, i) => {
+      const isItemEquivalentStep = i % arrayStep === 0;
+      const isLastItem = i === (array.length - 1);
+      if (isItemEquivalentStep || isLastItem) {
+        return item;
+      } return false;
+    });
+    return correctedArray;
+  }
+
+  static correctLastItems(array: IParameters[], width: number): IParameters[] {
+    const correctedArray = [...array];
+    const lastItemPosition = Number(array[array.length - 1].position);
+    const prevLastItemPosition = Number(array[array.length - 2].position);
+    const isSmallPlaceInEnd = Math.abs(prevLastItemPosition - lastItemPosition) < width;
+    if (isSmallPlaceInEnd) {
+      correctedArray.splice((array.length - 2), 1);
+    }
+    return correctedArray;
+  }
+
+  private init() {
+    this.$scale.addClass('meta-slider__scale');
+    this.$scale.appendTo(this.$slider);
+  }
+
   private takeWidth(): number {
     const widthArr: number[] = [];
-    const randomItemsArr = [...this.stepsArr.slice(0, 3), ...this.stepsArr.slice(-3)];
-    randomItemsArr.forEach((item) => {
-      const scaleItem = jQuery('<div>', { text: item.value }).appendTo(this.$scale);
-      scaleItem.css(this.vertical ? 'height' : 'width', 'min-content');
-      const itemWidth = this.vertical ? $(scaleItem).height() : $(scaleItem).width();
-      if (itemWidth !== undefined) {
-        widthArr.push(itemWidth);
-      } else {
-        throw new Error('wrong width of item');
-      }
-      scaleItem.remove();
+    const size = this.vertical ? 'height' : 'width';
+    this.stepsArr.forEach((item) => {
+      const $scaleItem = jQuery('<div>', { text: item.value }).appendTo(this.$scale);
+      $scaleItem.css(size, 'min-content');
+      const itemWidth = this.vertical ? $scaleItem.height() : $scaleItem.width();
+      widthArr.push(itemWidth || 0);
+      $scaleItem.remove();
     });
-    const maxWidth = Math.max.apply(null, widthArr);
-    return this.vertical ? maxWidth : maxWidth + 10;
+    return Math.max.apply(null, widthArr) + 10;
+  }
+
+  private takeScaleSize(): number {
+    const scaleSize = this.vertical ? this.$scale.height() : this.$scale.width();
+    if (scaleSize !== undefined) {
+      return Number(scaleSize);
+    }
+    throw new Error('wrong scale size');
   }
 
   private addValues(): void {
     const scaleArr = this.correctScaleArr();
-    const lastItemPosition = Number(scaleArr[scaleArr.length - 1].position);
-    const prevLastItemPosition = Number(scaleArr[scaleArr.length - 2].position);
-    const isSmallPlaceInEnd = Math.abs(prevLastItemPosition - lastItemPosition) < this.itemWidth;
-    if (isSmallPlaceInEnd) {
-      scaleArr.splice((scaleArr.length - 2), 1);
-    }
     scaleArr.forEach((item) => {
-      this.addItem(item);
+      const position = item.position - this.itemWidth / 2;
+      this.addItem(item, position);
     });
   }
 
   private correctScaleArr(): IParameters[] {
-    const maxStepsCount = this.takeMaxStepsCount();
-    const scaleStep = Math.round(this.stepsArr.length / maxStepsCount);
-    const isStepsArrSmall = this.stepsArr.length < maxStepsCount;
-    const scaleArr: IParameters[] = this.stepsArr.filter((item, i) => {
-      const isItemEquivalentStep = i % scaleStep === 0;
-      const isLastItem = i === (this.stepsArr.length - 1);
-      const shouldItemBeInScale = isItemEquivalentStep || isLastItem;
-      if (shouldItemBeInScale || isStepsArrSmall) {
-        return item;
-      } return false;
-    });
-    return scaleArr;
+    const maxStepsCount = Math.floor(this.scaleSize / this.itemWidth);
+    const scaleArr: IParameters[] = Scale.reduceArray(this.stepsArr, maxStepsCount);
+    const correctedScaleArr = Scale.correctLastItems(scaleArr, this.itemWidth);
+    return correctedScaleArr;
   }
 
-  private takeMaxStepsCount(): number {
-    const scaleWidth = this.vertical ? this.$scale.height() : this.$scale.width();
-    if (scaleWidth !== undefined) {
-      const stepsCount = scaleWidth / this.itemWidth;
-      return Math.floor(stepsCount);
-    }
-    throw new Error('wrong scale width');
-  }
-
-  private addItem(item: IParameters): JQuery<HTMLElement> {
-    const position = item.position - this.itemWidth / 2;
+  private addItem(item: IParameters, position: number): void {
     const scaleItem = jQuery('<div>', {
-      class: 'meta-slider__scale-item',
-      style: this.vertical ? `top: ${position}px` : `left: ${position}px`,
+      class: 'meta-slider__scale-item js-meta-slider__scale-item',
+      style: this.vertical ? `top: ${position}px; line-height: ${this.itemWidth}px` : `left: ${position}px`,
     });
     const $line = jQuery('<div>', { class: 'meta-slider__line', text: this.vertical ? '\u2014' : '|' });
     $line.appendTo(scaleItem);
@@ -107,7 +122,6 @@ class Scale implements IScale {
     });
     $value.appendTo(scaleItem);
     scaleItem.appendTo(this.$scale);
-    return scaleItem;
   }
 
   private bindEventListeners(): void {

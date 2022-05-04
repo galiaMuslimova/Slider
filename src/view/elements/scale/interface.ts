@@ -6,7 +6,7 @@ interface IScale {
   $slider: JQuery<HTMLElement>;
   $scale: JQuery<HTMLElement>;
 
-  init(stepsArr: IParameters[], vertical:boolean): void
+  correctScale(stepsArr: IParameters[], vertical:boolean): void
 }
 
 export default IScale;

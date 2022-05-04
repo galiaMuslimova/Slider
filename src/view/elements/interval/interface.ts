@@ -4,7 +4,8 @@ interface IInterval {
   $slider: JQuery<HTMLElement>;
   $interval: JQuery<HTMLElement>;
 
-  init(vertical: boolean): void
+  correctInterval(): void
+  changeVertical(vertical: boolean): void
   moveInterval(parameters: IParameters[]): void
 }
 

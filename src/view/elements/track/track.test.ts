@@ -7,7 +7,7 @@ const { JSDOM } = require('jsdom');
 const dom = new JSDOM(`<!DOCTYPE html>
 <body>
   <div class='testSlider'>
-    <div class='meta-slider'></div>
+    <div class='meta-slider js-meta-slider'></div>
   </div>
 </body>`);
 global.window = dom.window;
@@ -20,9 +20,9 @@ describe('Track', () => {
   let $track: JQuery<HTMLElement>;
 
   before(() => {
-    $slider = $(document).find('.meta-slider');
+    $slider = $(document).find('.js-meta-slider');
     trackClass = new Track($slider);
-    trackClass.init(false);
+    trackClass.correctTrack(false);
     $track = trackClass.$track;
     $track.css('width', '500');
     $track.css('height', '400');
@@ -35,13 +35,13 @@ describe('Track', () => {
   });
 
   it('проверяет ширину трэка для вертикального', () => {
-    trackClass.setVertical(true);
+    trackClass.correctTrack(true);
     const trackParameters = trackClass.getTrackParameters();
     expect(trackParameters.trackWidth).to.equal(400);
   });
 
   it('проверяет ширину трэка для горизонтального', () => {
-    trackClass.setVertical(false);
+    trackClass.correctTrack(false);
     const trackParameters = trackClass.getTrackParameters();
     expect(trackParameters.trackWidth).to.equal(500);
   });

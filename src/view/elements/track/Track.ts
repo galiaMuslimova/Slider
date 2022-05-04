@@ -10,39 +10,38 @@ class Track implements ITrack {
 
   public $track: JQuery<HTMLElement>;
 
-  private position: { top: number, left: number };
-
   private vertical: boolean;
 
   private trackStart: number;
+
+  private trackWidth: number;
 
   constructor(slider: JQuery<HTMLElement>) {
     this.$slider = slider;
     this.vertical = false;
     this.$track = jQuery('<div>');
     this.observer = new Observer();
-    this.position = { top: 0, left: 0 };
     this.trackStart = 0;
+    this.trackWidth = 500;
+    this.init();
   }
 
-  public init(vertical: boolean): void {
-    this.$track.addClass('meta-slider__track');
-    this.$track.appendTo(this.$slider);
+  public correctTrack(vertical: boolean): void {
+    this.$track.empty();
     this.vertical = vertical;
-    this.position = this.$track.position();
-    this.trackStart = this.vertical ? Number(this.position.top) : Number(this.position.left);
-    this.bindEventListeners();
+    const position = this.$track.position();
+    this.trackStart = this.vertical ? Number(position.top) : Number(position.left);
+    this.trackWidth = this.vertical ? this.$track.height() || 500 : this.$track.width() || 500;
   }
 
   public getTrackParameters(): ITrackPosition {
-    const trackStart = this.vertical ? Number(this.position.top) : Number(this.position.left);
-    const trackWidth = this.vertical ? this.$track.height() : this.$track.width();
-    this.trackStart = trackStart;
-    return { trackStart, trackWidth };
+    return { trackStart: this.trackStart, trackWidth: this.trackWidth };
   }
 
-  public setVertical(vertical: boolean): void {
-    this.vertical = vertical;
+  private init(): void {
+    this.$track.addClass('meta-slider__track js-meta-slider__track');
+    this.$track.appendTo(this.$slider);
+    this.bindEventListeners();
   }
 
   private bindEventListeners(): void {

@@ -31,18 +31,15 @@ class Controller implements IController {
     this.config = this.model.getConfig();
     this.vertical = this.config.vertical;
     this.view = new View(this.$slider, this.config);
+    this.init();
   }
 
-  public init() {
-    this.view.observer.subscribe({ key: 'mouseMove', observer: this.moveHandle.bind(this) });
-    this.view.observer.subscribe({ key: 'moveEnd', observer: this.moveEnd.bind(this) });
-    this.view.observer.subscribe({ key: 'scaleClick', observer: this.clickOnScale.bind(this) });
-    this.view.observer.subscribe({ key: 'trackClick', observer: this.changePositionByTrack.bind(this) });
+  public correctSlider() {
     this.$slider.addClass(this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
     const { trackStart, trackWidth } = this.view.getTrackParameters();
     this.model.setTrackParameters(trackStart, trackWidth);
     const stepsArr = this.model.initStepsArr();
-    this.view.init(stepsArr);
+    this.view.correctView(stepsArr);
     this.model.correctFromTo();
     const parameters = this.model.initParameters();
     this.view.setParameters(parameters);
@@ -54,8 +51,15 @@ class Controller implements IController {
     this.view.observer.subscribe({ key: 'setting', observer: this.changeSettings.bind(this) });
   }
 
+  private init() {
+    this.view.observer.subscribe({ key: 'mouseMove', observer: this.moveHandle.bind(this) });
+    this.view.observer.subscribe({ key: 'moveEnd', observer: this.moveEnd.bind(this) });
+    this.view.observer.subscribe({ key: 'scaleClick', observer: this.clickOnScale.bind(this) });
+    this.view.observer.subscribe({ key: 'trackClick', observer: this.changePositionByTrack.bind(this) });
+  }
+
   private initSlider() {
-    this.$slider.addClass('meta-slider');
+    this.$slider.addClass('meta-slider js-meta-slider');
     this.$slider.prependTo(this.$root);
   }
 
@@ -109,9 +113,8 @@ class Controller implements IController {
         this.vertical = !this.vertical;
         this.model.setVertical(this.vertical);
         this.$slider.removeClass(this.vertical ? 'meta-slider_horizontal' : 'meta-slider_vertical');
-        this.$slider.addClass(this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
         this.view.changeDirection(this.model.getConfig());
-        this.init();
+        this.correctSlider();
         break;
       }
       default: {

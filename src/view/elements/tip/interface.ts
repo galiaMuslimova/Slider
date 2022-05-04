@@ -4,7 +4,7 @@ interface ITip{
   $slider: JQuery<HTMLElement>;
   $tip: JQuery<HTMLElement>;
 
-  init(tip: boolean): void
+  correctTips(tip: boolean): void
   changeTips(parameters: IParameters[]): void
 }
 

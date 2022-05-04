@@ -9,7 +9,7 @@ interface IController {
   model: IModel;
   $slider: JQuery<HTMLElement>;
 
-  init(): void
+  correctSlider(): void
   addPanel(): void
 }
 

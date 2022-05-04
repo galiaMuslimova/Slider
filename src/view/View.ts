@@ -46,28 +46,25 @@ class View implements IView {
     this.$container = jQuery('<div>');
     this.initContainer();
     this.track = new Track(this.$container);
-    this.track.init(this.config.vertical);
     this.scale = new Scale(this.$container);
     this.handles = new Handle(this.$container);
     this.tips = new Tip(this.$container);
     this.interval = new Interval(this.$container);
     this.panel = null;
+    this.init();
   }
 
-  public init(stepsArr: IParameters[]): void {
-    this.track.init(this.config.vertical);
-    this.track.observer.subscribe({ key: 'trackClick', observer: this.changePositionByTrack.bind(this) });
-    this.handles.init(this.config.vertical, this.config.range);
+  public correctView(stepsArr: IParameters[]): void {
+    this.handles.correctHandles(this.config.vertical);
     this.handles.correctHandlesByRange(this.config.range);
-    this.handles.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this) });
-    this.handles.observer.subscribe({ key: 'moveEnd', observer: this.mouseMoveEnd.bind(this) });
-    this.tips.init(this.config.tip);
-    this.interval.init(this.config.vertical);
-    this.scale.init(stepsArr, this.config.vertical);
-    this.scale.observer.subscribe({ key: 'scaleClick', observer: this.scaleClick.bind(this) });
+    this.tips.correctTips(this.config.tip);
+    this.interval.correctInterval();
+    this.interval.changeVertical(this.config.vertical);
+    this.scale.correctScale(stepsArr, this.config.vertical);
   }
 
   public getTrackParameters(): ITrackPosition {
+    this.track.correctTrack(this.config.vertical);
     return this.track.getTrackParameters();
   }
 
@@ -81,7 +78,7 @@ class View implements IView {
   }
 
   public initScale(stepsArr: IParameters[]): void {
-    this.scale.init(stepsArr, this.config.vertical);
+    this.scale.correctScale(stepsArr, this.config.vertical);
   }
 
   public correctHandlesByRange(range:boolean): void {
@@ -89,7 +86,7 @@ class View implements IView {
   }
 
   public initTips(tip: boolean): void {
-    this.tips.init(tip);
+    this.tips.correctTips(tip);
   }
 
   public changeTips(parameters: IParameters[]): void {
@@ -98,7 +95,6 @@ class View implements IView {
 
   public changeDirection(config: IConfig): void {
     this.config = config;
-    this.track.init(config.vertical);
     this.$container.removeClass(`meta-slider__container_${config.vertical ? 'horizontal' : 'vertical'}`).addClass(`meta-slider__container_${config.vertical ? 'vertical' : 'horizontal'}`);
   }
 
@@ -113,6 +109,13 @@ class View implements IView {
     this.panel.observer.subscribe({ key: 'setting', observer: this.changeSettings.bind(this) });
     this.panel.initPanel(config);
     this.panel.initBounds(config);
+  }
+
+  private init() {
+    this.track.observer.subscribe({ key: 'trackClick', observer: this.changePositionByTrack.bind(this) });
+    this.handles.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this) });
+    this.handles.observer.subscribe({ key: 'moveEnd', observer: this.mouseMoveEnd.bind(this) });
+    this.scale.observer.subscribe({ key: 'scaleClick', observer: this.scaleClick.bind(this) });
   }
 
   private initContainer() {

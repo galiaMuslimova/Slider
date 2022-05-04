@@ -57,10 +57,10 @@ describe('View', () => {
     $root.empty();
   });
 
-  it('проверяет параметры трэка', () => {
+  it('проверяет начальные параметры трэка', () => {
     const view = new View($root, config);
     const trackParameters = view.getTrackParameters();
-    expect(trackParameters).to.deep.equal({ trackStart: 0, trackWidth: 0 });
+    expect(trackParameters).to.deep.equal({ trackStart: 0, trackWidth: 500 });
   });
 
   it('проверяет изменился на горизонтальный', () => {
