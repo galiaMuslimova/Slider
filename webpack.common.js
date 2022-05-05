@@ -11,6 +11,7 @@ module.exports = {
     extensions: ['.ts', '.js'],
     alias: {
       '@': path.resolve(__dirname, 'src'),
+      '@d': path.resolve(__dirname, 'demo'),
     }
   },
   optimization: {

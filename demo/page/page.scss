@@ -1,0 +1,21 @@
+.page {
+  &__slider {
+    box-sizing: border-box;
+    margin: 20px auto 70px;
+
+    &_is-first {
+      width: 500px;
+      height: 400px;
+    }
+
+    &_is-second {
+      width: 320px;
+      height: 320px;
+    }
+
+    &_is-third {
+      width: 400px;
+      height: 400px;
+    }
+  }
+}

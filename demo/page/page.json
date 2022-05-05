@@ -1,0 +1,30 @@
+[
+  {
+    "min": 0,
+    "max": 60,
+    "step": 1,
+    "from": 3,
+    "to": 70,
+    "tip": "gg",
+    "range": true
+  },
+  {
+    "min": 100000,
+    "max": 210000,
+    "from": 25000,
+    "to": 35750,
+    "step": 3000,
+    "vertical": false,
+    "tip": true,
+    "range": false
+  },
+  {
+    "min": 1,
+    "max": 1000,
+    "from": 100,
+    "step": 10,
+    "to": "undefined",
+    "vertical": true,
+    "tip": false
+  }
+]

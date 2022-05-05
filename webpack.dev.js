@@ -9,7 +9,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 module.exports = merge(common, {  
   mode: 'development',
   context: path.resolve(__dirname, 'demo'),
-  entry: './demo.ts',
+  entry: './demo.js',
   output: {
     filename: 'index.[contenthash].js',
     path: path.resolve(__dirname, 'docs')
@@ -37,15 +37,23 @@ module.exports = merge(common, {
     new CleanWebpackPlugin(),
   ],
   module: {
-    rules: [
-      {
-        test: /\.css$/,
-        use: [ 'style-loader', 'css-loader' ]
+    rules: [{
+      test: /\.css$/,
+      use: [
+        {
+          loader: MiniCssExtractPlugin.loader,
+          options: { singleton: true }
+        },
+        'style-loader', 'css-loader',
+      ]
+    },
+    {
+      test: /\.s[ac]ss$/,
+      use: [{
+        loader: MiniCssExtractPlugin.loader,
       },
-      {
-        test: /\.s[ac]ss$/,
-        use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader']
-      }
-    ]
+        'css-loader', 'postcss-loader', 'sass-loader'
+      ]
+    }]
   }   
 })

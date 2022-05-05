@@ -1,0 +1,7 @@
+include ../slider/slider.pug
+
+mixin page()
+  .page.js-page
+    each item in ['first', 'second', 'third']
+      .page__slider.js-page__slider(class=`page__slider_is-${item}`)
+        +slider()
