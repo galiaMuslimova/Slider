@@ -12,7 +12,7 @@ import ITrack from './elements/track/interface';
 interface IView {
   observer: IObserver
   readonly $container: JQuery<HTMLElement>
-  readonly $slider: JQuery<HTMLElement>
+  readonly $root: JQuery<HTMLElement>
   scale: IScale
   handles: IHandle
   track: ITrack
@@ -26,7 +26,7 @@ interface IView {
   correctHandlesByRange(range:boolean): void
   initTips(tip: boolean): void
   changeTips(parameters: IParameters[]): void
-  changeDirection(config: IConfig): void
+  toggleDirection(config: IConfig): void
   setParameters(parameters: IParameters[]): void
   setSettings(setting: ISettings): void
   initPanel(config: IConfig): void

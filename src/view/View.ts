@@ -33,18 +33,21 @@ class View implements IView {
 
   public panel: IPanel | null;
 
-  readonly $slider: JQuery<HTMLElement>;
+  readonly $root: JQuery<HTMLElement>;
 
   readonly $container: JQuery<HTMLElement>;
 
+  private $slider: JQuery<HTMLElement>;
+
   private config: IConfig;
 
-  constructor(slider: JQuery<HTMLElement>, config: IConfig) {
-    this.$slider = slider;
+  constructor($root: JQuery<HTMLElement>, config: IConfig) {
+    this.$root = $root;
+    this.$slider = jQuery('<div>');
     this.config = config;
     this.observer = new Observer();
     this.$container = jQuery('<div>');
-    this.initContainer();
+    this.toggleDirection(this.config);
     this.track = new Track(this.$container);
     this.scale = new Scale(this.$container);
     this.handles = new Handle(this.$container);
@@ -52,6 +55,14 @@ class View implements IView {
     this.interval = new Interval(this.$container);
     this.panel = null;
     this.init();
+  }
+
+  public toggleDirection(config: IConfig): void {
+    const isVertical = config.vertical;
+    this.$slider.removeClass(isVertical ? 'meta-slider_horizontal' : 'meta-slider_vertical');
+    this.$slider.addClass(isVertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
+    this.$container.removeClass(isVertical ? 'meta-slider__container_horizontal' : 'meta-slider__container_vertical');
+    this.$container.addClass(isVertical ? 'meta-slider__container_vertical' : 'meta-slider__container_horizontal');
   }
 
   public correctView(stepsArr: IParameters[]): void {
@@ -93,11 +104,6 @@ class View implements IView {
     this.tips.changeTips(parameters);
   }
 
-  public changeDirection(config: IConfig): void {
-    this.config = config;
-    this.$container.removeClass(`meta-slider__container_${config.vertical ? 'horizontal' : 'vertical'}`).addClass(`meta-slider__container_${config.vertical ? 'vertical' : 'horizontal'}`);
-  }
-
   public setSettings(setting: ISettings): void {
     if (this.panel !== null) {
       this.panel.setValue(setting);
@@ -112,15 +118,13 @@ class View implements IView {
   }
 
   private init() {
+    this.$slider.addClass('meta-slider js-meta-slider');
+    this.$slider.prependTo(this.$root);
+    this.$container.appendTo(this.$slider);
     this.track.observer.subscribe({ key: 'trackClick', observer: this.changePositionByTrack.bind(this) });
     this.handles.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this) });
     this.handles.observer.subscribe({ key: 'moveEnd', observer: this.mouseMoveEnd.bind(this) });
     this.scale.observer.subscribe({ key: 'scaleClick', observer: this.scaleClick.bind(this) });
-  }
-
-  private initContainer() {
-    this.$container.addClass(`meta-slider__container meta-slider__container_${this.config.vertical ? 'vertical' : 'horizontal'}`);
-    this.$container.appendTo(this.$slider);
   }
 
   private changePositionByTrack(position: number): void {

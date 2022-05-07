@@ -7,7 +7,6 @@ interface IController {
   readonly $root: JQuery<HTMLElement>;
   view: IView;
   model: IModel;
-  $slider: JQuery<HTMLElement>;
 
   correctSlider(): void
   addPanel(): void

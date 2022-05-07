@@ -16,8 +16,6 @@ class Controller implements IController {
 
   public model: IModel;
 
-  public $slider: JQuery<HTMLElement>;
-
   private config: IConfig;
 
   private vertical: boolean;
@@ -25,17 +23,14 @@ class Controller implements IController {
   constructor(root: JQuery<HTMLElement>, options: IOptions) {
     this.options = options;
     this.$root = root;
-    this.$slider = jQuery('<div>');
-    this.initSlider();
     this.model = new Model(this.options);
     this.config = this.model.getConfig();
     this.vertical = this.config.vertical;
-    this.view = new View(this.$slider, this.config);
+    this.view = new View(this.$root, this.config);
     this.init();
   }
 
   public correctSlider() {
-    this.$slider.addClass(this.vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
     const { trackStart, trackWidth } = this.view.getTrackParameters();
     this.model.setTrackParameters(trackStart, trackWidth);
     const stepsArr = this.model.initStepsArr();
@@ -56,11 +51,6 @@ class Controller implements IController {
     this.view.observer.subscribe({ key: 'moveEnd', observer: this.moveEnd.bind(this) });
     this.view.observer.subscribe({ key: 'scaleClick', observer: this.clickOnScale.bind(this) });
     this.view.observer.subscribe({ key: 'trackClick', observer: this.changePositionByTrack.bind(this) });
-  }
-
-  private initSlider() {
-    this.$slider.addClass('meta-slider js-meta-slider');
-    this.$slider.prependTo(this.$root);
   }
 
   private moveHandle(options: IEventPosition) {
@@ -112,8 +102,7 @@ class Controller implements IController {
       case 'vertical': {
         this.vertical = !this.vertical;
         this.model.setVertical(this.vertical);
-        this.$slider.removeClass(this.vertical ? 'meta-slider_horizontal' : 'meta-slider_vertical');
-        this.view.changeDirection(this.model.getConfig());
+        this.view.toggleDirection(this.model.getConfig());
         this.correctSlider();
         break;
       }
