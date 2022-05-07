@@ -11,97 +11,101 @@ import Track from './elements/track/track';
 import Scale from './elements/scale/scale';
 import Handle from './elements/handle/handle';
 import Interval from './elements/interval/interval';
-import Tip from './elements/tip/tip';
 import ITrack from './elements/track/interface';
 import IScale from './elements/scale/interface';
 import IHandle from './elements/handle/interface';
 import IInterval from './elements/interval/interface';
-import ITip from './elements/tip/interface';
 
 class View implements IView {
   public observer: Observer;
 
-  public scale: IScale;
-
-  public handles: IHandle;
-
-  public track: ITrack;
-
-  public interval: IInterval;
-
-  public tips: ITip;
-
-  public panel: IPanel | null;
-
-  readonly $root: JQuery<HTMLElement>;
-
-  readonly $container: JQuery<HTMLElement>;
-
   private $slider: JQuery<HTMLElement>;
 
-  private config: IConfig;
+  private $container: JQuery<HTMLElement>;
 
-  constructor($root: JQuery<HTMLElement>, config: IConfig) {
-    this.$root = $root;
-    this.$slider = jQuery('<div>');
-    this.config = config;
+  private $trackElement: JQuery<HTMLElement>;
+
+  private track: ITrack;
+
+  private firstHandle: IHandle;
+
+  private secondHandle: IHandle | null;
+
+  private interval: IInterval;
+
+  private scale: IScale;
+
+  private panel: IPanel | null;
+
+  constructor() {
     this.observer = new Observer();
+    this.$slider = jQuery('<div>');
     this.$container = jQuery('<div>');
-    this.toggleDirection(this.config);
-    this.track = new Track(this.$container);
-    this.scale = new Scale(this.$container);
-    this.handles = new Handle(this.$container);
-    this.tips = new Tip(this.$container);
-    this.interval = new Interval(this.$container);
+    this.$trackElement = jQuery('<div>');
+    this.track = new Track();
+    this.scale = new Scale();
+    this.firstHandle = new Handle();
+    this.secondHandle = null;
+    this.interval = new Interval();
     this.panel = null;
-    this.init();
   }
 
-  public toggleDirection(config: IConfig): void {
-    const isVertical = config.vertical;
-    this.$slider.removeClass(isVertical ? 'meta-slider_horizontal' : 'meta-slider_vertical');
-    this.$slider.addClass(isVertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
-    this.$container.removeClass(isVertical ? 'meta-slider__container_horizontal' : 'meta-slider__container_vertical');
-    this.$container.addClass(isVertical ? 'meta-slider__container_vertical' : 'meta-slider__container_horizontal');
+  public init($root: JQuery<HTMLElement>) {
+    this.$slider.addClass('meta-slider js-meta-slider');
+    this.$slider.prependTo($root);
+    this.$container.addClass('meta-slider__container js-meta-slider__container');
+    this.$container.appendTo(this.$slider);
+    this.track.init(this.$container);
+    this.track.observer.subscribe({ key: 'trackClick', observer: this.changePositionByTrack.bind(this) });
+    this.$trackElement = this.track.getElement();
+    this.firstHandle.init(this.$trackElement);
+    this.firstHandle.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this, 0) });
+    this.firstHandle.observer.subscribe({ key: 'moveEnd', observer: this.mouseMoveEnd.bind(this) });
+    this.interval.init(this.$trackElement);
+    this.scale.init(this.$container);
+    this.scale.observer.subscribe({ key: 'scaleClick', observer: this.scaleClick.bind(this) });
   }
 
-  public correctView(stepsArr: IParameters[]): void {
-    this.handles.correctHandles(this.config.vertical);
-    this.handles.correctHandlesByRange(this.config.range);
-    this.tips.correctTips(this.config.tip);
-    this.interval.correctInterval();
-    this.interval.changeVertical(this.config.vertical);
-    this.scale.correctScale(stepsArr, this.config.vertical);
+  public toggleDirection(vertical: boolean): void {
+    this.$slider.removeClass(vertical ? 'meta-slider_horizontal' : 'meta-slider_vertical');
+    this.$slider.addClass(vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
+    this.$container.removeClass(vertical ? 'meta-slider__container_horizontal' : 'meta-slider__container_vertical');
+    this.$container.addClass(vertical ? 'meta-slider__container_vertical' : 'meta-slider__container_horizontal');
+    this.track.setVertical(vertical);
+    this.firstHandle.setVertical(vertical);
+    this.secondHandle?.setVertical(vertical);
+    this.interval.setVertical(vertical);
+    this.scale.setVertical(vertical);
+  }
+
+  public toggleRange(range: boolean): void {
+    if (range && !this.secondHandle) {
+      this.secondHandle = new Handle();
+      this.secondHandle.init(this.$trackElement);
+      this.secondHandle.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this, 1) });
+      this.secondHandle.observer.subscribe({ key: 'moveEnd', observer: this.mouseMoveEnd.bind(this) });
+    } else if (!range && this.secondHandle) {
+      const handle = this.secondHandle.getElement();
+      this.$trackElement.find(handle).remove();
+      this.secondHandle = null;
+    }
+  }
+
+  public correctScale(stepsArr: IParameters[]): void {
+    this.scale.correctScale(stepsArr);
   }
 
   public getTrackParameters(): ITrackPosition {
-    this.track.correctTrack(this.config.vertical);
     return this.track.getTrackParameters();
   }
 
   public setParameters(parameters: IParameters[]): void {
-    this.handles.moveHandles(parameters);
-    this.tips.changeTips(parameters);
+    this.firstHandle.moveHandle(parameters[0]);
+    this.secondHandle?.moveHandle(parameters[1]);
     this.interval.moveInterval(parameters);
     if (this.panel !== null) {
       this.panel.initValues(parameters);
     }
-  }
-
-  public initScale(stepsArr: IParameters[]): void {
-    this.scale.correctScale(stepsArr, this.config.vertical);
-  }
-
-  public correctHandlesByRange(range:boolean): void {
-    this.handles.correctHandlesByRange(range);
-  }
-
-  public initTips(tip: boolean): void {
-    this.tips.correctTips(tip);
-  }
-
-  public changeTips(parameters: IParameters[]): void {
-    this.tips.changeTips(parameters);
   }
 
   public setSettings(setting: ISettings): void {
@@ -117,14 +121,9 @@ class View implements IView {
     this.panel.initBounds(config);
   }
 
-  private init() {
-    this.$slider.addClass('meta-slider js-meta-slider');
-    this.$slider.prependTo(this.$root);
-    this.$container.appendTo(this.$slider);
-    this.track.observer.subscribe({ key: 'trackClick', observer: this.changePositionByTrack.bind(this) });
-    this.handles.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this) });
-    this.handles.observer.subscribe({ key: 'moveEnd', observer: this.mouseMoveEnd.bind(this) });
-    this.scale.observer.subscribe({ key: 'scaleClick', observer: this.scaleClick.bind(this) });
+  private toggleTip(tip: boolean): void {
+    this.firstHandle.toggleTip(tip);
+    this.secondHandle?.toggleTip(tip);
   }
 
   private changePositionByTrack(position: number): void {
@@ -136,10 +135,40 @@ class View implements IView {
   }
 
   private changeSettings(setting: ISettings): void {
-    this.observer.notify('setting', setting);
+    const key = Object.keys(setting)[0];
+    const value = setting[key];
+    switch (key) {
+      case 'min':
+      case 'max':
+      case 'step':
+        this.observer.notify('changeScale', setting);
+        break;
+      case 'from':
+      case 'to':
+        this.observer.notify('changeParameters', setting);
+        break;
+      case 'range':
+        this.toggleRange(Boolean(value));
+        this.toggleTip(this.firstHandle.isTip);
+        this.observer.notify('changeParameters', setting);
+        break;
+      case 'tip':
+        this.toggleTip(Boolean(value));
+        this.observer.notify('changeParameters', setting);
+        break;
+      case 'vertical': {
+        this.toggleDirection(Boolean(value));
+        this.observer.notify('changeDirection', setting);
+        break;
+      }
+      default: {
+        throw new Error('undefined setting');
+      }
+    }
   }
 
-  private mouseMove(options: IEventPosition): void {
+  private mouseMove(index: number, eventPosition: number): void {
+    const options = { eventPosition, index };
     this.observer.notify('mouseMove', options);
   }
 

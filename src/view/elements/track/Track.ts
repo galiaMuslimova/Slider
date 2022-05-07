@@ -6,9 +6,7 @@ import ITrack from './interface';
 class Track implements ITrack {
   public observer: IObserver;
 
-  public $slider: JQuery<HTMLElement>;
-
-  public $track: JQuery<HTMLElement>;
+  private $track: JQuery<HTMLElement>;
 
   private vertical: boolean;
 
@@ -16,32 +14,33 @@ class Track implements ITrack {
 
   private trackWidth: number;
 
-  constructor(slider: JQuery<HTMLElement>) {
-    this.$slider = slider;
-    this.vertical = false;
-    this.$track = jQuery('<div>');
+  constructor() {
     this.observer = new Observer();
+    this.$track = jQuery('<div>');
+    this.vertical = false;
     this.trackStart = 0;
     this.trackWidth = 500;
-    this.init();
   }
 
-  public correctTrack(vertical: boolean): void {
-    this.$track.empty();
+  public init($slider: JQuery<HTMLElement>): void {
+    this.$track.addClass('meta-slider__track js-meta-slider__track');
+    this.$track.appendTo($slider);
+    this.bindEventListeners();
+  }
+
+  public setVertical(vertical: boolean): void {
     this.vertical = vertical;
-    const position = this.$track.position();
-    this.trackStart = this.vertical ? Number(position.top) : Number(position.left);
-    this.trackWidth = this.vertical ? this.$track.height() || 500 : this.$track.width() || 500;
   }
 
   public getTrackParameters(): ITrackPosition {
+    const position = this.$track.position();
+    this.trackStart = this.vertical ? Number(position.top) : Number(position.left);
+    this.trackWidth = this.vertical ? this.$track.height() || 500 : this.$track.width() || 500;
     return { trackStart: this.trackStart, trackWidth: this.trackWidth };
   }
 
-  private init(): void {
-    this.$track.addClass('meta-slider__track js-meta-slider__track');
-    this.$track.appendTo(this.$slider);
-    this.bindEventListeners();
+  public getElement(): JQuery<HTMLElement> {
+    return this.$track;
   }
 
   private bindEventListeners(): void {

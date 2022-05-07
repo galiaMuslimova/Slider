@@ -3,14 +3,13 @@ import IObserver from '../../../observer/interface';
 
 interface IHandle {
   observer: IObserver;
-  readonly $slider: JQuery<HTMLElement>;
+  isTip: boolean
 
-  correctHandles(vertical: boolean): void
-  correctHandlesByRange(range: boolean): void
-  moveHandles(parameters: IParameters[]): void
+  init($track: JQuery<HTMLElement>): void
   setVertical(vertical: boolean): void
-  getVertical(): boolean
-  getHandles(): JQuery<HTMLElement>[]
+  getElement(): JQuery<HTMLElement>
+  moveHandle(parameters: IParameters): void
+  toggleTip(tip: boolean): void
 }
 
 export default IHandle;

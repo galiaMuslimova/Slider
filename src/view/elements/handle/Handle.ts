@@ -1,113 +1,89 @@
 import Observer from '../../../observer/Observer';
 import IObserver from '../../../observer/interface';
-import IHandle from './interface';
 import { IParameters } from '../../../interfaces/interfaces';
+import ITip from '../tip/interface';
+import Tip from '../tip/tip';
+import IHandle from './interface';
 
 class Handle implements IHandle {
   public observer: IObserver;
 
-  readonly $slider: JQuery<HTMLElement>;
-
-  private $track: JQuery<HTMLElement>;
+  public isTip: boolean;
 
   private vertical: boolean;
 
-  private $leftHandle: JQuery<HTMLElement>;
+  private $handle: JQuery<HTMLElement>;
 
-  private $rightHandle: JQuery<HTMLElement>;
+  private tip: ITip | null;
 
-  private handles: JQuery<HTMLElement>[];
-
-  constructor(slider: JQuery<HTMLElement>) {
-    this.$slider = slider;
-    this.$track = jQuery('<div>');
-    this.vertical = false;
+  constructor() {
     this.observer = new Observer();
-    this.$leftHandle = jQuery('<div>');
-    this.$rightHandle = jQuery('<div>');
-    this.handles = [];
-    this.init();
-  }
-
-  public correctHandles(vertical: boolean): void {
-    this.handles = [];
-    this.$track = this.$slider.find('.js-meta-slider__track');
-    this.$leftHandle.appendTo(this.$track);
-    this.handles.push(this.$leftHandle);
-    this.$rightHandle.appendTo(this.$track);
-    this.handles.push(this.$rightHandle);
-    this.vertical = vertical;
-  }
-
-  public correctHandlesByRange(range: boolean): void {
-    if (range && this.handles.length === 1) {
-      this.$rightHandle.appendTo(this.$track);
-      this.handles.push(this.$rightHandle);
-    } else if (!range && this.handles.length === 2) {
-      const $handle2 = this.$track.find('.js-meta-slider__handle_right');
-      $handle2.remove();
-      this.handles.pop();
-    }
+    this.isTip = true;
+    this.vertical = false;
+    this.$handle = jQuery('<div>');
+    this.tip = new Tip();
     this.bindEventListeners();
   }
 
-  public moveHandles(parameters: IParameters[]): void {
-    this.handles.forEach((item, index) => {
-      item.css(this.vertical ? 'top' : 'left', `${parameters[index].position - 20 / 2}px`);
-      item.css(this.vertical ? 'left' : 'top', '-5px');
-    });
+  public init($track: JQuery<HTMLElement>): void {
+    this.$handle.addClass('meta-slider__handle js-meta-slider__handle');
+    this.$handle.appendTo($track);
+    this.tip?.init(this.$handle);
   }
 
   public setVertical(vertical: boolean): void {
     this.vertical = vertical;
   }
 
-  public getVertical(): boolean {
-    return this.vertical;
+  public getElement(): JQuery<HTMLElement> {
+    return this.$handle;
   }
 
-  public getHandles(): JQuery<HTMLElement>[] {
-    return this.handles;
+  public moveHandle(parameters: IParameters): void {
+    this.$handle.css(this.vertical ? 'top' : 'left', `${parameters.position - 20 / 2}px`);
+    this.$handle.css(this.vertical ? 'left' : 'top', '-5px');
+    this.tip?.changeTip(parameters);
+  }
+
+  public toggleTip(tip: boolean): void {
+    this.isTip = tip;
+    if (tip && !this.tip) {
+      this.tip = new Tip();
+      this.tip.init(this.$handle);
+    } else if (!tip && this.tip) {
+      const tipElement = this.tip.getElement();
+      tipElement.remove();
+      this.tip = null;
+    }
   }
 
   static handleDragStart(): boolean {
     return false;
   }
 
-  private init(): void {
-    this.$leftHandle = jQuery('<div>', { class: 'meta-slider__handle js-meta-slider__handle meta-slider__handle_left' });
-    this.$rightHandle = jQuery('<div>', { class: 'meta-slider__handle js-meta-slider__handle meta-slider__handle_right js-meta-slider__handle_right' });
-  }
-
   private bindEventListeners(): void {
-    this.handles.forEach((item) => {
-      item.on('mousedown touchstart', this.handleHandleMouseDown.bind(this));
-    });
+    this.$handle.on('mousedown touchstart', this.handleHandleMouseDown.bind(this));
   }
 
   private handleHandleMouseDown(event: Event): void {
     event.preventDefault();
-    const eventTarget = <Element>event.target;
-    const index = $(eventTarget).hasClass('meta-slider__handle_left') ? 0 : 1;
-    $(document).on('mousemove', this.handleMouseMove.bind(this, index));
-    $(document).on('touchmove', this.handleTouchMove.bind(this, index));
+    $(document).on('mousemove', this.handleMouseMove.bind(this));
+    $(document).on('touchmove', this.handleTouchMove.bind(this));
     $(document).on('mouseup touchend', this.handleMoveEnd.bind(this));
     $(document).on('dragstart', Handle.handleDragStart);
   }
 
-  private handleMouseMove(index: number, event: Event): void {
+  private handleMouseMove(event: Event): void {
     const eventPosition = this.vertical ? (<MouseEvent>event).pageY : (<MouseEvent>event).pageX;
-    const options = { eventPosition, index };
-    this.observer.notify('mouseMove', options);
+    this.observer.notify('mouseMove', eventPosition);
   }
 
-  private handleTouchMove(index: number, event: Event): void {
+  private handleTouchMove(event: Event): void {
     const touches = (<TouchEvent>event)?.touches;
     if (touches !== undefined) {
       const touch = touches[0];
       const eventPosition = this.vertical ? touch.pageY : touch.pageX;
-      const options = { eventPosition, index };
-      this.observer.notify('mouseMove', options);
+      this.observer.notify('mouseMove', eventPosition);
     }
   }
 

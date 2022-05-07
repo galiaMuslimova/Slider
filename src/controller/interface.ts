@@ -8,7 +8,6 @@ interface IController {
   view: IView;
   model: IModel;
 
-  correctSlider(): void
   addPanel(): void
 }
 

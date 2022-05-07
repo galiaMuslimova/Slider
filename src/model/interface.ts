@@ -5,11 +5,12 @@ import {
 interface IModel {
   readonly options: IOptions;
 
+  init(): void
   correctMinMax(config?: IConfig): IConfig
   initStepsArr(): IParameters[]
   correctFromTo(config?: IConfig): IConfig
   initParameters(): IParameters[]
-  takeParamHandleMove(options: IEventPosition): IParameters[] | boolean
+  moveHandle(options: IEventPosition): IParameters[] | undefined
   correctFromToByParams(): { from: number, to: number }
   takeParamScaleClick(value: number): IParameters[]
   takeParamTrackClick(position: number): IParameters[]
@@ -18,6 +19,8 @@ interface IModel {
   setSetting(setting: ISettings): void
   getParameters(): IParameters[]
   setVertical(vertical: boolean): void
+  getVertical(): boolean
+  getRange(): boolean
   setTrackParameters(trackStart: number, trackWidth: number | undefined): void
   getStepsArr(): IParameters[]
 }

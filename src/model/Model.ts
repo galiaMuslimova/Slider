@@ -30,11 +30,17 @@ class Model implements IModel {
   constructor(options: IOptions) {
     this.options = this.correctOptionsType(options);
     this.config = $.extend({}, defaults, this.options);
-    this.correctMinMax();
     this.trackStart = 0;
     this.trackWidth = 500;
     this.stepsArr = [];
     this.parameters = [];
+  }
+
+  public init() {
+    this.config = this.correctMinMax();
+    this.stepsArr = this.initStepsArr();
+    this.config = this.correctFromTo();
+    this.parameters = this.initParameters();
   }
 
   public correctMinMax(config: IConfig = this.config): IConfig {
@@ -109,7 +115,7 @@ class Model implements IModel {
     return parameters;
   }
 
-  public takeParamHandleMove(options: IEventPosition): IParameters[] | boolean {
+  public moveHandle(options: IEventPosition): IParameters[] | undefined {
     const { eventPosition } = options;
     const { index } = options;
     const position = Math.round(eventPosition - this.trackStart);
@@ -122,8 +128,7 @@ class Model implements IModel {
       this.parameters[index].position = stepsArrItem.position;
       return this.parameters;
     }
-
-    return false;
+    return undefined;
   }
 
   public correctFromToByParams(): { from: number, to: number } {
@@ -186,8 +191,16 @@ class Model implements IModel {
     return this.parameters;
   }
 
+  public getVertical(): boolean {
+    return this.config.vertical;
+  }
+
   public setVertical(vertical: boolean): void {
     this.config.vertical = vertical;
+  }
+
+  public getRange(): boolean {
+    return this.config.range;
   }
 
   public setTrackParameters(trackStart: number, trackWidth: number | undefined): void {

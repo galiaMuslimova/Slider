@@ -3,10 +3,11 @@ import IObserver from '../../../observer/interface';
 
 interface IScale {
   observer: IObserver;
-  $slider: JQuery<HTMLElement>;
   $scale: JQuery<HTMLElement>;
 
-  correctScale(stepsArr: IParameters[], vertical:boolean): void
+  init($slider: JQuery<HTMLElement>): void
+  setVertical(vertical: boolean): void
+  correctScale(stepsArr: IParameters[]): void
 }
 
 export default IScale;
