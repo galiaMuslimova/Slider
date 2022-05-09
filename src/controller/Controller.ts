@@ -25,14 +25,9 @@ class Controller implements IController {
   }
 
   private init() {
-    this.view.toggleDirection(this.model.getVertical());
     this.view.init(this.$root);
+    this.view.toggleDirection(this.model.getVertical());
     this.view.toggleRange(this.model.getRange());
-    const { trackStart, trackWidth } = this.view.getTrackParameters();
-    this.model.setTrackParameters(trackStart, trackWidth);
-    this.model.init();
-    this.view.correctScale(this.model.getStepsArr());
-    this.view.setParameters(this.model.getParameters());
     this.view.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this) });
     this.view.observer.subscribe({ key: 'moveEnd', observer: this.moveEnd.bind(this) });
     this.view.observer.subscribe({ key: 'scaleClick', observer: this.clickOnScale.bind(this) });
@@ -40,6 +35,13 @@ class Controller implements IController {
     this.view.observer.subscribe({ key: 'changeScale', observer: this.changeScale.bind(this) });
     this.view.observer.subscribe({ key: 'changeParameters', observer: this.changeParameters.bind(this) });
     this.view.observer.subscribe({ key: 'changeDirection', observer: this.changeDirection.bind(this) });
+    setTimeout(() => {
+      const { trackStart, trackWidth } = this.view.getTrackParameters();
+      this.model.setTrackParameters(trackStart, trackWidth);
+      this.model.init();
+      this.view.correctScale(this.model.getStepsArr());
+      this.view.setParameters(this.model.getParameters());
+    }, 10);
   }
 
   public addPanel() {
@@ -54,10 +56,7 @@ class Controller implements IController {
   }
 
   private moveEnd() {
-    const { from, to } = this.model.correctFromToByParams();
-    this.view.setSettings({ from });
-    this.view.setSettings({ to });
-    this.view.setParameters(this.model.getParameters());
+    this.view.setParameters(this.model.correctFromToByParams());
   }
 
   private clickOnScale(value: number) {
@@ -79,7 +78,8 @@ class Controller implements IController {
 
   private changeParameters(setting: ISettings) {
     this.model.setSetting(setting);
-    this.view.setParameters(this.model.initParameters());
+    this.model.initParameters();
+    this.view.setParameters(this.model.correctFromToByParams());
   }
 
   private changeDirection(setting: ISettings) {

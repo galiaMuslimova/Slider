@@ -35,6 +35,10 @@ class Handle implements IHandle {
     this.vertical = vertical;
   }
 
+  public getVertical(): boolean {
+    return this.vertical;
+  }
+
   public getElement(): JQuery<HTMLElement> {
     return this.$handle;
   }
@@ -88,8 +92,8 @@ class Handle implements IHandle {
   }
 
   private handleMoveEnd(event: Event): void {
-    this.observer.notify('moveEnd', 0);
     $(document).off('mousemove mouseup touchmove touchend');
+    this.observer.notify('moveEnd', 0);
   }
 }
 

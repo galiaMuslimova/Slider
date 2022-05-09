@@ -1,11 +1,12 @@
 import {
-  IConfig, IEventPosition, IParameters, ISettings, ITrackPosition,
+  IConfig, IParameters, ISettings, ITrackPosition,
 } from '../interfaces/interfaces';
 import Panel from '../panel/Panel';
 import IPanel from '../panel/interface';
 import Observer from '../observer/Observer';
-import IView from './interface';
+
 import './slider.scss';
+import IView from './interface';
 
 import Track from './elements/track/track';
 import Scale from './elements/scale/scale';
@@ -51,9 +52,9 @@ class View implements IView {
   }
 
   public init($root: JQuery<HTMLElement>) {
-    this.$slider.addClass('meta-slider js-meta-slider');
+    this.$slider.addClass('meta-slider meta-slider_horizontal');
     this.$slider.prependTo($root);
-    this.$container.addClass('meta-slider__container js-meta-slider__container');
+    this.$container.addClass('meta-slider__container meta-slider__container_horizontal');
     this.$container.appendTo(this.$slider);
     this.track.init(this.$container);
     this.track.observer.subscribe({ key: 'trackClick', observer: this.changePositionByTrack.bind(this) });
@@ -82,6 +83,7 @@ class View implements IView {
     if (range && !this.secondHandle) {
       this.secondHandle = new Handle();
       this.secondHandle.init(this.$trackElement);
+      this.secondHandle?.setVertical(this.firstHandle.getVertical());
       this.secondHandle.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this, 1) });
       this.secondHandle.observer.subscribe({ key: 'moveEnd', observer: this.mouseMoveEnd.bind(this) });
     } else if (!range && this.secondHandle) {
@@ -109,7 +111,7 @@ class View implements IView {
   }
 
   public setSettings(setting: ISettings): void {
-    if (this.panel !== null) {
+    if (this.panel) {
       this.panel.setValue(setting);
     }
   }

@@ -131,14 +131,19 @@ class Model implements IModel {
     return undefined;
   }
 
-  public correctFromToByParams(): { from: number, to: number } {
+  public correctFromToByParams(): IParameters[] {
     if (this.config.range) {
-      this.config.from = Math.min(this.parameters[0].value, this.parameters[1].value);
-      this.config.to = Math.max(this.parameters[0].value, this.parameters[1].value);
+      const isFirstLower = this.parameters[0].value < this.parameters[1].value;
+      const minParameter = isFirstLower ? this.parameters[0] : this.parameters[1];
+      const maxParameter = isFirstLower ? this.parameters[1] : this.parameters[0];
+      this.config.from = minParameter.value;
+      this.config.to = maxParameter.value;
+      this.parameters[1] = maxParameter;
+      this.parameters[0] = minParameter;
     } else {
       this.config.from = this.parameters[0].value;
     }
-    return { from: this.config.from, to: this.config.to };
+    return this.parameters;
   }
 
   public takeParamScaleClick(value: number): IParameters[] {
@@ -222,7 +227,7 @@ class Model implements IModel {
     return array.indexOf(closest);
   }
 
-  private correctOptionsType(options: IOptions = this.options):IOptions {
+  private correctOptionsType(options: IOptions = this.options): IOptions {
     const correctOptions = { ...options };
     correctOptions.max = Number.isInteger(options.max) ? Math.round(options.max) : defaults.max;
     correctOptions.min = Number.isInteger(options.min) ? Math.round(options.min) : defaults.min;

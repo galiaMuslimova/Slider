@@ -11,7 +11,7 @@ interface IModel {
   correctFromTo(config?: IConfig): IConfig
   initParameters(): IParameters[]
   moveHandle(options: IEventPosition): IParameters[] | undefined
-  correctFromToByParams(): { from: number, to: number }
+  correctFromToByParams(): IParameters[]
   takeParamScaleClick(value: number): IParameters[]
   takeParamTrackClick(position: number): IParameters[]
   getConfig(): IConfig
