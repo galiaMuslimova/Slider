@@ -1,4 +1,5 @@
 import MetaSlider from '../../src/MetaSlider';
+import '../../src/index';
 
 class Slider{
   constructor(options, $root) {
@@ -9,7 +10,7 @@ class Slider{
 
   init() {
     const $element = this.$root.find('.js-slider');
-    const slider = new MetaSlider($element, this.options);
+    const slider = $element.MetaSlider(this.options)
     slider.addPanel();
   }
 }

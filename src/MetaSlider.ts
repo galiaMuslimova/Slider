@@ -1,7 +1,8 @@
 import Controller from './controller/Controller';
 import { IOptions } from './interfaces/interfaces';
+import IMetaSlider from './interface';
 
-class MetaSlider {
+class MetaSlider implements IMetaSlider {
   readonly controller: Controller;
 
   constructor(element: JQuery<HTMLElement>, options: IOptions) {

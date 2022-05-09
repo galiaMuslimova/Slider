@@ -6,12 +6,16 @@
 `npm install git+https://github.com/galiaMuslimova/Slider.git`
 Затем, для подключения на страницу 
 ```
-  import MetaSlider from 'meta-slider
+  import MetaSlider from 'meta-slider'
   import 'meta-slider/dist/index.css'
 ```
 затем для добавления слайдера на элемент
 `new MetaSlider(element, {})`
 где element это jquery элемент слайдера, а {} содержит необходимые опции. Например
+
+или 
+
+`element.MetaSlider(options)`
 ```
 let element = $(".mySlider")
 new MetaSlider(element, {

@@ -29,9 +29,10 @@ module.exports = {
     },
   },
   rules: {
-    'linebreak-style': 0,
-    "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": 'off',
-    'func-names': 'off'
+    'linebreak-style': 'off',
+    'no-unused-vars': 'off',
+    '@typescript-eslint/no-unused-vars': 'off',
+    'func-names': 'off',
+    'no-param-reassign': 'off'
   },
 };
