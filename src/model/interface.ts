@@ -10,7 +10,7 @@ interface IModel {
   initStepsArr(): IParameters[]
   correctFromTo(config?: IConfig): IConfig
   initParameters(): IParameters[]
-  moveHandle(options: IEventPosition): IParameters[] | undefined
+  takeParamHandleMove(options: IEventPosition): IParameters[] | undefined
   correctFromToByParams(): IParameters[]
   takeParamScaleClick(value: number): IParameters[]
   takeParamTrackClick(position: number): IParameters[]
@@ -21,6 +21,7 @@ interface IModel {
   setVertical(vertical: boolean): void
   getVertical(): boolean
   getRange(): boolean
+  getTip(): boolean
   setTrackParameters(trackStart: number, trackWidth: number | undefined): void
   getStepsArr(): IParameters[]
 }

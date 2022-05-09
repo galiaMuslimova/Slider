@@ -6,9 +6,7 @@ const { JSDOM } = require('jsdom');
 
 const dom = new JSDOM(`<!DOCTYPE html>
 <body>
-  <div class='testSlider'>
-    <div class='meta-slider js-meta-slider'></div>
-  </div>
+  <div class='meta-slider js-meta-slider'></div>
 </body>`);
 global.window = dom.window;
 
@@ -21,27 +19,27 @@ describe('Track', () => {
 
   before(() => {
     $slider = $(document).find('.js-meta-slider');
-    trackClass = new Track($slider);
-    trackClass.correctTrack(false);
-    $track = trackClass.$track;
+    trackClass = new Track();
+    trackClass.init($slider);
+    $track = $slider.find('.js-meta-slider__track');
     $track.css('width', '500');
     $track.css('height', '400');
     $track.css('top', '20');
     $track.css('left', '10');
   });
 
-  it('устанавливает корневой элемент', () => {
-    expect(trackClass.$slider).to.deep.equal($slider);
+  it('проверяет создание элемента track', () => {
+    expect($track.length).to.equal(1);
   });
 
   it('проверяет ширину трэка для вертикального', () => {
-    trackClass.correctTrack(true);
+    trackClass.setVertical(true);
     const trackParameters = trackClass.getTrackParameters();
     expect(trackParameters.trackWidth).to.equal(400);
   });
 
   it('проверяет ширину трэка для горизонтального', () => {
-    trackClass.correctTrack(false);
+    trackClass.setVertical(false);
     const trackParameters = trackClass.getTrackParameters();
     expect(trackParameters.trackWidth).to.equal(500);
   });

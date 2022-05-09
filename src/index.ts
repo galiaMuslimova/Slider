@@ -40,10 +40,6 @@ declare global {
       slider.addPanel();
     }
   };
-
-  $(() => {
-    $('.js-meta-slider').MetaSlider();
-  });
 }(jQuery));
 
 export default MetaSlider;

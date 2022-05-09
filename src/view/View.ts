@@ -52,7 +52,7 @@ class View implements IView {
   }
 
   public init($root: JQuery<HTMLElement>) {
-    this.$slider.addClass('meta-slider meta-slider_horizontal');
+    this.$slider.addClass('meta-slider js-meta-slider meta-slider_horizontal');
     this.$slider.prependTo($root);
     this.$container.addClass('meta-slider__container meta-slider__container_horizontal');
     this.$container.appendTo(this.$slider);
@@ -93,6 +93,11 @@ class View implements IView {
     }
   }
 
+  public toggleTip(tip: boolean): void {
+    this.firstHandle.toggleTip(tip);
+    this.secondHandle?.toggleTip(tip);
+  }
+
   public correctScale(stepsArr: IParameters[]): void {
     this.scale.correctScale(stepsArr);
   }
@@ -110,22 +115,11 @@ class View implements IView {
     }
   }
 
-  public setSettings(setting: ISettings): void {
-    if (this.panel) {
-      this.panel.setValue(setting);
-    }
-  }
-
   public initPanel(config: IConfig): void {
     this.panel = new Panel(this.$slider);
     this.panel.observer.subscribe({ key: 'setting', observer: this.changeSettings.bind(this) });
     this.panel.initPanel(config);
     this.panel.initBounds(config);
-  }
-
-  private toggleTip(tip: boolean): void {
-    this.firstHandle.toggleTip(tip);
-    this.secondHandle?.toggleTip(tip);
   }
 
   private changePositionByTrack(position: number): void {

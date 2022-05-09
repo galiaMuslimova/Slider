@@ -10,9 +10,9 @@ interface IView {
   correctScale(stepsArr: IParameters[]): void
   getTrackParameters(): ITrackPosition
   toggleDirection(vertical: boolean): void
-  toggleRange(vertical: boolean): void
+  toggleRange(range: boolean): void
+  toggleTip(tip: boolean): void
   setParameters(parameters: IParameters[]): void
-  setSettings(setting: ISettings): void
   initPanel(config: IConfig): void
 }
 

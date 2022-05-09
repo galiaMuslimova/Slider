@@ -7,9 +7,7 @@ const { JSDOM } = require('jsdom');
 
 const dom = new JSDOM(`<!DOCTYPE html>
 <body>
-  <div class='testSlider'>
-    <div class='meta-slider js-meta-slider'></div>
-  </div>
+  <div class='meta-slider js-meta-slider'></div>
 </body>`);
 global.window = dom.window;
 
@@ -17,66 +15,32 @@ const { document } = dom.window;
 
 describe('Tip', () => {
   let $slider: JQuery<HTMLElement>;
+  let $track: JQuery<HTMLElement>;
+  let $handle: JQuery<HTMLElement>;
+  let $tip: JQuery<HTMLElement>;
   let tipClass: Tip;
   let handleClass: Handle;
 
   before(() => {
     $slider = $(document).find('.js-meta-slider');
-    jQuery('<div>', {
+    $track = jQuery('<div>', {
       class: 'meta-slider__track js-meta-slider__track',
-    }).appendTo($slider);
-    handleClass = new Handle($slider);
-    handleClass.correctHandles(false);
-    tipClass = new Tip($slider);
+    });
+    $track.appendTo($slider);
+    handleClass = new Handle();
+    handleClass.init($track);
+    $handle = handleClass.getElement();
+    tipClass = new Tip();
+    tipClass.init($handle);
+    $tip = tipClass.getElement();
   });
 
-  it('проверяет создание подсказок tips = 2 при handle=2', () => {
-    handleClass.correctHandlesByRange(true);
-    tipClass.correctTips(true);// tips true
-    const $tips = $slider.find('.js-meta-slider__tip');
-    expect($tips.length).to.eq(2);
+  it('проверяет создание элемента tip', () => {
+    expect($tip.length).to.eq(1);
   });
 
   it('проверяет отсутствие подсказок tips = 0', () => {
-    tipClass.correctTips(false);// tips false
-    const $tips = $slider.find('.js-meta-slider__tip');
-    expect($tips.length).to.eq(0);
-  });
-
-  it('проверяет отсутствие подсказок tips=0 при handle=1', () => {
-    handleClass.correctHandlesByRange(false);
-    tipClass.correctTips(false);// tips false
-    const $tips = $slider.find('.js-meta-slider__tip');
-    expect($tips.length).to.eq(0);
-  });
-
-  it('меняет значения подсказок tips при tips=2', () => {
-    handleClass.correctHandlesByRange(true);
-    tipClass.correctTips(true);// tips true
-    const parameters = [{ value: 10, position: 100 }, { value: 50, position: 500 }];
-    tipClass.changeTips(parameters);
-    const $tips = $slider.find('.js-meta-slider__tip');
-    $tips.each((index, element) => {
-      expect($(element).text()).to.eq(`${parameters[index].value}`);
-    });
-  });
-
-  it('меняет значения подсказок tips при tips=1', () => {
-    handleClass.correctHandlesByRange(false);
-    tipClass.correctTips(true);// tips true
-    const parameters = [{ value: -50, position: 100 }];
-    tipClass.changeTips(parameters);
-    const $tips = $slider.find('.js-meta-slider__tip');
-    $tips.each((index, element) => {
-      expect($(element).text()).to.eq(`${parameters[index].value}`);
-    });
-  });
-
-  it('не добавляет значения подсказок tips при tips=false', () => {
-    tipClass.correctTips(false);// tips false
-    const parameters = [{ value: -50, position: 100 }, { value: -8, position: 150 }];
-    tipClass.changeTips(parameters);
-    const $tips = $slider.find('.js-meta-slider__tip');
-    expect($tips.length).to.eq(0);
+    tipClass.changeTip({ value: 10, position: 100 });
+    expect($tip.html()).to.eq('10');
   });
 });

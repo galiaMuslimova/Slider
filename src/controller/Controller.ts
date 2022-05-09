@@ -28,6 +28,7 @@ class Controller implements IController {
     this.view.init(this.$root);
     this.view.toggleDirection(this.model.getVertical());
     this.view.toggleRange(this.model.getRange());
+    this.view.toggleTip(this.model.getTip());
     this.view.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this) });
     this.view.observer.subscribe({ key: 'moveEnd', observer: this.moveEnd.bind(this) });
     this.view.observer.subscribe({ key: 'scaleClick', observer: this.clickOnScale.bind(this) });
@@ -49,7 +50,7 @@ class Controller implements IController {
   }
 
   private mouseMove(options: IEventPosition) {
-    const parameters = this.model.moveHandle(options);
+    const parameters = this.model.takeParamHandleMove(options);
     if (parameters !== undefined) {
       this.view.setParameters(parameters);
     }

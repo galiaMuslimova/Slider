@@ -7,9 +7,7 @@ const { JSDOM } = require('jsdom');
 
 const dom = new JSDOM(`<!DOCTYPE html>
 <body>
-  <div class='testSlider'>
-    <div class='meta-slider js-meta-slider'></div>
-  </div>
+  <div class='meta-slider js-meta-slider'></div>
 </body>`);
 global.window = dom.window;
 
@@ -98,8 +96,9 @@ describe('create slider', () => {
 
   before(() => {
     $slider = $(document).find('.js-meta-slider');
-    scaleClass = new Scale($slider);
-    $scale = scaleClass.$scale;
+    scaleClass = new Scale();
+    scaleClass.init($slider);
+    $scale = $slider.find('.js-meta-slider__scale');
     $scale.css('width', '300px');
     $scale.css('height', '300px');
     stepsArr = [
@@ -110,7 +109,7 @@ describe('create slider', () => {
   });
 
   it('проверить создание слайдера', () => {
-    scaleClass.correctScale(stepsArr, false);
+    scaleClass.correctScale(stepsArr);
     const scaleItems = $scale.find('.js-meta-slider__scale-item');
     const scaleValues = $scale.find('.js-meta-slider__value');
     scaleValues.each(function (index) {

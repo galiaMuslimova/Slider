@@ -115,7 +115,7 @@ class Model implements IModel {
     return parameters;
   }
 
-  public moveHandle(options: IEventPosition): IParameters[] | undefined {
+  public takeParamHandleMove(options: IEventPosition): IParameters[] | undefined {
     const { eventPosition } = options;
     const { index } = options;
     const position = Math.round(eventPosition - this.trackStart);
@@ -206,6 +206,10 @@ class Model implements IModel {
 
   public getRange(): boolean {
     return this.config.range;
+  }
+
+  public getTip(): boolean {
+    return this.config.tip;
   }
 
   public setTrackParameters(trackStart: number, trackWidth: number | undefined): void {

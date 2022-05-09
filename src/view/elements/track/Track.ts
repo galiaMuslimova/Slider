@@ -23,7 +23,7 @@ class Track implements ITrack {
   }
 
   public init($slider: JQuery<HTMLElement>): void {
-    this.$track.addClass('meta-slider__track');
+    this.$track.addClass('meta-slider__track js-meta-slider__track');
     this.$track.appendTo($slider);
     this.bindEventListeners();
   }

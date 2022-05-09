@@ -6,7 +6,7 @@ import IScale from './interface';
 class Scale implements IScale {
   public observer: IObserver;
 
-  public $scale: JQuery<HTMLElement>;
+  private $scale: JQuery<HTMLElement>;
 
   private stepsArr: IParameters[];
 
@@ -26,7 +26,7 @@ class Scale implements IScale {
   }
 
   public init($slider: JQuery<HTMLElement>) {
-    this.$scale.addClass('meta-slider__scale');
+    this.$scale.addClass('meta-slider__scale js-meta-slider__scale');
     this.$scale.appendTo($slider);
   }
 
