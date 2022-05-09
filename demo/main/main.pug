@@ -1,0 +1,7 @@
+include ../slider/slider.pug
+
+mixin main()  
+  .main.js-main
+    each item in ['first', 'second', 'third']
+      .main__slider.js-main__slider(class=`main__slider_is-${item}`)
+        +slider(item)
