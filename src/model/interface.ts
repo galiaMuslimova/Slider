@@ -18,10 +18,6 @@ interface IModel {
   setConfig(config: IConfig): void
   setSetting(setting: ISettings): void
   getParameters(): IParameters[]
-  setVertical(vertical: boolean): void
-  getVertical(): boolean
-  getRange(): boolean
-  getTip(): boolean
   setTrackParameters(trackStart: number, trackWidth: number | undefined): void
   getStepsArr(): IParameters[]
 }

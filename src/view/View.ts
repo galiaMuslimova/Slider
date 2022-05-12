@@ -1,5 +1,5 @@
 import {
-  IConfig, IParameters, ISettings, ITrackPosition,
+  IConfig, IOptions, IParameters, ISettings, ITrackPosition,
 } from '../interfaces/interfaces';
 import Panel from '../panel/Panel';
 import IPanel from '../panel/interface';
@@ -67,7 +67,8 @@ class View implements IView {
     this.scale.observer.subscribe({ key: 'scaleClick', observer: this.scaleClick.bind(this) });
   }
 
-  public toggleDirection(vertical: boolean): void {
+  public toggleDirection(config: IConfig | IOptions): void {
+    const { vertical } = config;
     this.$slider.removeClass(vertical ? 'meta-slider_horizontal' : 'meta-slider_vertical');
     this.$slider.addClass(vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
     this.$container.removeClass(vertical ? 'meta-slider__container_horizontal' : 'meta-slider__container_vertical');
@@ -79,7 +80,8 @@ class View implements IView {
     this.scale.setVertical(vertical);
   }
 
-  public toggleRange(range: boolean): void {
+  public toggleRange(config: IConfig | IOptions): void {
+    const { range } = config;
     if (range && !this.secondHandle) {
       this.secondHandle = new Handle();
       this.secondHandle.init(this.$trackElement);
@@ -93,7 +95,8 @@ class View implements IView {
     }
   }
 
-  public toggleTip(tip: boolean): void {
+  public toggleTip(config: IConfig | IOptions): void {
+    const { tip } = config;
     this.firstHandle.toggleTip(tip);
     this.secondHandle?.toggleTip(tip);
   }
@@ -144,16 +147,16 @@ class View implements IView {
         this.observer.notify('changeParameters', setting);
         break;
       case 'range':
-        this.toggleRange(Boolean(value));
-        this.toggleTip(this.firstHandle.isTip);
+        this.toggleRange({ range: Boolean(value) });
+        this.toggleTip({ tip: this.firstHandle.isTip });
         this.observer.notify('changeParameters', setting);
         break;
       case 'tip':
-        this.toggleTip(Boolean(value));
+        this.toggleTip({ tip: Boolean(value) });
         this.observer.notify('changeParameters', setting);
         break;
       case 'vertical': {
-        this.toggleDirection(Boolean(value));
+        this.toggleDirection({ vertical: Boolean(value) });
         this.observer.notify('changeDirection', setting);
         break;
       }

@@ -26,9 +26,9 @@ class Controller implements IController {
 
   private init() {
     this.view.init(this.$root);
-    this.view.toggleDirection(this.model.getVertical());
-    this.view.toggleRange(this.model.getRange());
-    this.view.toggleTip(this.model.getTip());
+    this.view.toggleDirection(this.model.getConfig());
+    this.view.toggleRange(this.model.getConfig());
+    this.view.toggleTip(this.model.getConfig());
     this.view.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this) });
     this.view.observer.subscribe({ key: 'moveEnd', observer: this.moveEnd.bind(this) });
     this.view.observer.subscribe({ key: 'scaleClick', observer: this.clickOnScale.bind(this) });
