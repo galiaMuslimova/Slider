@@ -1,5 +1,5 @@
 import {
-  IOptions, ISettings, IEventPosition, IConfig, IParameters, ICoordinates,
+  IOptions, ISettings, ICoordinates, IConfig,
 } from '../interfaces/interfaces';
 import View from '../view/View';
 import IView from '../view/interface';
@@ -36,6 +36,18 @@ class Controller implements IController {
 
   public addPanel() {
     this.view.initPanel(this.model.getConfig());
+  }
+
+  public setOptions(options: IOptions): void {
+    this.model.setOptions(options);
+  }
+
+  public getOptions(): IConfig {
+    return this.model.getOptions();
+  }
+
+  public getValues(): number[] {
+    return this.model.getValues();
   }
 
   private initData() {

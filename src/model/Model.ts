@@ -66,6 +66,15 @@ class Model implements IModel {
     this.data.trackParameters.trackWidth = trackWidth === undefined ? 500 : trackWidth;
   }
 
+  public setOptions(options: IOptions): void {
+    const correctedOptions = this.correctOptionsType(options);
+    this.data.config = $.extend({}, this.data.config, correctedOptions);
+  }
+
+  public getOptions(): IConfig {
+    return this.data.config;
+  }
+
   public getData(): IData {
     return this.data;
   }
@@ -76,6 +85,14 @@ class Model implements IModel {
 
   public setSetting(setting: ISettings): void {
     this.data.config = $.extend({}, this.data.config, setting);
+  }
+
+  public getValues(): number[] {
+    const values: number[] = [];
+    this.data.parameters.forEach((item) => {
+      values.push(item.value);
+    });
+    return values;
   }
 
   static takeClosestNum(num: number, array: number[]): number {

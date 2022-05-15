@@ -8,8 +8,11 @@ interface IModel {
   init(): void
   changeParameter(parameter: IChanges, order?: number): IParameters[]
   correctFromToByParams(): IData
+  setOptions(options: IOptions): void
+  getOptions(): IConfig
   getData(): IData
   getConfig(): IConfig
+  getValues(): number[]
   setSetting(setting: ISettings): void
   setTrackParameters(trackStart: number, trackWidth: number | undefined): void
 }

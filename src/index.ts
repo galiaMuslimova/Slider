@@ -6,6 +6,9 @@ declare global {
   interface JQuery {
     MetaSlider(opts?: IOptions): JQuery;
     addPanel(): void;
+    setOptions(options: IOptions): void;
+    getOptions(): void;
+    getValues(): void;
   }
 }
 
@@ -38,6 +41,24 @@ declare global {
   $.fn.addPanel = function () {
     if (slider) {
       slider.addPanel();
+    }
+  };
+
+  $.fn.setOptions = function (options) {
+    if (slider) {
+      slider.setOptions(options);
+    }
+  };
+
+  $.fn.getOptions = function () {
+    if (slider) {
+      slider.getOptions();
+    }
+  };
+
+  $.fn.getValues = function () {
+    if (slider) {
+      slider.getValues();
     }
   };
 }(jQuery));
