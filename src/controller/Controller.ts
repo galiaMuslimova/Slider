@@ -1,5 +1,5 @@
 import {
-  IOptions, ISettings, IEventPosition, IConfig,
+  IOptions, ISettings, IEventPosition, IConfig, IParameters, ICoordinates,
 } from '../interfaces/interfaces';
 import View from '../view/View';
 import IView from '../view/interface';
@@ -26,22 +26,11 @@ class Controller implements IController {
 
   private init() {
     this.view.init(this.$root);
-    this.view.toggleDirection(this.model.getConfig());
-    this.view.toggleRange(this.model.getConfig());
-    this.view.toggleTip(this.model.getConfig());
-    this.view.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this) });
-    this.view.observer.subscribe({ key: 'moveEnd', observer: this.moveEnd.bind(this) });
-    this.view.observer.subscribe({ key: 'scaleClick', observer: this.clickOnScale.bind(this) });
-    this.view.observer.subscribe({ key: 'trackClick', observer: this.changePositionByTrack.bind(this) });
-    this.view.observer.subscribe({ key: 'changeScale', observer: this.changeScale.bind(this) });
-    this.view.observer.subscribe({ key: 'changeParameters', observer: this.changeParameters.bind(this) });
-    this.view.observer.subscribe({ key: 'changeDirection', observer: this.changeDirection.bind(this) });
+    this.view.initConfig(this.model.getConfig());
+    this.view.observer.subscribe({ key: 'moveHandle', observer: this.changeData.bind(this) });
+    this.view.observer.subscribe({ key: 'changeSetting', observer: this.changeSetting.bind(this) });
     setTimeout(() => {
-      const { trackStart, trackWidth } = this.view.getTrackParameters();
-      this.model.setTrackParameters(trackStart, trackWidth);
-      this.model.init();
-      this.view.correctScale(this.model.getStepsArr());
-      this.view.setParameters(this.model.getParameters());
+      this.initData();
     }, 10);
   }
 
@@ -49,46 +38,28 @@ class Controller implements IController {
     this.view.initPanel(this.model.getConfig());
   }
 
-  private mouseMove(options: IEventPosition) {
-    const parameters = this.model.takeParamHandleMove(options);
-    if (parameters !== undefined) {
-      this.view.setParameters(parameters);
+  private initData() {
+    const { trackStart, trackWidth } = this.view.getTrackParameters();
+    this.model.setTrackParameters(trackStart, trackWidth);
+    this.model.init();
+    this.view.initData(this.model.getData());
+  }
+
+  private changeData(setting: ICoordinates) {
+    const key = Object.keys(setting)[0];
+    const value = setting[key];
+    if (key === '0' || key === '1') {
+      this.view.setParameters(this.model.changeParameter(value, Number(key)));
+    } else if (key === 'moveEnd') {
+      this.view.initData(this.model.correctFromToByParams());
+    } else {
+      this.view.setParameters(this.model.changeParameter(value));
     }
   }
 
-  private moveEnd() {
-    this.view.setParameters(this.model.correctFromToByParams());
-  }
-
-  private clickOnScale(value: number) {
-    const parameters = this.model.takeParamScaleClick(value);
-    this.view.setParameters(parameters);
-  }
-
-  private changePositionByTrack(position: number) {
-    const parameters = this.model.takeParamTrackClick(position);
-    this.view.setParameters(parameters);
-  }
-
-  private changeScale(setting: ISettings) {
+  private changeSetting(setting: ISettings) {
     this.model.setSetting(setting);
-    this.view.correctScale(this.model.initStepsArr());
-    this.model.correctFromTo();
-    this.view.setParameters(this.model.initParameters());
-  }
-
-  private changeParameters(setting: ISettings) {
-    this.model.setSetting(setting);
-    this.model.initParameters();
-    this.view.setParameters(this.model.correctFromToByParams());
-  }
-
-  private changeDirection(setting: ISettings) {
-    this.model.setSetting(setting);
-    const { trackStart, trackWidth } = this.view.getTrackParameters();
-    this.model.setTrackParameters(trackStart, trackWidth);
-    this.view.correctScale(this.model.initStepsArr());
-    this.view.setParameters(this.model.initParameters());
+    this.initData();
   }
 }
 

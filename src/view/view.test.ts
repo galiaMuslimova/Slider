@@ -36,24 +36,24 @@ describe('View', () => {
   });
 
   it('проверяет установку vertical true', () => {
-    view.toggleDirection(true);
+    view.initConfig({ vertical: true });
     expect($slider.hasClass('meta-slider_vertical')).to.equal(true);
     expect($slider.hasClass('meta-slider_horizontal')).to.equal(false);
   });
 
   it('проверяет установку vertical false', () => {
-    view.toggleDirection(false);
+    view.initConfig({ vertical: false });
     expect($slider.hasClass('meta-slider_vertical')).to.equal(false);
     expect($slider.hasClass('meta-slider_horizontal')).to.equal(true);
   });
 
   it('проверяет установку range true', () => {
-    view.toggleRange(true);
+    view.initConfig({ range: true });
     expect($slider.find('.js-meta-slider__handle').length).to.equal(2);
   });
 
   it('проверяет установку range false', () => {
-    view.toggleRange(false);
+    view.initConfig({ range: false });
     expect($slider.find('.js-meta-slider__handle').length).to.equal(1);
   });
 });

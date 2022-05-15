@@ -1,4 +1,4 @@
-import { IParameters } from '../../../interfaces/interfaces';
+import { IParameters, ITrackPosition } from '../../../interfaces/interfaces';
 import IObserver from '../../../observer/interface';
 
 interface IHandle {
@@ -11,6 +11,7 @@ interface IHandle {
   getElement(): JQuery<HTMLElement>
   moveHandle(parameters: IParameters): void
   toggleTip(tip: boolean): void
+  setTrackParameters(trackParameters: ITrackPosition): void
 }
 
 export default IHandle;

@@ -44,8 +44,7 @@ describe('Controller', () => {
     const { trackStart, trackWidth } = controller?.view.getTrackParameters();
     controller?.model.setTrackParameters(trackStart, trackWidth);
     controller?.model.init();
-    controller?.view.correctScale(controller?.model.getStepsArr());
-    controller?.view.setParameters(controller?.model.getParameters());
+    controller?.view.initData(controller?.model.getData());
     $slider = $rootEl.find('.js-meta-slider');
     $track = $rootEl.find('.js-meta-slider__track');
     $scale = $rootEl.find('.js-meta-slider__scale');
@@ -83,7 +82,8 @@ describe('Controller', () => {
   });
 
   it('устанавливает stepsArr', () => {
-    const stepsArr = controller?.model.initStepsArr();
+    controller?.model.init();
+    const stepsArr = controller?.model.getData().stepsArr;
     const expectedStepsArr = [
       { value: 0, position: 0 },
       { value: 1, position: 50 },
@@ -103,7 +103,7 @@ describe('Controller', () => {
   it('проверяет change input min', () => {
     const e = jQuery.Event('change', { target: { value: 5 } });
     $panel?.find('input[name="min"]').triggerHandler(e);
-    const stepsArr = controller?.model.getStepsArr();
+    const stepsArr = controller?.model.getData().stepsArr;
     const expectedStepsArr = [
       { value: 5, position: 0 },
       { value: 6, position: 100 },
@@ -118,7 +118,7 @@ describe('Controller', () => {
   it('проверяет change input max', () => {
     const e = jQuery.Event('change', { target: { value: 5 } });
     $panel?.find('input[name="max"]').triggerHandler(e);
-    const stepsArr = controller?.model.getStepsArr();
+    const stepsArr = controller?.model.getData().stepsArr;
     const expectedStepsArr = [
       { value: 0, position: 0 },
       { value: 1, position: 100 },
@@ -133,7 +133,7 @@ describe('Controller', () => {
   it('проверяет change input step', () => {
     const e = jQuery.Event('change', { target: { value: 2 } });
     $panel?.find('input[name="step"]').triggerHandler(e);
-    const stepsArr = controller?.model.getStepsArr();
+    const stepsArr = controller?.model.getData().stepsArr;
     const expectedStepsArr = [
       { value: 0, position: 0 },
       { value: 2, position: 100 },
@@ -149,7 +149,7 @@ describe('Controller', () => {
     const e = jQuery.Event('change', { target: { value: 3 } });
     $panel?.find('input[name="from"]').triggerHandler(e);
     const exceptParameters = [{ value: 3, position: 150 }, { value: 8, position: 400 }];
-    expect(controller?.model.getParameters()).to.deep.equal(exceptParameters);
+    expect(controller?.model.getData().parameters).to.deep.equal(exceptParameters);
   });
 
   it('проверяет change input vertical', () => {
@@ -169,7 +169,8 @@ describe('Controller', () => {
   });
 
   it('проверяет change and correct handles position', () => {
-    const parameters = controller?.model.takeParamHandleMove({ eventPosition: 30, index: 1 });
+    controller?.model.changeParameter({ position: 30 }, 1);
+    const parameters = controller?.model.getData().parameters;
     const exceptParameters = [{ value: 2, position: 100 }, { value: 1, position: 50 }];
     expect(parameters).to.deep.equal(exceptParameters);
     const eStart = jQuery.Event('mousedown');
@@ -180,7 +181,7 @@ describe('Controller', () => {
       $(document).triggerHandler(eEnd);
     }
     const correctParameters = [{ value: 1, position: 50 }, { value: 2, position: 100 }];
-    expect(controller?.model.getParameters()).to.deep.equal(correctParameters);
+    expect(controller?.model.getData().parameters).to.deep.equal(correctParameters);
   });
 
   it('проверяет change handle 1', () => {
@@ -192,7 +193,7 @@ describe('Controller', () => {
       $(document).triggerHandler(eMove);
     }
     const exceptParameters = [{ value: 4, position: 200 }, { value: 8, position: 400 }];
-    expect(controller?.model.getParameters()).to.deep.equal(exceptParameters);
+    expect(controller?.model.getData().parameters).to.deep.equal(exceptParameters);
   });
 
   it('проверяет change handle 2', () => {
@@ -204,6 +205,6 @@ describe('Controller', () => {
       $(document).triggerHandler(eMove);
     }
     const exceptParameters = [{ value: 2, position: 100 }, { value: 4, position: 200 }];
-    expect(controller?.model.getParameters()).to.deep.equal(exceptParameters);
+    expect(controller?.model.getData().parameters).to.deep.equal(exceptParameters);
   });
 });

@@ -1,6 +1,6 @@
 import Observer from '../../../observer/Observer';
 import IObserver from '../../../observer/interface';
-import { IParameters } from '../../../interfaces/interfaces';
+import { IParameters, ITrackPosition } from '../../../interfaces/interfaces';
 import ITip from '../tip/interface';
 import Tip from '../tip/tip';
 import IHandle from './interface';
@@ -16,12 +16,18 @@ class Handle implements IHandle {
 
   private tip: ITip | null;
 
+  private trackStart: number;
+
+  private trackWidth: number;
+
   constructor() {
     this.observer = new Observer();
     this.isTip = true;
     this.vertical = false;
     this.$handle = jQuery('<div>');
     this.tip = new Tip();
+    this.trackStart = 0;
+    this.trackWidth = 500;
     this.bindEventListeners();
   }
 
@@ -41,6 +47,12 @@ class Handle implements IHandle {
 
   public getElement(): JQuery<HTMLElement> {
     return this.$handle;
+  }
+
+  public setTrackParameters(trackParameters: ITrackPosition): void {
+    const { trackStart, trackWidth } = trackParameters;
+    this.trackStart = trackStart;
+    this.trackWidth = trackWidth;
   }
 
   public moveHandle(parameters: IParameters): void {
@@ -79,7 +91,11 @@ class Handle implements IHandle {
 
   private handleMouseMove(event: Event): void {
     const eventPosition = this.vertical ? (<MouseEvent>event).pageY : (<MouseEvent>event).pageX;
-    this.observer.notify('mouseMove', eventPosition);
+    const correctedPosition = Math.round(eventPosition - this.trackStart);
+    const isInScale = (correctedPosition >= 0) && (correctedPosition <= this.trackWidth);
+    if (isInScale) {
+      this.observer.notify('mouseMove', correctedPosition);
+    }
   }
 
   private handleTouchMove(event: Event): void {

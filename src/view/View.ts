@@ -1,5 +1,5 @@
 import {
-  IConfig, IOptions, IParameters, ISettings, ITrackPosition,
+  IConfig, ICoordinates, IData, IOptions, IParameters, ISettings, ITrackPosition,
 } from '../interfaces/interfaces';
 import Panel from '../panel/Panel';
 import IPanel from '../panel/interface';
@@ -38,6 +38,8 @@ class View implements IView {
 
   private panel: IPanel | null;
 
+  private config: IConfig | IOptions;
+
   constructor() {
     this.observer = new Observer();
     this.$slider = jQuery('<div>');
@@ -49,6 +51,7 @@ class View implements IView {
     this.secondHandle = null;
     this.interval = new Interval();
     this.panel = null;
+    this.config = {};
   }
 
   public init($root: JQuery<HTMLElement>) {
@@ -60,14 +63,49 @@ class View implements IView {
     this.track.observer.subscribe({ key: 'trackClick', observer: this.changePositionByTrack.bind(this) });
     this.$trackElement = this.track.getElement();
     this.firstHandle.init(this.$trackElement);
-    this.firstHandle.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this, 0) });
+    this.firstHandle.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this, '0') });
     this.firstHandle.observer.subscribe({ key: 'moveEnd', observer: this.mouseMoveEnd.bind(this) });
     this.interval.init(this.$trackElement);
     this.scale.init(this.$container);
     this.scale.observer.subscribe({ key: 'scaleClick', observer: this.scaleClick.bind(this) });
   }
 
-  public toggleDirection(config: IConfig | IOptions): void {
+  public initConfig(config: IConfig | IOptions): void {
+    this.config = config;
+    this.toggleDirection(config);
+    this.toggleRange(config);
+    this.toggleTip(config);
+  }
+
+  public initPanel(config: IConfig): void {
+    this.panel = new Panel(this.$slider);
+    this.panel.observer.subscribe({ key: 'setting', observer: this.changeSettings.bind(this) });
+    this.panel.initPanel(config);
+    this.panel.initBounds(config);
+  }
+
+  public initData(data: IData) {
+    this.correctScale(data.stepsArr);
+    this.setParameters(data.parameters);
+  }
+
+  public setParameters(parameters: IParameters[]): void {
+    this.firstHandle.moveHandle(parameters[0]);
+    this.secondHandle?.moveHandle(parameters[1]);
+    this.interval.moveInterval(parameters);
+    if (this.panel !== null) {
+      this.panel.initValues(parameters);
+    }
+  }
+
+  public getTrackParameters(): ITrackPosition {
+    const { trackStart, trackWidth } = this.track.getTrackParameters();
+    this.firstHandle.setTrackParameters({ trackStart, trackWidth });
+    this.secondHandle?.setTrackParameters(this.track.getTrackParameters());
+    return { trackStart, trackWidth };
+  }
+
+  private toggleDirection(config: IConfig | IOptions): void {
     const { vertical } = config;
     this.$slider.removeClass(vertical ? 'meta-slider_horizontal' : 'meta-slider_vertical');
     this.$slider.addClass(vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
@@ -80,13 +118,14 @@ class View implements IView {
     this.scale.setVertical(vertical);
   }
 
-  public toggleRange(config: IConfig | IOptions): void {
+  private toggleRange(config: IConfig | IOptions): void {
     const { range } = config;
     if (range && !this.secondHandle) {
       this.secondHandle = new Handle();
       this.secondHandle.init(this.$trackElement);
-      this.secondHandle?.setVertical(this.firstHandle.getVertical());
-      this.secondHandle.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this, 1) });
+      this.secondHandle.setVertical(this.firstHandle.getVertical());
+      this.secondHandle.setTrackParameters(this.track.getTrackParameters());
+      this.secondHandle.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this, '1') });
       this.secondHandle.observer.subscribe({ key: 'moveEnd', observer: this.mouseMoveEnd.bind(this) });
     } else if (!range && this.secondHandle) {
       const handle = this.secondHandle.getElement();
@@ -95,84 +134,42 @@ class View implements IView {
     }
   }
 
-  public toggleTip(config: IConfig | IOptions): void {
+  private toggleTip(config: IConfig | IOptions): void {
     const { tip } = config;
     this.firstHandle.toggleTip(tip);
     this.secondHandle?.toggleTip(tip);
   }
 
-  public correctScale(stepsArr: IParameters[]): void {
-    this.scale.correctScale(stepsArr);
-  }
-
-  public getTrackParameters(): ITrackPosition {
-    return this.track.getTrackParameters();
-  }
-
-  public setParameters(parameters: IParameters[]): void {
-    this.firstHandle.moveHandle(parameters[0]);
-    this.secondHandle?.moveHandle(parameters[1]);
-    this.interval.moveInterval(parameters);
-    if (this.panel !== null) {
-      this.panel.initValues(parameters);
-    }
-  }
-
-  public initPanel(config: IConfig): void {
-    this.panel = new Panel(this.$slider);
-    this.panel.observer.subscribe({ key: 'setting', observer: this.changeSettings.bind(this) });
-    this.panel.initPanel(config);
-    this.panel.initBounds(config);
-  }
-
   private changePositionByTrack(position: number): void {
-    this.observer.notify('trackClick', position);
+    const options: ICoordinates = {};
+    options.track = { position };
+    this.observer.notify('moveHandle', options);
   }
 
-  private scaleClick(currentValue: number): void {
-    this.observer.notify('scaleClick', currentValue);
+  private mouseMove(name: string, eventPosition: number): void {
+    const options: ICoordinates = {};
+    options[name] = { position: eventPosition };
+    this.observer.notify('moveHandle', options);
+  }
+
+  private mouseMoveEnd(): void {
+    this.observer.notify('moveHandle', { moveEnd: {} });
+  }
+
+  private scaleClick(value: number): void {
+    const options: ICoordinates = {};
+    options.scale = { value };
+    this.observer.notify('moveHandle', options);
   }
 
   private changeSettings(setting: ISettings): void {
-    const key = Object.keys(setting)[0];
-    const value = setting[key];
-    switch (key) {
-      case 'min':
-      case 'max':
-      case 'step':
-        this.observer.notify('changeScale', setting);
-        break;
-      case 'from':
-      case 'to':
-        this.observer.notify('changeParameters', setting);
-        break;
-      case 'range':
-        this.toggleRange({ range: Boolean(value) });
-        this.toggleTip({ tip: this.firstHandle.isTip });
-        this.observer.notify('changeParameters', setting);
-        break;
-      case 'tip':
-        this.toggleTip({ tip: Boolean(value) });
-        this.observer.notify('changeParameters', setting);
-        break;
-      case 'vertical': {
-        this.toggleDirection({ vertical: Boolean(value) });
-        this.observer.notify('changeDirection', setting);
-        break;
-      }
-      default: {
-        throw new Error('undefined setting');
-      }
-    }
+    this.config = $.extend({}, this.config, setting);
+    this.initConfig(this.config);
+    this.observer.notify('changeSetting', setting);
   }
 
-  private mouseMove(index: number, eventPosition: number): void {
-    const options = { eventPosition, index };
-    this.observer.notify('mouseMove', options);
-  }
-
-  private mouseMoveEnd(event: Event): void {
-    this.observer.notify('moveEnd', event);
+  private correctScale(stepsArr: IParameters[]): void {
+    this.scale.correctScale(stepsArr);
   }
 }
 

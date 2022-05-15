@@ -29,6 +29,18 @@ interface IParameters {
   position: number
 }
 
+interface ICoordinates {
+  [index: string]: {
+    value?: number,
+    position?: number,
+  };
+}
+
+interface IChanges {
+  value?: number,
+  position?: number
+}
+
 interface IResult {
   stepsArr: IParameters[],
   parameters: IParameters[]
@@ -41,7 +53,14 @@ interface IEventPosition {
 
 interface ITrackPosition {
   trackStart: number,
-  trackWidth: number | undefined
+  trackWidth: number
+}
+
+interface IData {
+  config: IConfig,
+  trackParameters: ITrackPosition;
+  parameters: IParameters[],
+  stepsArr: IParameters[],
 }
 
 export {
@@ -52,4 +71,7 @@ export {
   IResult,
   IEventPosition,
   ITrackPosition,
+  IData,
+  ICoordinates,
+  IChanges,
 };
