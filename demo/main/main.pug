@@ -2,6 +2,10 @@ include ../slider/slider.pug
 
 mixin main()  
   .main.js-main
-    each item in ['first', 'second', 'third']
-      .main__slider.js-main__slider(class=`main__slider_is-${item}`)
-        +slider(item)
+    .main__slider.js-main__slider
+      .main__slider__item.main__slider__item_is-first
+        +slider({type: 'simple'})
+      .main__slider__item.main__slider__item_is-second
+        +slider({type: 'single'})         
+      .main__slider__item.main__slider__item_is-third
+        +slider({type: 'vertical'})

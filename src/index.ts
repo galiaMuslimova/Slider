@@ -1,5 +1,5 @@
 import MetaSlider from './MetaSlider';
-import { IOptions } from './interfaces/interfaces';
+import { IConfig, IOptions } from './interfaces/interfaces';
 import IMetaSlider from './interface';
 
 declare global {
@@ -7,8 +7,8 @@ declare global {
     MetaSlider(opts?: IOptions): JQuery;
     addPanel(): void;
     setOptions(options: IOptions): void;
-    getOptions(): void;
-    getValues(): void;
+    getOptions(): IConfig;
+    getValues(): { from: number, to?: number };
   }
 }
 
@@ -25,6 +25,7 @@ declare global {
       vertical: false,
       tip: true,
       range: true,
+      onChange: (values: number[]) => values,
     }, opts);
 
     function createSlider($element: JQuery<HTMLElement>) {
@@ -52,14 +53,8 @@ declare global {
 
   $.fn.getOptions = function () {
     if (slider) {
-      slider.getOptions();
-    }
-  };
-
-  $.fn.getValues = function () {
-    if (slider) {
-      slider.getValues();
-    }
+      return slider.getOptions();
+    } throw new Error('no slider');
   };
 }(jQuery));
 

@@ -25,13 +25,11 @@ class Controller implements IController {
   }
 
   private init() {
-    this.view.init(this.$root);
+    this.view.initSlider(this.$root, this.initData.bind(this));
     this.view.initConfig(this.model.getConfig());
+    this.view.initElements();
     this.view.observer.subscribe({ key: 'moveHandle', observer: this.changeData.bind(this) });
     this.view.observer.subscribe({ key: 'changeSetting', observer: this.changeSetting.bind(this) });
-    setTimeout(() => {
-      this.initData();
-    }, 10);
   }
 
   public addPanel() {

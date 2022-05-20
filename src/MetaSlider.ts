@@ -7,7 +7,6 @@ class MetaSlider implements IMetaSlider {
 
   constructor(element: JQuery<HTMLElement>, options: IOptions) {
     this.controller = new Controller(element, options);
-    this.init();
   }
 
   public addPanel(): void {
@@ -24,10 +23,6 @@ class MetaSlider implements IMetaSlider {
 
   public getValues(): number[] {
     return this.controller.getValues();
-  }
-
-  private init() {
-    return this;
   }
 }
 

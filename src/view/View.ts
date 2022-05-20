@@ -54,12 +54,17 @@ class View implements IView {
     this.config = {};
   }
 
-  public init($root: JQuery<HTMLElement>) {
+  public initSlider($root: JQuery<HTMLElement>, initData: () => void) {
     this.$slider.addClass('meta-slider js-meta-slider meta-slider_horizontal');
     this.$slider.prependTo($root);
     this.$container.addClass('meta-slider__container meta-slider__container_horizontal');
     this.$container.appendTo(this.$slider);
     this.track.init(this.$container);
+    this.$trackElement = this.track.getElement();
+    this.$trackElement.ready(() => { initData(); });
+  }
+
+  public initElements() {
     this.track.observer.subscribe({ key: 'trackClick', observer: this.changePositionByTrack.bind(this) });
     this.$trackElement = this.track.getElement();
     this.firstHandle.init(this.$trackElement);

@@ -15,14 +15,14 @@ const defaults = {
 };
 
 class Model implements IModel {
-  readonly options: IOptions;
+  private options: IOptions;
 
   private data: IData;
 
   constructor(options: IOptions) {
-    this.options = this.correctOptionsType(options);
+    this.options = options;
     this.data = {
-      config: $.extend({}, defaults, this.options),
+      config: this.correctConfig(this.options),
       trackParameters: { trackStart: 0, trackWidth: 500 },
       stepsArr: [],
       parameters: [],
@@ -40,6 +40,8 @@ class Model implements IModel {
     const newParameter = this.takeClosestParameter(parameter);
     const parameterOrder = order || this.makeOrder(parameter);
     this.data.parameters[parameterOrder] = newParameter;
+    const values = this.getValues();
+    this.options.onChange.call(this, values);
     return this.data.parameters;
   }
 
@@ -67,8 +69,9 @@ class Model implements IModel {
   }
 
   public setOptions(options: IOptions): void {
-    const correctedOptions = this.correctOptionsType(options);
-    this.data.config = $.extend({}, this.data.config, correctedOptions);
+    this.options = $.extend(this.options, options);
+    const correctConfig = this.correctConfig(options);
+    this.data.config = correctConfig;
   }
 
   public getOptions(): IConfig {
@@ -88,10 +91,11 @@ class Model implements IModel {
   }
 
   public getValues(): number[] {
-    const values: number[] = [];
-    this.data.parameters.forEach((item) => {
-      values.push(item.value);
-    });
+    const { parameters } = this.data;
+    const values: number[] = [parameters[0].value];
+    if (this.data.config.range) {
+      values.push(parameters[1].value);
+    }
     return values;
   }
 
@@ -105,17 +109,17 @@ class Model implements IModel {
     return array.indexOf(closest);
   }
 
-  private correctOptionsType(options: IOptions = this.options): IOptions {
-    const correctOptions = { ...options };
-    correctOptions.max = Number.isInteger(options.max) ? Math.round(options.max) : defaults.max;
-    correctOptions.min = Number.isInteger(options.min) ? Math.round(options.min) : defaults.min;
-    correctOptions.step = Number.isInteger(options.step) ? Math.round(options.step) : defaults.step;
-    correctOptions.from = Number.isInteger(options.from) ? Math.round(options.from) : defaults.from;
-    correctOptions.to = Number.isInteger(options.to) ? Math.round(options.to) : defaults.to;
-    correctOptions.vertical = typeof options.vertical === 'boolean' ? options.vertical : defaults.vertical;
-    correctOptions.tip = typeof options.tip === 'boolean' ? options.tip : defaults.tip;
-    correctOptions.range = typeof options.range === 'boolean' ? options.range : defaults.range;
-    return correctOptions;
+  private correctConfig(options: IOptions = this.options): IConfig {
+    const correctConfig = { ...defaults };
+    correctConfig.max = Number.isInteger(options.max) ? Math.round(options.max) : defaults.max;
+    correctConfig.min = Number.isInteger(options.min) ? Math.round(options.min) : defaults.min;
+    correctConfig.step = Number.isInteger(options.step) ? Math.round(options.step) : defaults.step;
+    correctConfig.from = Number.isInteger(options.from) ? Math.round(options.from) : defaults.from;
+    correctConfig.to = Number.isInteger(options.to) ? Math.round(options.to) : defaults.to;
+    correctConfig.vertical = typeof options.vertical === 'boolean' ? options.vertical : defaults.vertical;
+    correctConfig.tip = typeof options.tip === 'boolean' ? options.tip : defaults.tip;
+    correctConfig.range = typeof options.range === 'boolean' ? options.range : defaults.range;
+    return correctConfig;
   }
 
   private correctMinMax(config: IConfig = this.data.config): IConfig {

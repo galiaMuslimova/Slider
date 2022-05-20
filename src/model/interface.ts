@@ -3,8 +3,6 @@ import {
 } from '../interfaces/interfaces';
 
 interface IModel {
-  readonly options: IOptions;
-
   init(): void
   changeParameter(parameter: IChanges, order?: number): IParameters[]
   correctFromToByParams(): IData

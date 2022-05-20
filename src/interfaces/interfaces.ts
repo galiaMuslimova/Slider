@@ -18,6 +18,7 @@ interface IOptions {
   vertical?: any,
   tip?: any,
   range?: any,
+  onChange: () => {}
 }
 
 interface ISettings {

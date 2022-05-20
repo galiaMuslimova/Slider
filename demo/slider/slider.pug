@@ -1,2 +1,6 @@
-mixin slider(item)
-  .slider.js-slider(data-order=item)
+mixin slider({type = 'simple'})
+  .slider.js-slider(data-type=type)
+    .slider__root.js-slider__root
+    .slider__text.js-slider__text
+      p.slider__options.js-slider__options
+      p.slider__values.js-slider__values
