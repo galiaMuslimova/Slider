@@ -1,5 +1,5 @@
 import {
-  IOptions, ISettings, ICoordinates, IConfig,
+  IOptions, ICoordinates, IConfig,
 } from '../interfaces/interfaces';
 import View from '../view/View';
 import IView from '../view/interface';
@@ -29,15 +29,11 @@ class Controller implements IController {
     this.view.initConfig(this.model.getConfig());
     this.view.initElements();
     this.view.observer.subscribe({ key: 'moveHandle', observer: this.changeData.bind(this) });
-    this.view.observer.subscribe({ key: 'changeSetting', observer: this.changeSetting.bind(this) });
-  }
-
-  public addPanel() {
-    this.view.initPanel(this.model.getConfig());
   }
 
   public setOptions(options: IOptions): void {
     this.model.setOptions(options);
+    this.initData();
   }
 
   public getOptions(): IConfig {
@@ -65,11 +61,6 @@ class Controller implements IController {
     } else {
       this.view.setParameters(this.model.changeParameter(value));
     }
-  }
-
-  private changeSetting(setting: ISettings) {
-    this.model.setSetting(setting);
-    this.initData();
   }
 }
 

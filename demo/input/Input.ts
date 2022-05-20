@@ -1,15 +1,13 @@
-import { ISettings } from '../../interfaces/interfaces';
-import Observer from '../../observer/Observer';
-import IObserver from '../../observer/interface';
+import { ISettings } from '../interfaces/interfaces';
+import Observer from '../observer/Observer';
+import IObserver from '../observer/interface';
 import IInput from './interface';
 import './input.scss';
 
 class Input implements IInput {
   public observer: IObserver;
 
-  public $input: JQuery<HTMLElement>;
-
-  readonly $form: JQuery<HTMLElement>;
+  readonly $root: JQuery<HTMLElement>;
 
   private name: string;
 
@@ -17,12 +15,11 @@ class Input implements IInput {
 
   private value: number | boolean;
 
-  constructor(form: JQuery<HTMLElement>, key: string, value: number | boolean) {
-    this.$form = form;
+  constructor($root: JQuery<HTMLElement>, key: string, value: number | boolean) {
+    this.$root = $root;
     this.value = value;
     this.name = key;
     this.type = (typeof value === 'number') ? 'number' : 'checkbox';
-    this.$input = this.createInput();
     this.observer = new Observer();
     this.setValue(this.value);
     this.bindEventListeners();
@@ -43,38 +40,18 @@ class Input implements IInput {
   public setValue(value: number | boolean): void {
     this.value = value;
     if (typeof value === 'number') {
-      this.$input.val(value);
+      this.$root.val(value);
     } else {
-      this.$input.prop('checked', value);
+      this.$root.prop('checked', value);
     }
   }
 
   public setProp(name: string, value: number | boolean): void {
-    this.$input.prop(name, value);
-  }
-
-  private createInput() {
-    const $input = jQuery('<div>', { class: 'input js-input' });
-    $input.appendTo(this.$form);
-    const $label = jQuery('<label>', { class: 'input__label' });
-    $label.appendTo($input);
-    const $text = jQuery('<p>', { class: 'input__text', text: this.name });
-    $text.appendTo($label);
-    const $field = jQuery('<input>', {
-      class: `input__field js-input__field input__field_with-${this.type}`,
-      type: this.type,
-      name: this.name,
-    });
-    $field.appendTo($label);
-    if (this.type === 'checkbox') {
-      const $box = jQuery('<span>', { class: 'input__box' });
-      $box.appendTo($label);
-    }
-    return $field;
+    this.$root.prop(name, value);
   }
 
   private bindEventListeners(): void {
-    this.$input.on('change keyup', this.handleInputValueChange.bind(this));
+    this.$root.on('change keyup', this.handleInputValueChange.bind(this));
   }
 
   private handleInputValueChange(event: Event): void {

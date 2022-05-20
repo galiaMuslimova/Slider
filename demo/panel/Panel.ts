@@ -1,7 +1,7 @@
 import { IConfig, IParameters, ISettings } from '../interfaces/interfaces';
 import Observer from '../observer/Observer';
 import IObserver from '../observer/interface';
-import Input from './input/Input';
+import Input from '../input/Input';
 import IPanel from './interface';
 
 import './panel.scss';
@@ -13,34 +13,19 @@ class Panel implements IPanel {
 
   readonly $root: JQuery<HTMLElement>;
 
+  private options: IConfig;
+
   private $panel: JQuery<HTMLElement>;
 
-  private $form: JQuery<HTMLElement>;
-
-  constructor(root: JQuery<HTMLElement>) {
-    this.$root = root;
+  constructor($root: JQuery<HTMLElement>, options: IConfig) {
+    this.$root = $root;
+    this.options = options;
     this.observer = new Observer();
-    this.$panel = jQuery('<div>');
-    this.$form = jQuery('<form>');
+    this.$panel = this.$root.find('.js-panel');
     this.inputs = new Map<string, Input>();
-    this.init();
+    this.initPanel(this.options);
     this.bindEventListeners();
-  }
-
-  public initPanel(config: IConfig): void {
-    const element = this;
-    const inputs = new Map<string, Input>();
-    Object.entries(config).forEach(([key, value]) => {
-      const input = new Input(this.$form, key, value);
-      input.observer.subscribe({ key: 'setting', observer: element.changeSettings.bind(element) });
-      inputs.set(key, input);
-      if (key === 'step') {
-        input.setProp('min', 0.1);
-        input.setProp('step', 0.1);
-      }
-    });
-    this.inputs = inputs;
-  }
+  }  
 
   public initBounds(config: IConfig): void {
     Object.entries(config).forEach(([key, value]) => {
@@ -91,15 +76,25 @@ class Panel implements IPanel {
     return false;
   }
 
-  private init() {
-    this.$panel.addClass('panel js-panel');
-    this.$form.addClass('panel__form js-panel__form');
-    this.$panel.appendTo(this.$root);
-    this.$form.appendTo(this.$panel);
+  private initPanel(options: IConfig): void {
+    const element = this;
+    const inputs = new Map<string, Input>();
+    Object.entries(options).forEach(([key, value]) => {
+      const searcher = `${key}`;
+      const $inputElement = this.$panel.find(`[name=${searcher}]`)
+      const input = new Input($inputElement, key, value);
+      input.observer.subscribe({ key: 'setting', observer: element.changeSettings.bind(element) });
+      inputs.set(key, input);
+      if (key === 'step') {
+        input.setProp('min', 0.1);
+        input.setProp('step', 0.1);
+      }
+    });
+    this.inputs = inputs;
   }
 
   private bindEventListeners(): void {
-    this.$form.on('submit', Panel.handlePanelFormSubmit);
+    this.$panel.on('submit', Panel.handlePanelFormSubmit);
   }
 
   private changeSettings(setting: ISettings): void {

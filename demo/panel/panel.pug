@@ -1,0 +1,13 @@
+include ../input/input.pug
+
+mixin panel()
+  .panel.js-panel
+    .panel__form
+      +input({type: 'number', name: 'min'})
+      +input({type: 'number', name: 'max'})
+      +input({type: 'number', name: 'step'})
+      +input({type: 'number', name: 'from'})
+      +input({type: 'number', name: 'to'})
+      +input({type: 'checkbox', name: 'vertical'})
+      +input({type: 'checkbox', name: 'range'})
+      +input({type: 'checkbox', name: 'tip'})

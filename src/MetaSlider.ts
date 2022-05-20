@@ -9,10 +9,6 @@ class MetaSlider implements IMetaSlider {
     this.controller = new Controller(element, options);
   }
 
-  public addPanel(): void {
-    this.controller.addPanel();
-  }
-
   public setOptions(options: IOptions): void {
     this.controller.setOptions(options);
   }

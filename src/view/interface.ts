@@ -12,7 +12,6 @@ interface IView {
   initData(data: IData): void
   getTrackParameters(): ITrackPosition
   setParameters(parameters: IParameters[]): void
-  initPanel(config: IConfig): void
 }
 
 export default IView;

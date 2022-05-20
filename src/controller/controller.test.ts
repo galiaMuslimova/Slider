@@ -40,7 +40,6 @@ describe('Controller', () => {
 
   beforeEach(() => {
     controller = new Controller($rootEl, options);
-    controller.addPanel();
     const { trackStart, trackWidth } = controller?.view.getTrackParameters();
     controller?.model.setTrackParameters(trackStart, trackWidth);
     controller?.model.init();

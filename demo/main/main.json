@@ -10,11 +10,11 @@
       "range": true
     },
     "single": {
-      "min": 100000,
-      "max": 210000,
-      "from": 25000,
-      "to": 35750,
-      "step": 3000,
+      "min": 10000,
+      "max": 21000,
+      "from": 2500,
+      "to": 3570,
+      "step": 300,
       "vertical": false,
       "tip": true,
       "range": false

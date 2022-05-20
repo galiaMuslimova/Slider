@@ -4,6 +4,11 @@
   grid-column-gap: 30px;
   margin: 50px; 
 
+  &__container {
+    display: grid;
+    grid-template-rows: min-content min-content;
+  }
+
   &__text {
     display: flex;
     flex-direction: row;

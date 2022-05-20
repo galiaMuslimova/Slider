@@ -27,7 +27,7 @@ describe('View', () => {
     $root.css('width', '450px');
     $root.css('height', '350px');
     view = new View();
-    view.init($root);
+    view.initSlider($root, () => {});
     $slider = $root.find('.js-meta-slider');
   });
 

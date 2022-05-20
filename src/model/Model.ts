@@ -41,7 +41,7 @@ class Model implements IModel {
     const parameterOrder = order || this.makeOrder(parameter);
     this.data.parameters[parameterOrder] = newParameter;
     const values = this.getValues();
-    this.options.onChange.call(this, values);
+    this.options.onChange?.call(this, values);
     return this.data.parameters;
   }
 
@@ -72,6 +72,7 @@ class Model implements IModel {
     this.options = $.extend(this.options, options);
     const correctConfig = this.correctConfig(options);
     this.data.config = correctConfig;
+    this.init();
   }
 
   public getOptions(): IConfig {

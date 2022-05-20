@@ -8,7 +8,6 @@ interface IController {
   readonly options: IOptions;
   readonly $root: JQuery<HTMLElement>;
 
-  addPanel(): void
   setOptions(options: IOptions): void
   getOptions(): IConfig
   getValues(): number[]

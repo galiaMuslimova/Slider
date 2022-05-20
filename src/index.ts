@@ -13,9 +13,9 @@ declare global {
 }
 
 (function ($) {
-  let slider: IMetaSlider | null = null;
-
   $.fn.MetaSlider = function (opts) {
+    let slider: IMetaSlider | null = null;
+
     const config = $.extend({}, {
       min: 10,
       max: 40,
@@ -36,25 +36,17 @@ declare global {
       createSlider($(this));
     });
 
+    $.fn.setOptions = function (options) {
+      slider?.setOptions(options);
+    };
+
+    $.fn.getOptions = function () {
+      if (slider) {
+        return slider.getOptions();
+      } throw new Error('no slider');
+    };
+
     return this;
-  };
-
-  $.fn.addPanel = function () {
-    if (slider) {
-      slider.addPanel();
-    }
-  };
-
-  $.fn.setOptions = function (options) {
-    if (slider) {
-      slider.setOptions(options);
-    }
-  };
-
-  $.fn.getOptions = function () {
-    if (slider) {
-      return slider.getOptions();
-    } throw new Error('no slider');
   };
 }(jQuery));
 

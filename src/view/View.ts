@@ -1,8 +1,6 @@
 import {
-  IConfig, ICoordinates, IData, IOptions, IParameters, ISettings, ITrackPosition,
+  IConfig, ICoordinates, IData, IOptions, IParameters, ITrackPosition,
 } from '../interfaces/interfaces';
-import Panel from '../panel/Panel';
-import IPanel from '../panel/interface';
 import Observer from '../observer/Observer';
 
 import './slider.scss';
@@ -22,8 +20,6 @@ class View implements IView {
 
   private $slider: JQuery<HTMLElement>;
 
-  private $container: JQuery<HTMLElement>;
-
   private $trackElement: JQuery<HTMLElement>;
 
   private track: ITrack;
@@ -36,30 +32,21 @@ class View implements IView {
 
   private scale: IScale;
 
-  private panel: IPanel | null;
-
-  private config: IConfig | IOptions;
-
   constructor() {
     this.observer = new Observer();
     this.$slider = jQuery('<div>');
-    this.$container = jQuery('<div>');
     this.$trackElement = jQuery('<div>');
     this.track = new Track();
     this.scale = new Scale();
     this.firstHandle = new Handle();
     this.secondHandle = null;
     this.interval = new Interval();
-    this.panel = null;
-    this.config = {};
   }
 
   public initSlider($root: JQuery<HTMLElement>, initData: () => void) {
     this.$slider.addClass('meta-slider js-meta-slider meta-slider_horizontal');
     this.$slider.prependTo($root);
-    this.$container.addClass('meta-slider__container meta-slider__container_horizontal');
-    this.$container.appendTo(this.$slider);
-    this.track.init(this.$container);
+    this.track.init(this.$slider);
     this.$trackElement = this.track.getElement();
     this.$trackElement.ready(() => { initData(); });
   }
@@ -71,22 +58,14 @@ class View implements IView {
     this.firstHandle.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this, '0') });
     this.firstHandle.observer.subscribe({ key: 'moveEnd', observer: this.mouseMoveEnd.bind(this) });
     this.interval.init(this.$trackElement);
-    this.scale.init(this.$container);
+    this.scale.init(this.$slider);
     this.scale.observer.subscribe({ key: 'scaleClick', observer: this.scaleClick.bind(this) });
   }
 
   public initConfig(config: IConfig | IOptions): void {
-    this.config = config;
     this.toggleDirection(config);
     this.toggleRange(config);
     this.toggleTip(config);
-  }
-
-  public initPanel(config: IConfig): void {
-    this.panel = new Panel(this.$slider);
-    this.panel.observer.subscribe({ key: 'setting', observer: this.changeSettings.bind(this) });
-    this.panel.initPanel(config);
-    this.panel.initBounds(config);
   }
 
   public initData(data: IData) {
@@ -98,9 +77,6 @@ class View implements IView {
     this.firstHandle.moveHandle(parameters[0]);
     this.secondHandle?.moveHandle(parameters[1]);
     this.interval.moveInterval(parameters);
-    if (this.panel !== null) {
-      this.panel.initValues(parameters);
-    }
   }
 
   public getTrackParameters(): ITrackPosition {
@@ -114,8 +90,6 @@ class View implements IView {
     const { vertical } = config;
     this.$slider.removeClass(vertical ? 'meta-slider_horizontal' : 'meta-slider_vertical');
     this.$slider.addClass(vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
-    this.$container.removeClass(vertical ? 'meta-slider__container_horizontal' : 'meta-slider__container_vertical');
-    this.$container.addClass(vertical ? 'meta-slider__container_vertical' : 'meta-slider__container_horizontal');
     this.track.setVertical(vertical);
     this.firstHandle.setVertical(vertical);
     this.secondHandle?.setVertical(vertical);
@@ -165,12 +139,6 @@ class View implements IView {
     const options: ICoordinates = {};
     options.scale = { value };
     this.observer.notify('moveHandle', options);
-  }
-
-  private changeSettings(setting: ISettings): void {
-    this.config = $.extend({}, this.config, setting);
-    this.initConfig(this.config);
-    this.observer.notify('changeSetting', setting);
   }
 
   private correctScale(stepsArr: IParameters[]): void {
