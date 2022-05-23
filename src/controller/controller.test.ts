@@ -135,7 +135,7 @@ describe('Controller', () => {
       min: -10,
       max: 15,
       step: 2,
-      from: 8,
+      from: 2,
       to: 12,
       range: true,
       tip: true,

@@ -21,7 +21,7 @@ class Panel implements IPanel {
     this.$root = $root;
     this.options = options;
     this.observer = new Observer();
-    this.$panel = this.$root.find('.js-panel');
+    this.$panel = $('<div>');
     this.inputs = new Map<string, Input>();
     this.initPanel(this.options);
     this.initBounds(this.options);
@@ -40,6 +40,7 @@ class Panel implements IPanel {
   }
 
   private initPanel(options: IConfig): void {
+    this.$panel = this.$root.find('.js-panel');
     const element = this;
     const inputs = new Map<string, Input>();
     Object.entries(options).forEach(([key, value]) => {

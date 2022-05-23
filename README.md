@@ -23,15 +23,36 @@ new MetaSlider(element, {
   max: 16
 })
 ```
-чтобы добавить панель конфигурации используйте метод
-`addPanel()`
+чтобы изменить или добавить новые опции используйте метод
+`setOptions()`
+Например, 
 ```
-let element = $(".mySlider")
-let slider = new MetaSlider(element, {
-  min: 5,
-  max: 16
-})
-slider.addPanel();
+slider.setOptions(options)
+```
+или
+```
+slider.setOptions({min: 5, step: 2})
+```
+чтобы получить опции слайдера
+`getOptions()`
+Например, 
+```
+const options = slider.getOptions()
+```
+чтобы получить згачения слайдера
+`getValues()`
+Например, 
+```
+const values = slider.getValues()
+```
+чтобы получить значения в реальном времени добавьте в опции функцию onChange()
+Например, 
+```
+slider.setOptions({
+  onChange: function (values) {        
+    alert(values)
+  }}
+)
 ```
 
 ## Параметры слайдера
