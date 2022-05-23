@@ -112,11 +112,11 @@ class Model implements IModel {
 
   private correctConfig(options: IOptions = this.options): IConfig {
     const correctConfig = { ...defaults };
-    correctConfig.max = Number.isInteger(Number(options.max)) ? options.max : defaults.max;
-    correctConfig.min = Number.isInteger(Number(options.min)) ? options.min : defaults.min;
-    correctConfig.step = Number.isInteger(Number(options.step)) ? options.step : defaults.step;
-    correctConfig.from = Number.isInteger(Number(options.from)) ? options.from : defaults.from;
-    correctConfig.to = Number.isInteger(Number(options.to)) ? options.to : defaults.to;
+    correctConfig.max = Number(options.max) ? options.max : defaults.max;
+    correctConfig.min = Number.isFinite(Number(options.min)) ? options.min : defaults.min;
+    correctConfig.step = Number.isFinite(Number(options.step)) ? options.step : defaults.step;
+    correctConfig.from = Number.isFinite(Number(options.from)) ? options.from : defaults.from;
+    correctConfig.to = Number.isFinite(Number(options.to)) ? options.to : defaults.to;
     correctConfig.vertical = typeof options.vertical === 'boolean' ? options.vertical : defaults.vertical;
     correctConfig.tip = typeof options.tip === 'boolean' ? options.tip : defaults.tip;
     correctConfig.range = typeof options.range === 'boolean' ? options.range : defaults.range;
