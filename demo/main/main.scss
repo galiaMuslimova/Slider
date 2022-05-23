@@ -8,5 +8,11 @@
         width: 70%;
       }
     }
+
+    &__item {
+      &_is-third {
+        width: 85%;
+      }
+    }
   }
 }

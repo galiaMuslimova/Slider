@@ -2,10 +2,9 @@ include ../panel/panel.pug
 
 mixin slider({type = 'simple'})
   .slider.js-slider(data-type=type)
-    .slider__container
-      .slider__root.js-slider__root
+    .slider__container      
       .slider__panel.js-slider__panel 
         +panel()
+      .slider__root.js-slider__root
     .slider__text.js-slider__text
-      p.slider__options.js-slider__options
       p.slider__values.js-slider__values

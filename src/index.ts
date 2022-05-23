@@ -6,6 +6,7 @@ declare global {
   interface JQuery {
     MetaSlider(opts?: IOptions): JQuery;
     addPanel(): void;
+    getSlider(): IMetaSlider
     setOptions(options: IOptions): void;
     getOptions(): IConfig;
     getValues(): { from: number, to?: number };
@@ -35,6 +36,12 @@ declare global {
     this.each(function () {
       createSlider($(this));
     });
+
+    $.fn.getSlider = function () {
+      if (slider) {
+        return slider;
+      } throw new Error('no slider');
+    };
 
     $.fn.setOptions = function (options) {
       slider?.setOptions(options);

@@ -1,26 +1,22 @@
 .slider {
   display: grid;
-  grid-template-columns: 1fr 1fr;  
+  grid-template-columns: 1fr 20%;
   grid-column-gap: 30px;
-  margin: 50px; 
+  margin: 50px;
 
   &__container {
     display: grid;
-    grid-template-rows: min-content min-content;
+    grid-column-gap: 30px;
+    grid-template-columns: 30% 1fr;
   }
 
   &__text {
     display: flex;
     flex-direction: row;
   }
-  
+
   &__root {
     height: 100%;
     width: 100%;
-  }
-
-  &__options {
-    max-width: 100px;
-    white-space: pre;
   }
 }

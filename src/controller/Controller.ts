@@ -33,7 +33,7 @@ class Controller implements IController {
 
   public setOptions(options: IOptions): void {
     this.model.setOptions(options);
-    this.initData();
+    this.init();
   }
 
   public getOptions(): IConfig {

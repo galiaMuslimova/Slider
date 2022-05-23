@@ -15,7 +15,6 @@ class Main implements IMain{
     const options = require('./main.json')[0];
     const $simpleSliderElement = this.$element.find('[data-type="simple"]');
     const simpleSlider = this.initSlider($simpleSliderElement, options['simple']);
-    simpleSlider.showValues();
     const $singleSliderElement = this.$element.find('[data-type="single"]');
     const singleSlider = this.initSlider($singleSliderElement, options['single']);  
     const $verticalSliderElement = this.$element.find('[data-type="vertical"]');

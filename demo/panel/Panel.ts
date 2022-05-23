@@ -24,6 +24,7 @@ class Panel implements IPanel {
     this.$panel = this.$root.find('.js-panel');
     this.inputs = new Map<string, Input>();
     this.initPanel(this.options);
+    this.initSettings(this.options);
     this.bindEventListeners();
   }  
 
@@ -80,9 +81,9 @@ class Panel implements IPanel {
     const element = this;
     const inputs = new Map<string, Input>();
     Object.entries(options).forEach(([key, value]) => {
-      const searcher = `${key}`;
+      const searcher = `${key}`;      
       const $inputElement = this.$panel.find(`[name=${searcher}]`)
-      const input = new Input($inputElement, key, value);
+      const input = new Input($inputElement, key, value);      
       input.observer.subscribe({ key: 'setting', observer: element.changeSettings.bind(element) });
       inputs.set(key, input);
       if (key === 'step') {
@@ -91,6 +92,14 @@ class Panel implements IPanel {
       }
     });
     this.inputs = inputs;
+  }
+
+  private initSettings(options: IConfig) {
+    Object.entries(options).forEach(([key, value]) => {
+      const setting:ISettings = {}
+      setting[key] = value;
+      this.changeSettings(setting);
+    });
   }
 
   private bindEventListeners(): void {
