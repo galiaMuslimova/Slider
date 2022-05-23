@@ -1,6 +1,7 @@
 [
   {
-    "simple": {
+    "name": "simple",
+    "options": {
       "min": 0,
       "max": 60,
       "step": 1,
@@ -8,18 +9,21 @@
       "to": 70,
       "tip": "gg",
       "range": true
-    },
-    "single": {
-      "min": 10000,
-      "max": 21000,
-      "from": 2500,
-      "to": 3570,
+    }
+  },
+  {
+    "name": "single",
+    "options": {
+      "min": 1000,
+      "max": 2100,
+      "from": 1600,
       "step": 300,
-      "vertical": false,
-      "tip": true,
       "range": false
-    },
-    "vertical": {
+    }
+  },
+  {
+    "name": "vertical",
+    "options": {
       "min": 1,
       "max": 1000,
       "from": 100,

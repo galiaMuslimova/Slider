@@ -18,7 +18,7 @@ interface IOptions {
   vertical?: any,
   tip?: any,
   range?: any,
-  onChange?: () => {}
+  onChange?: (values: number[]) => number[]
 }
 
 interface ISettings {
@@ -40,11 +40,6 @@ interface ICoordinates {
 interface IChanges {
   value?: number,
   position?: number
-}
-
-interface IResult {
-  stepsArr: IParameters[],
-  parameters: IParameters[]
 }
 
 interface IEventPosition {
@@ -69,7 +64,6 @@ export {
   IConfig,
   ISettings,
   IParameters,
-  IResult,
   IEventPosition,
   ITrackPosition,
   IData,

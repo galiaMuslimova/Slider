@@ -34,6 +34,7 @@ class Model implements IModel {
     this.data.stepsArr = this.initStepsArr();
     this.data.config = this.correctFromTo();
     this.data.parameters = this.initParameters();
+    this.correctFromToByParams();
   }
 
   public changeParameter(parameter: IChanges, order?: number): IParameters[] {
@@ -70,8 +71,7 @@ class Model implements IModel {
 
   public setOptions(options: IOptions): void {
     this.options = $.extend(this.options, options);
-    const correctConfig = this.correctConfig(options);
-    this.data.config = correctConfig;
+    this.data.config = this.correctConfig(this.options);
     this.init();
   }
 
@@ -112,11 +112,11 @@ class Model implements IModel {
 
   private correctConfig(options: IOptions = this.options): IConfig {
     const correctConfig = { ...defaults };
-    correctConfig.max = Number.isInteger(options.max) ? Math.round(options.max) : defaults.max;
-    correctConfig.min = Number.isInteger(options.min) ? Math.round(options.min) : defaults.min;
-    correctConfig.step = Number.isInteger(options.step) ? Math.round(options.step) : defaults.step;
-    correctConfig.from = Number.isInteger(options.from) ? Math.round(options.from) : defaults.from;
-    correctConfig.to = Number.isInteger(options.to) ? Math.round(options.to) : defaults.to;
+    correctConfig.max = Number(options.max) ? options.max : defaults.max;
+    correctConfig.min = Number(options.min) ? options.min : defaults.min;
+    correctConfig.step = Number(options.step) ? options.step : defaults.step;
+    correctConfig.from = Number(options.from) ? options.from : defaults.from;
+    correctConfig.to = Number(options.to) ? options.to : defaults.to;
     correctConfig.vertical = typeof options.vertical === 'boolean' ? options.vertical : defaults.vertical;
     correctConfig.tip = typeof options.tip === 'boolean' ? options.tip : defaults.tip;
     correctConfig.range = typeof options.range === 'boolean' ? options.range : defaults.range;

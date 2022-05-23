@@ -18,61 +18,15 @@ interface IOptions {
   vertical?: any,
   tip?: any,
   range?: any,
-  onChange?: () => {}
+  onChange?: (values: number[]) => number[]
 }
 
 interface ISettings {
   [index: string]: number | boolean;
 }
 
-interface IParameters {
-  value: number,
-  position: number
-}
-
-interface ICoordinates {
-  [index: string]: {
-    value?: number,
-    position?: number,
-  };
-}
-
-interface IChanges {
-  value?: number,
-  position?: number
-}
-
-interface IResult {
-  stepsArr: IParameters[],
-  parameters: IParameters[]
-}
-
-interface IEventPosition {
-  eventPosition: number,
-  index: number
-}
-
-interface ITrackPosition {
-  trackStart: number,
-  trackWidth: number
-}
-
-interface IData {
-  config: IConfig,
-  trackParameters: ITrackPosition;
-  parameters: IParameters[],
-  stepsArr: IParameters[],
-}
-
 export {
   IOptions,
   IConfig,
   ISettings,
-  IParameters,
-  IResult,
-  IEventPosition,
-  ITrackPosition,
-  IData,
-  ICoordinates,
-  IChanges,
 };

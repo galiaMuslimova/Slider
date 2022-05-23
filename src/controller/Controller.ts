@@ -8,13 +8,13 @@ import IModel from '../model/interface';
 import IController from './interface';
 
 class Controller implements IController {
-  readonly options: IOptions;
-
-  readonly $root: JQuery<HTMLElement>;
-
   public view: IView;
 
   public model: IModel;
+
+  private options: IOptions;
+
+  private $root: JQuery<HTMLElement>;
 
   constructor(root: JQuery<HTMLElement>, options: IOptions) {
     this.options = options;
@@ -22,13 +22,6 @@ class Controller implements IController {
     this.model = new Model(this.options);
     this.view = new View();
     this.init();
-  }
-
-  private init() {
-    this.view.initSlider(this.$root, this.initData.bind(this));
-    this.view.initConfig(this.model.getConfig());
-    this.view.initElements();
-    this.view.observer.subscribe({ key: 'moveHandle', observer: this.changeData.bind(this) });
   }
 
   public setOptions(options: IOptions): void {
@@ -42,6 +35,13 @@ class Controller implements IController {
 
   public getValues(): number[] {
     return this.model.getValues();
+  }
+
+  private init() {
+    this.view.initSlider(this.$root, this.initData.bind(this));
+    this.view.initConfig(this.model.getConfig());
+    this.view.initElements();
+    this.view.observer.subscribe({ key: 'moveHandle', observer: this.changeData.bind(this) });
   }
 
   private initData() {

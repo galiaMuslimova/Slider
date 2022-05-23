@@ -5,8 +5,6 @@ import IView from '../view/interface';
 interface IController {
   view: IView;
   model: IModel;
-  readonly options: IOptions;
-  readonly $root: JQuery<HTMLElement>;
 
   setOptions(options: IOptions): void
   getOptions(): IConfig

@@ -25,10 +25,6 @@ class Input implements IInput {
     this.bindEventListeners();
   }
 
-  public getName(): string {
-    return this.name;
-  }
-
   public getValue(): number | boolean {
     const { value } = this;
     if (typeof value === 'number') {

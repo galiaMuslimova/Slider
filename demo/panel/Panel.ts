@@ -1,4 +1,4 @@
-import { IConfig, IParameters, ISettings } from '../interfaces/interfaces';
+import { IConfig, ISettings } from '../interfaces/interfaces';
 import Observer from '../observer/Observer';
 import IObserver from '../observer/interface';
 import Input from '../input/Input';
@@ -24,53 +24,15 @@ class Panel implements IPanel {
     this.$panel = this.$root.find('.js-panel');
     this.inputs = new Map<string, Input>();
     this.initPanel(this.options);
-    this.initSettings(this.options);
+    this.initBounds(this.options);
     this.bindEventListeners();
   }  
-
-  public initBounds(config: IConfig): void {
-    Object.entries(config).forEach(([key, value]) => {
-      const setting: ISettings = {};
-      setting[key] = value;
-      this.changeBounds(setting);
-    });
-  }
-
-  public initValues(parameters: IParameters[]): void {
-    switch (parameters.length) {
-      case 1: {
-        const max = this.takeInputFromArr('max').getValue();
-        this.takeInputFromArr('from').setValue(parameters[0].value);
-        this.takeInputFromArr('from').setProp('max', max);
-        break;
-      }
-      case 2: {
-        this.takeInputFromArr('from').setValue(parameters[0].value);
-        this.takeInputFromArr('to').setValue(parameters[1].value);
-        this.takeInputFromArr('from').setProp('max', parameters[1].value);
-        this.takeInputFromArr('to').setProp('min', parameters[0].value);
-        break;
-      }
-      default: {
-        throw new Error('undefined values');
-      }
-    }
-  }
 
   public setValue(setting: ISettings): void {
     const key = Object.keys(setting)[0];
     const value = Object.values(setting)[0];
     const input = this.takeInputFromArr(key);
     input.setValue(value);
-  }
-
-  public takeInputFromArr(name: string): Input {
-    const input = this.inputs.get(name);
-    if (input) {
-      return input;
-    }
-
-    throw new Error('no such input');
   }
 
   static handlePanelFormSubmit(): boolean {
@@ -81,9 +43,9 @@ class Panel implements IPanel {
     const element = this;
     const inputs = new Map<string, Input>();
     Object.entries(options).forEach(([key, value]) => {
-      const searcher = `${key}`;      
+      const searcher = `${key}`;
       const $inputElement = this.$panel.find(`[name=${searcher}]`)
-      const input = new Input($inputElement, key, value);      
+      const input = new Input($inputElement, key, value);
       input.observer.subscribe({ key: 'setting', observer: element.changeSettings.bind(element) });
       inputs.set(key, input);
       if (key === 'step') {
@@ -94,16 +56,25 @@ class Panel implements IPanel {
     this.inputs = inputs;
   }
 
-  private initSettings(options: IConfig) {
-    Object.entries(options).forEach(([key, value]) => {
-      const setting:ISettings = {}
+  private initBounds(config: IConfig): void {
+    Object.entries(config).forEach(([key, value]) => {
+      const setting: ISettings = {};
       setting[key] = value;
-      this.changeSettings(setting);
+      this.changeBounds(setting);
     });
   }
 
   private bindEventListeners(): void {
     this.$panel.on('submit', Panel.handlePanelFormSubmit);
+  }
+
+  private takeInputFromArr(name: string): Input {
+    const input = this.inputs.get(name);
+    if (input) {
+      return input;
+    }
+
+    throw new Error('no such input');
   }
 
   private changeSettings(setting: ISettings): void {

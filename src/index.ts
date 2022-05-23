@@ -9,7 +9,7 @@ declare global {
     getSlider(): IMetaSlider
     setOptions(options: IOptions): void;
     getOptions(): IConfig;
-    getValues(): { from: number, to?: number };
+    getValues(): number[];
   }
 }
 
@@ -50,6 +50,12 @@ declare global {
     $.fn.getOptions = function () {
       if (slider) {
         return slider.getOptions();
+      } throw new Error('no slider');
+    };
+
+    $.fn.getValues = function () {
+      if (slider) {
+        return slider.getValues();
       } throw new Error('no slider');
     };
 

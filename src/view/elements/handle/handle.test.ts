@@ -53,4 +53,8 @@ describe('Handle', () => {
     const $tip = handleClass.getElement().find('.js-meta-slider__tip');
     expect($tip.length).to.equal(1);
   });
+
+  it('проверить handleDragStart', () => {
+    expect(Handle.handleDragStart()).to.equal(false);
+  });
 });

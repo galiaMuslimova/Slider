@@ -23,7 +23,6 @@ describe('Controller', () => {
   let $scale: JQuery<HTMLElement> | null;
   let $track: JQuery<HTMLElement> | null;
   let $handle: JQuery<HTMLElement> | null;
-  let $panel: JQuery<HTMLElement> | null;
 
   before(() => {
     $rootEl = $(document).find('.js-body__slider');
@@ -48,20 +47,11 @@ describe('Controller', () => {
     $track = $rootEl.find('.js-meta-slider__track');
     $scale = $rootEl.find('.js-meta-slider__scale');
     $handle = $rootEl.find('.js-meta-slider__handle');
-    $panel = $rootEl.find('.js-panel');
   });
 
   afterEach(() => {
     controller = null;
     $rootEl.empty();
-  });
-
-  it('устанавливает опции', () => {
-    expect(controller?.options).to.deep.equal(options);
-  });
-
-  it('устанавливает корневой элемент', () => {
-    expect(controller?.$root).to.deep.equal($rootEl);
   });
 
   it('устанавливает slider', () => {
@@ -74,10 +64,6 @@ describe('Controller', () => {
 
   it('устанавливает handle', () => {
     expect($handle?.length).to.equal(2);
-  });
-
-  it('устанавливает panel', () => {
-    expect($panel?.length).to.equal(1);
   });
 
   it('устанавливает stepsArr', () => {
@@ -97,74 +83,6 @@ describe('Controller', () => {
       { value: 10, position: 500 },
     ];
     expect(stepsArr).to.deep.equal(expectedStepsArr);
-  });
-
-  it('проверяет change input min', () => {
-    const e = jQuery.Event('change', { target: { value: 5 } });
-    $panel?.find('input[name="min"]').triggerHandler(e);
-    const stepsArr = controller?.model.getData().stepsArr;
-    const expectedStepsArr = [
-      { value: 5, position: 0 },
-      { value: 6, position: 100 },
-      { value: 7, position: 200 },
-      { value: 8, position: 300 },
-      { value: 9, position: 400 },
-      { value: 10, position: 500 },
-    ];
-    expect(stepsArr).to.deep.equal(expectedStepsArr);
-  });
-
-  it('проверяет change input max', () => {
-    const e = jQuery.Event('change', { target: { value: 5 } });
-    $panel?.find('input[name="max"]').triggerHandler(e);
-    const stepsArr = controller?.model.getData().stepsArr;
-    const expectedStepsArr = [
-      { value: 0, position: 0 },
-      { value: 1, position: 100 },
-      { value: 2, position: 200 },
-      { value: 3, position: 300 },
-      { value: 4, position: 400 },
-      { value: 5, position: 500 },
-    ];
-    expect(stepsArr).to.deep.equal(expectedStepsArr);
-  });
-
-  it('проверяет change input step', () => {
-    const e = jQuery.Event('change', { target: { value: 2 } });
-    $panel?.find('input[name="step"]').triggerHandler(e);
-    const stepsArr = controller?.model.getData().stepsArr;
-    const expectedStepsArr = [
-      { value: 0, position: 0 },
-      { value: 2, position: 100 },
-      { value: 4, position: 200 },
-      { value: 6, position: 300 },
-      { value: 8, position: 400 },
-      { value: 10, position: 500 },
-    ];
-    expect(stepsArr).to.deep.equal(expectedStepsArr);
-  });
-
-  it('проверяет change input from', () => {
-    const e = jQuery.Event('change', { target: { value: 3 } });
-    $panel?.find('input[name="from"]').triggerHandler(e);
-    const exceptParameters = [{ value: 3, position: 150 }, { value: 8, position: 400 }];
-    expect(controller?.model.getData().parameters).to.deep.equal(exceptParameters);
-  });
-
-  it('проверяет change input vertical', () => {
-    const e = jQuery.Event('change', { target: { checked: true } });
-    $panel?.find('input[name="vertical"]').triggerHandler(e);
-    const handle1 = $slider?.find('.js-meta-slider__handle')[0];
-    const handle2 = $slider?.find('.js-meta-slider__handle')[1];
-
-    if (handle1) {
-      expect($(handle1).css('top')).to.equal('90px');
-      expect($(handle1).css('left')).to.equal('-5px');
-    }
-    if (handle2) {
-      expect($(handle2).css('top')).to.equal('390px');
-      expect($(handle2).css('left')).to.equal('-5px');
-    }
   });
 
   it('проверяет change and correct handles position', () => {
@@ -190,9 +108,8 @@ describe('Controller', () => {
     if (handle1) {
       $(handle1).triggerHandler(eStart);
       $(document).triggerHandler(eMove);
+      expect($(handle1).css('left')).to.deep.equal('190px');
     }
-    const exceptParameters = [{ value: 4, position: 200 }, { value: 8, position: 400 }];
-    expect(controller?.model.getData().parameters).to.deep.equal(exceptParameters);
   });
 
   it('проверяет change handle 2', () => {
@@ -202,8 +119,28 @@ describe('Controller', () => {
     if (handle2) {
       $(handle2).triggerHandler(eStart);
       $(document).triggerHandler(eMove);
+      expect($(handle2).css('left')).to.deep.equal('190px');
     }
-    const exceptParameters = [{ value: 2, position: 100 }, { value: 4, position: 200 }];
-    expect(controller?.model.getData().parameters).to.deep.equal(exceptParameters);
+  });
+
+  it('проверяет получение values', () => {
+    expect(controller?.getValues()).to.deep.equal([2, 8]);
+  });
+
+  it('проверяет опции', () => {
+    controller?.setOptions({
+      min: -10, max: 15, step: 2, to: 12,
+    });
+    const expectedOptions = {
+      min: -10,
+      max: 15,
+      step: 2,
+      from: 8,
+      to: 12,
+      range: true,
+      tip: true,
+      vertical: false,
+    };
+    expect(controller?.getOptions()).to.deep.equal(expectedOptions);
   });
 });
