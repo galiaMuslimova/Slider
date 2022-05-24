@@ -47,25 +47,17 @@ class View implements IView {
     this.$slider.addClass('meta-slider js-meta-slider meta-slider_horizontal');
     this.$slider.prependTo($root);
     this.track.init(this.$slider);
-    this.initConfig(config);
-    this.initElements();
-  }
-
-  private initElements(): void {
-    this.track.observer.subscribe({ key: 'trackClick', observer: this.changePositionByTrack.bind(this) });
     this.$trackElement = this.track.getElement();
+    this.toggleDirection(config);
+    this.toggleRange(config);
+    this.toggleTip(config);
+    this.track.observer.subscribe({ key: 'trackClick', observer: this.trackClick.bind(this) });
     this.firstHandle.init(this.$trackElement);
-    this.firstHandle.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this, '0') });
+    this.firstHandle.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this, 0) });
     this.firstHandle.observer.subscribe({ key: 'moveEnd', observer: this.mouseMoveEnd.bind(this) });
     this.interval.init(this.$trackElement);
     this.scale.init(this.$slider);
     this.scale.observer.subscribe({ key: 'scaleClick', observer: this.scaleClick.bind(this) });
-  }
-
-  private initConfig(config: IConfig): void {
-    this.toggleDirection(config);
-    this.toggleRange(config);
-    this.toggleTip(config);
   }
 
   public initData(data: IData): void {
@@ -97,14 +89,14 @@ class View implements IView {
     this.scale.setVertical(vertical);
   }
 
-  private toggleRange(config: IConfig | IOptions): void {
-    const { range } = config;
+  private toggleRange(config: IConfig): void {
+    const { range, vertical } = config;
     if (range && !this.secondHandle) {
       this.secondHandle = new Handle();
       this.secondHandle.init(this.$trackElement);
-      this.secondHandle.setVertical(this.firstHandle.getVertical());
+      this.secondHandle.setVertical(vertical);
       this.secondHandle.setTrackParameters(this.track.getTrackParameters());
-      this.secondHandle.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this, '1') });
+      this.secondHandle.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this, 1) });
       this.secondHandle.observer.subscribe({ key: 'moveEnd', observer: this.mouseMoveEnd.bind(this) });
     } else if (!range && this.secondHandle) {
       const handle = this.secondHandle.getElement();
@@ -119,29 +111,27 @@ class View implements IView {
     this.secondHandle?.toggleTip(tip);
   }
 
-  private changePositionByTrack(position: number): void {
+  private trackClick(position: number): void {
     const options: ICoordinates = {
-      key: 'track',
-      value: position,
+      position,
     };
     this.observer.notify('moveHandle', options);
   }
 
-  private mouseMove(name: string, eventPosition: number): void {
+  private mouseMove(key: number, eventPosition: number): void {
     const options: ICoordinates = {
-      key: name,
-      value: eventPosition,
+      key,
+      position: eventPosition,
     };
     this.observer.notify('moveHandle', options);
   }
 
   private mouseMoveEnd(): void {
-    this.observer.notify('moveEnd', 0);
+    this.observer.notify('moveEnd', null);
   }
 
   private scaleClick(value: number): void {
     const options: ICoordinates = {
-      key: 'scale',
       value,
     };
     this.observer.notify('moveHandle', options);

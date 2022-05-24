@@ -21,14 +21,24 @@ describe('View', () => {
   let $root: JQuery<HTMLElement>;
   let $slider: JQuery<HTMLElement>;
   let view: IView;
+  let config: IConfig;
 
   before(() => {
+    config = {
+      min: 0,
+      max: 10,
+      step: 1,
+      from: 2,
+      to: 8,
+      range: true,
+      vertical: true,
+      tip: true,
+    };
     $root = $(document).find('.testSlider');
     $root.css('width', '450px');
     $root.css('height', '350px');
     view = new View();
-    view.initSlider($root, () => {});
-    view.initElements();
+    view.initSlider($root, config);
     $slider = $root.find('.js-meta-slider');
   });
 
@@ -37,24 +47,24 @@ describe('View', () => {
   });
 
   it('проверяет установку vertical true', () => {
-    view.initConfig({ vertical: true });
+    view.initSlider($root, config);
     expect($slider.hasClass('meta-slider_vertical')).to.equal(true);
     expect($slider.hasClass('meta-slider_horizontal')).to.equal(false);
   });
 
   it('проверяет установку vertical false', () => {
-    view.initConfig({ vertical: false });
+    view.initSlider($root, $.extend(config, { vertical: false }));
     expect($slider.hasClass('meta-slider_vertical')).to.equal(false);
     expect($slider.hasClass('meta-slider_horizontal')).to.equal(true);
   });
 
   it('проверяет установку range true', () => {
-    view.initConfig({ range: true });
+    view.initSlider($root, $.extend(config, { range: true }));
     expect($slider.find('.js-meta-slider__handle').length).to.equal(2);
   });
 
   it('проверяет установку range false', () => {
-    view.initConfig({ range: false });
+    view.initSlider($root, $.extend(config, { range: false }));
     expect($slider.find('.js-meta-slider__handle').length).to.equal(1);
   });
 });

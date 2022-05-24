@@ -42,7 +42,7 @@ class Model implements IModel {
 
   public changeParameter(parameter: ICoordinates): IParameters[] {
     const newParameter = this.takeClosestParameter(parameter);
-    const parameterOrder = Number(parameter.key) || this.makeOrder(parameter);
+    const parameterOrder = parameter.key || this.makeOrder(parameter);
     this.data.parameters[parameterOrder] = newParameter;
     const values = this.getValues();
     this.options.onChange?.call(this, values);

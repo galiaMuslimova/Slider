@@ -39,9 +39,7 @@ describe('Controller', () => {
 
   beforeEach(() => {
     controller = new Controller($rootEl, options);
-    const { trackStart, trackWidth } = controller?.view.getTrackParameters();
-    controller?.model.setTrackParameters(trackStart, trackWidth);
-    controller?.model.init();
+    controller?.model.init(controller?.view.getTrackParameters());
     controller?.view.initData(controller?.model.getData());
     $slider = $rootEl.find('.js-meta-slider');
     $track = $rootEl.find('.js-meta-slider__track');
@@ -67,7 +65,6 @@ describe('Controller', () => {
   });
 
   it('устанавливает stepsArr', () => {
-    controller?.model.init();
     const stepsArr = controller?.model.getData().stepsArr;
     const expectedStepsArr = [
       { value: 0, position: 0 },
@@ -86,7 +83,7 @@ describe('Controller', () => {
   });
 
   it('проверяет change and correct handles position', () => {
-    controller?.model.changeParameter({ position: 30 }, 1);
+    controller?.model.changeParameter({ key: 1, position: 30 });
     const parameters = controller?.model.getData().parameters;
     const exceptParameters = [{ value: 2, position: 100 }, { value: 1, position: 50 }];
     expect(parameters).to.deep.equal(exceptParameters);

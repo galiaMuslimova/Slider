@@ -46,7 +46,7 @@ describe('Model', () => {
       min: 35,
       max: 25,
     });
-    model.init();
+    model.init({ trackStart: 0, trackWidth: 500 });
     expect(model.getConfig().min).to.equal(25);
     expect(model.getConfig().max).to.equal(35);
   });
@@ -58,8 +58,7 @@ describe('Model', () => {
       step: 5,
       from: 5,
     });
-    model.setTrackParameters(0, 500);
-    model.init();
+    model.init({ trackStart: 0, trackWidth: 500 });
     expect(model.getConfig().from).to.equal(10);
   });
 
@@ -71,8 +70,7 @@ describe('Model', () => {
       from: 1,
       to: 125,
     });
-    model.setTrackParameters(0, 500);
-    model.init();
+    model.init({ trackStart: 0, trackWidth: 500 });
     expect(model.getConfig().to).to.equal(25);
   });
 
@@ -89,7 +87,7 @@ describe('Model', () => {
       { value: 4, position: 300 },
       { value: 5, position: 400 },
       { value: 6, position: 500 }];
-    model.init();
+    model.init({ trackStart: 0, trackWidth: 500 });
     expect(model.getData().stepsArr).to.deep.equal(stepsArr);
   });
 
@@ -101,8 +99,7 @@ describe('Model', () => {
       from: 3,
       to: 10,
     });
-    model.setTrackParameters(0, 500);
-    model.init();
+    model.init({ trackStart: 0, trackWidth: 500 });
     const parameters = [{ value: 3, position: 150 }, { value: 10, position: 500 }];
     expect(model.getData().parameters).to.deep.equal(parameters);
   });
@@ -115,8 +112,7 @@ describe('Model', () => {
       from: -8,
       to: 19,
     });
-    model.setTrackParameters(0, 500);
-    model.init();
+    model.init({ trackStart: 0, trackWidth: 500 });
     const parameters = [{ value: 0, position: 0 }, { value: 10, position: 500 }];
     expect(model.getData().parameters).to.deep.equal(parameters);
   });
@@ -129,11 +125,10 @@ describe('Model', () => {
       from: 100,
       to: 400,
     });
-    const options = { position: 130 };
+    const options = { key: 0, position: 130 };
     const parameters = [{ value: 150, position: 150 }, { value: 400, position: 400 }];
-    model.setTrackParameters(0, 500);
-    model.init();
-    expect(model.changeParameter(options, 0)).to.deep.equal(parameters);
+    model.init({ trackStart: 0, trackWidth: 500 });
+    expect(model.changeParameter(options)).to.deep.equal(parameters);
   });
 
   it('получить параметры при движении handle 2', () => {
@@ -144,11 +139,10 @@ describe('Model', () => {
       from: 10,
       to: 40,
     });
-    const options = { position: 130 };
+    const options = { key: 1, position: 130 };
     const parameters = [{ value: 10, position: 100 }, { value: 15, position: 150 }];
-    model.setTrackParameters(0, 500);
-    model.init();
-    expect(model.changeParameter(options, 1)).to.deep.equal(parameters);
+    model.init({ trackStart: 0, trackWidth: 500 });
+    expect(model.changeParameter(options)).to.deep.equal(parameters);
   });
 
   it('получить параметры при клике на шкалу, меняется handle 2', () => {
@@ -160,8 +154,7 @@ describe('Model', () => {
       to: 40,
     });
     const parameters = [{ value: 10, position: 100 }, { value: 45, position: 450 }];
-    model.setTrackParameters(0, 500);
-    model.init();
+    model.init({ trackStart: 0, trackWidth: 500 });
     expect(model.changeParameter({ value: 45 })).to.deep.equal(parameters);
   });
 
@@ -174,8 +167,7 @@ describe('Model', () => {
       to: 40,
     });
     const parameters = [{ value: 15, position: 150 }, { value: 40, position: 400 }];
-    model.setTrackParameters(0, 500);
-    model.init();
+    model.init({ trackStart: 0, trackWidth: 500 });
     expect(model.changeParameter({ value: 15 })).to.deep.equal(parameters);
   });
 
@@ -189,8 +181,7 @@ describe('Model', () => {
       range: false,
     });
     const parameters = [{ value: 5, position: 50 }];
-    model.setTrackParameters(0, 500);
-    model.init();
+    model.init({ trackStart: 0, trackWidth: 500 });
     expect(model.changeParameter({ value: 5 })).to.deep.equal(parameters);
   });
 
@@ -204,8 +195,7 @@ describe('Model', () => {
       range: false,
     });
     const parameters = [{ value: 15, position: 150 }];
-    model.setTrackParameters(0, 500);
-    model.init();
+    model.init({ trackStart: 0, trackWidth: 500 });
     expect(model.changeParameter({ position: 150 })).to.deep.equal(parameters);
   });
 
@@ -219,8 +209,7 @@ describe('Model', () => {
       range: true,
     });
     const parameters = [{ value: 5, position: 50 }, { value: 35, position: 350 }];
-    model.setTrackParameters(0, 500);
-    model.init();
+    model.init({ trackStart: 0, trackWidth: 500 });
     expect(model.changeParameter({ position: 350 })).to.deep.equal(parameters);
   });
 

@@ -31,7 +31,7 @@ interface IParameters {
 }
 
 interface ICoordinates {
-  key: string,
+  key?: number,
   value?: number,
   position?: number
 }
