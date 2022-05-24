@@ -1,10 +1,10 @@
 import {
-  IParameters, IEventPosition, IOptions, IConfig, ISettings, IData, ICoordinates, IChanges,
+  IParameters, ITrackPosition, IOptions, IConfig, ISettings, IData, ICoordinates,
 } from '../interfaces/interfaces';
 
 interface IModel {
-  init(): void
-  changeParameter(parameter: IChanges, order?: number): IParameters[]
+  init(trackParameters: ITrackPosition): void
+  changeParameter(parameter: ICoordinates, order?: number): IParameters[]
   correctFromToByParams(): IData
   setOptions(options: IOptions): void
   getOptions(): IConfig
@@ -12,7 +12,6 @@ interface IModel {
   getConfig(): IConfig
   getValues(): number[]
   setSetting(setting: ISettings): void
-  setTrackParameters(trackStart: number, trackWidth: number | undefined): void
 }
 
 export default IModel;

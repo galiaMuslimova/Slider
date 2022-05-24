@@ -38,29 +38,21 @@ class Controller implements IController {
   }
 
   private init() {
-    this.view.initSlider(this.$root, this.initData.bind(this));
-    this.view.initConfig(this.model.getConfig());
-    this.view.initElements();
-    this.view.observer.subscribe({ key: 'moveHandle', observer: this.changeData.bind(this) });
+    this.view.initSlider(this.$root, this.model.getConfig());
+    this.view.$slider.ready(() => {
+      this.model.init(this.view.getTrackParameters());
+      this.view.initData(this.model.getData());
+    });
+    this.view.observer.subscribe({ key: 'moveHandle', observer: this.changeParameters.bind(this) });
+    this.view.observer.subscribe({ key: 'moveEnd', observer: this.correctParameters.bind(this) });
   }
 
-  private initData() {
-    const { trackStart, trackWidth } = this.view.getTrackParameters();
-    this.model.setTrackParameters(trackStart, trackWidth);
-    this.model.init();
-    this.view.initData(this.model.getData());
+  private changeParameters(setting: ICoordinates) {
+    this.view.setParameters(this.model.changeParameter(setting));
   }
 
-  private changeData(setting: ICoordinates) {
-    const key = Object.keys(setting)[0];
-    const value = setting[key];
-    if (key === '0' || key === '1') {
-      this.view.setParameters(this.model.changeParameter(value, Number(key)));
-    } else if (key === 'moveEnd') {
-      this.view.initData(this.model.correctFromToByParams());
-    } else {
-      this.view.setParameters(this.model.changeParameter(value));
-    }
+  private correctParameters() {
+    this.view.initData(this.model.correctFromToByParams());
   }
 }
 

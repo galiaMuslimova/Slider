@@ -10,14 +10,14 @@ interface IConfig {
 }
 
 interface IOptions {
-  min?: any,
-  max?: any,
-  step?: any,
-  from?: any,
-  to?: any,
-  vertical?: any,
-  tip?: any,
-  range?: any,
+  min?: number,
+  max?: number,
+  step?: number,
+  from?: number,
+  to?: number,
+  vertical?: boolean,
+  tip?: boolean,
+  range?: boolean,
   onChange?: (values: number[]) => number[]
 }
 
@@ -31,13 +31,7 @@ interface IParameters {
 }
 
 interface ICoordinates {
-  [index: string]: {
-    value?: number,
-    position?: number,
-  };
-}
-
-interface IChanges {
+  key: string,
   value?: number,
   position?: number
 }
@@ -68,5 +62,4 @@ export {
   ITrackPosition,
   IData,
   ICoordinates,
-  IChanges,
 };

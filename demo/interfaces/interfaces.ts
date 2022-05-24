@@ -10,14 +10,14 @@ interface IConfig {
 }
 
 interface IOptions {
-  min?: any,
-  max?: any,
-  step?: any,
-  from?: any,
-  to?: any,
-  vertical?: any,
-  tip?: any,
-  range?: any,
+  min?: number | boolean | string | null,
+  max?: number | boolean | string | null,
+  step?: number | boolean | string | null,
+  from?: number | boolean | string | null,
+  to?: number | boolean | string | null,
+  vertical?: number | boolean | string | null,
+  tip?: number | boolean | string | null,
+  range?: number | boolean | string | null,
   onChange?: (values: number[]) => number[]
 }
 

@@ -5,10 +5,9 @@ import IObserver from '../observer/interface';
 
 interface IView {
   observer: IObserver
+  $slider: JQuery<HTMLElement>
 
-  initSlider($root: JQuery<HTMLElement>, initData: () => void): void
-  initElements(): void
-  initConfig(config: IConfig | IOptions): void
+  initSlider($root: JQuery<HTMLElement>, config: IConfig): void
   initData(data: IData): void
   getTrackParameters(): ITrackPosition
   setParameters(parameters: IParameters[]): void

@@ -18,7 +18,7 @@ import IInterval from './elements/interval/interface';
 class View implements IView {
   public observer: Observer;
 
-  private $slider: JQuery<HTMLElement>;
+  public $slider: JQuery<HTMLElement>;
 
   private $trackElement: JQuery<HTMLElement>;
 
@@ -43,15 +43,15 @@ class View implements IView {
     this.interval = new Interval();
   }
 
-  public initSlider($root: JQuery<HTMLElement>, initData: () => void) {
+  public initSlider($root: JQuery<HTMLElement>, config: IConfig): void {
     this.$slider.addClass('meta-slider js-meta-slider meta-slider_horizontal');
     this.$slider.prependTo($root);
     this.track.init(this.$slider);
-    this.$trackElement = this.track.getElement();
-    this.$trackElement.ready(() => { initData(); });
+    this.initConfig(config);
+    this.initElements();
   }
 
-  public initElements() {
+  private initElements(): void {
     this.track.observer.subscribe({ key: 'trackClick', observer: this.changePositionByTrack.bind(this) });
     this.$trackElement = this.track.getElement();
     this.firstHandle.init(this.$trackElement);
@@ -62,13 +62,13 @@ class View implements IView {
     this.scale.observer.subscribe({ key: 'scaleClick', observer: this.scaleClick.bind(this) });
   }
 
-  public initConfig(config: IConfig | IOptions): void {
+  private initConfig(config: IConfig): void {
     this.toggleDirection(config);
     this.toggleRange(config);
     this.toggleTip(config);
   }
 
-  public initData(data: IData) {
+  public initData(data: IData): void {
     this.correctScale(data.stepsArr);
     this.setParameters(data.parameters);
   }
@@ -86,7 +86,7 @@ class View implements IView {
     return { trackStart, trackWidth };
   }
 
-  private toggleDirection(config: IConfig | IOptions): void {
+  private toggleDirection(config: IConfig): void {
     const { vertical } = config;
     this.$slider.removeClass(vertical ? 'meta-slider_horizontal' : 'meta-slider_vertical');
     this.$slider.addClass(vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
@@ -113,31 +113,37 @@ class View implements IView {
     }
   }
 
-  private toggleTip(config: IConfig | IOptions): void {
+  private toggleTip(config: IConfig): void {
     const { tip } = config;
     this.firstHandle.toggleTip(tip);
     this.secondHandle?.toggleTip(tip);
   }
 
   private changePositionByTrack(position: number): void {
-    const options: ICoordinates = {};
-    options.track = { position };
+    const options: ICoordinates = {
+      key: 'track',
+      value: position,
+    };
     this.observer.notify('moveHandle', options);
   }
 
   private mouseMove(name: string, eventPosition: number): void {
-    const options: ICoordinates = {};
-    options[name] = { position: eventPosition };
+    const options: ICoordinates = {
+      key: name,
+      value: eventPosition,
+    };
     this.observer.notify('moveHandle', options);
   }
 
   private mouseMoveEnd(): void {
-    this.observer.notify('moveHandle', { moveEnd: {} });
+    this.observer.notify('moveEnd', 0);
   }
 
   private scaleClick(value: number): void {
-    const options: ICoordinates = {};
-    options.scale = { value };
+    const options: ICoordinates = {
+      key: 'scale',
+      value,
+    };
     this.observer.notify('moveHandle', options);
   }
 
