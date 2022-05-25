@@ -1,6 +1,6 @@
 interface ISlider {
 
-  showValues(): void
+  displayValues(): void
 }
 
 export default ISlider;

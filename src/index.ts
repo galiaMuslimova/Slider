@@ -7,7 +7,7 @@ declare global {
     MetaSlider(opts?: IOptions): JQuery;
     addPanel(): void;
     getSlider(): IMetaSlider
-    setOptions(options: IOptions): void;
+    setOptions(options: IOptions): IMetaSlider;
     getOptions(): IConfig;
     getValues(): number[];
   }
@@ -33,27 +33,30 @@ declare global {
       slider = new MetaSlider($element, config);
     }
 
-    this.each(function () {
+    this.each(() => {
       createSlider($(this));
     });
 
-    $.fn.getSlider = function () {
+    $.fn.getSlider = () => {
       if (slider) {
         return slider;
       } throw new Error('no slider');
     };
 
-    $.fn.setOptions = function (options) {
-      slider?.setOptions(options);
+    $.fn.setOptions = (options) => {
+      if (slider) {
+        slider.setOptions(options);
+        return slider;
+      } throw new Error('no slider');
     };
 
-    $.fn.getOptions = function () {
+    $.fn.getOptions = () => {
       if (slider) {
         return slider.getOptions();
       } throw new Error('no slider');
     };
 
-    $.fn.getValues = function () {
+    $.fn.getValues = () => {
       if (slider) {
         return slider.getValues();
       } throw new Error('no slider');

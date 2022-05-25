@@ -3,9 +3,9 @@ include ../slider/slider.pug
 mixin main()  
   .main.js-main
     .main__slider.js-main__slider
-      .main__slider__item.main__slider__item_is-first
-        +slider({type: 'simple'})
-      .main__slider__item.main__slider__item_is-second
-        +slider({type: 'single'})         
-      .main__slider__item.main__slider__item_is-third
-        +slider({type: 'vertical'})
+      .main__slider__item.js-main__slider__item.main__slider__item_is-first
+        +slider({ min: 0, max: 60, step: 1, from: 3, to: 50 })
+      .main__slider__item.js-main__slider__item.main__slider__item_is-second
+        +slider({ min: 1000, max: 2100, from: 1300, vertical: 'true' })         
+      .main__slider__item.js-main__slider__item.main__slider__item_is-third
+        +slider({ range: 'false' })

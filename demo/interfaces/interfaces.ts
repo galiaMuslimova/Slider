@@ -9,15 +9,17 @@ interface IConfig {
   range: boolean,
 }
 
+/* type any has to be here,
+cause customer should be able to write any type of options without problems */
 interface IOptions {
-  min?: number | boolean | string | null,
-  max?: number | boolean | string | null,
-  step?: number | boolean | string | null,
-  from?: number | boolean | string | null,
-  to?: number | boolean | string | null,
-  vertical?: number | boolean | string | null,
-  tip?: number | boolean | string | null,
-  range?: number | boolean | string | null,
+  min?: any,
+  max?: any,
+  step?: any,
+  from?: any,
+  to?: any,
+  vertical?: any,
+  tip?: any,
+  range?: any,
   onChange?: (values: number[]) => number[]
 }
 

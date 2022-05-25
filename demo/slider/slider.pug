@@ -1,7 +1,7 @@
 include ../panel/panel.pug
 
-mixin slider({type = 'simple'})
-  .slider.js-slider(data-type=type)
+mixin slider({ min=0, max=10, step=1, from=2, to=8, tip='true', range='true', vertical='false' })
+  .slider.js-slider(data-min=min, data-max=max, data-step=step, data-from=from, data-to=to, data-tip=tip, data-range=range, data-vertical=vertical)
     .slider__container      
       .slider__panel.js-slider__panel 
         +panel()
