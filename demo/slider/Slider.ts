@@ -11,7 +11,7 @@ class Slider implements ISlider {
   private $element: JQuery<HTMLElement>;
   private $sliderRootElement: JQuery<HTMLElement>;
   private $sliderValues: JQuery<HTMLElement>;
-  private slider: IMetaSlider;
+  private slider: JQuery<HTMLElement>;
   private panel: IPanel;
   private isDisplayValues: boolean;
 
@@ -46,8 +46,7 @@ class Slider implements ISlider {
       range: Boolean(this.$element.data().range),
       vertical: Boolean(this.$element.data().vertical),
     };
-    this.slider = this.$sliderRootElement.MetaSlider(options).getSlider();
-    this.slider.setOptions({
+    this.slider = this.$sliderRootElement.MetaSlider(options).setOptions({
       onChange: (values) => {
         this.addAttributes(values);
         this.showValues(values);

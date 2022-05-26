@@ -1,13 +1,12 @@
 import MetaSlider from './MetaSlider';
 import { IConfig, IOptions } from './interfaces/interfaces';
-import IMetaSlider from './interface';
 
 declare global {
   interface JQuery {
-    MetaSlider(opts?: IOptions): JQuery;
+    MetaSlider(opts?: IOptions): JQuery<HTMLElement>;
     addPanel(): void;
-    getSlider(): IMetaSlider
-    setOptions(options: IOptions): IMetaSlider;
+    getSlider(): JQuery<HTMLElement>
+    setOptions(options: IOptions): JQuery<HTMLElement>;
     getOptions(): IConfig;
     getValues(): number[];
   }
@@ -15,8 +14,6 @@ declare global {
 
 (function ($) {
   $.fn.MetaSlider = function (opts) {
-    let slider: IMetaSlider | null = null;
-
     const config = $.extend({}, {
       min: 10,
       max: 40,
@@ -29,40 +26,27 @@ declare global {
       onChange: (values: number[]) => values,
     }, opts);
 
-    function createSlider($element: JQuery<HTMLElement>) {
-      slider = new MetaSlider($element, config);
-    }
-
-    this.each(() => {
-      createSlider($(this));
+    this.each(function () {
+      const slider = new MetaSlider($(this), config);
+      $(this).data('slider', slider);
     });
 
-    $.fn.getSlider = () => {
-      if (slider) {
-        return slider;
-      } throw new Error('no slider');
-    };
+    return $(this);
+  };
 
-    $.fn.setOptions = (options) => {
-      if (slider) {
-        slider.setOptions(options);
-        return slider;
-      } throw new Error('no slider');
-    };
-
-    $.fn.getOptions = () => {
-      if (slider) {
-        return slider.getOptions();
-      } throw new Error('no slider');
-    };
-
-    $.fn.getValues = () => {
-      if (slider) {
-        return slider.getValues();
-      } throw new Error('no slider');
-    };
-
+  $.fn.setOptions = function (options) {
+    this.data('slider').setOptions(options);
     return this;
+  };
+
+  $.fn.getSlider = function () { return this; };
+
+  $.fn.getOptions = function () {
+    return this.data('slider').getOptions();
+  };
+
+  $.fn.getValues = function () {
+    return this.data('slider').getValues();
   };
 }(jQuery));
 
