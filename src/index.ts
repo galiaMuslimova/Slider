@@ -28,6 +28,9 @@ declare global {
 
     this.each(function () {
       const slider = new MetaSlider($(this), config);
+      $.each(config, (key, value) => {
+        $(this).attr(`data-${key}`, `${value}`);
+      });
       $(this).data('slider', slider);
     });
 
@@ -35,7 +38,10 @@ declare global {
   };
 
   $.fn.setOptions = function (options) {
-    this.data('slider').setOptions(options);
+    const config = this.data('slider').setOptions(options);
+    $.each(config, (key, value) => {
+      this.attr(`data-${String(key)}`, `${value}`);
+    });
     return this;
   };
 

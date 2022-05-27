@@ -48,9 +48,7 @@ class View implements IView {
     this.$slider.prependTo($root);
     this.track.init(this.$slider);
     this.$trackElement = this.track.getElement();
-    this.toggleDirection(config);
-    this.toggleRange(config);
-    this.toggleTip(config);
+    this.changeConfig(config);
     this.track.observer.subscribe({ key: 'trackClick', observer: this.trackClick.bind(this) });
     this.firstHandle.init(this.$trackElement);
     this.firstHandle.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this, 0) });
@@ -58,6 +56,12 @@ class View implements IView {
     this.interval.init(this.$trackElement);
     this.scale.init(this.$slider);
     this.scale.observer.subscribe({ key: 'scaleClick', observer: this.scaleClick.bind(this) });
+  }
+
+  public changeConfig(config: IConfig): void {
+    this.toggleDirection(config);
+    this.toggleRange(config);
+    this.toggleTip(config);
   }
 
   public initData(data: IData): void {

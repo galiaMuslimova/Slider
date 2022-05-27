@@ -9,8 +9,8 @@ class MetaSlider implements IMetaSlider {
     this.controller = new Controller(element, options);
   }
 
-  public setOptions(options: IOptions): void {
-    this.controller.setOptions(options);
+  public setOptions(options: IOptions): IConfig {
+    return this.controller.setOptions(options);
   }
 
   public getOptions(): IConfig {

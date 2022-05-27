@@ -4,7 +4,7 @@ import { IConfig, IOptions } from './interfaces/interfaces';
 interface IMetaSlider {
   controller: IController;
 
-  setOptions(options: IOptions): void
+  setOptions(options: IOptions): IConfig
   getOptions(): IConfig
   getValues(): number[]
 }

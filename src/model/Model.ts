@@ -29,7 +29,7 @@ class Model implements IModel {
     };
   }
 
-  public init(trackParameters: ITrackPosition): void {
+  public init(trackParameters: ITrackPosition): IData {
     const { trackStart, trackWidth } = trackParameters;
     this.data.trackParameters.trackStart = trackStart;
     this.data.trackParameters.trackWidth = trackWidth === undefined ? 500 : trackWidth;
@@ -38,6 +38,7 @@ class Model implements IModel {
     this.data.config = this.correctFromTo();
     this.data.parameters = this.initParameters();
     this.correctFromToByParams();
+    return this.data;
   }
 
   public changeParameter(parameter: ICoordinates): IParameters[] {
@@ -70,10 +71,6 @@ class Model implements IModel {
   public setOptions(options: IOptions): void {
     this.options = $.extend(this.options, options);
     this.data.config = this.correctConfig(this.options);
-  }
-
-  public getOptions(): IConfig {
-    return this.data.config;
   }
 
   public getData(): IData {
@@ -125,6 +122,8 @@ class Model implements IModel {
     correctConfig.max = (config.max > config.min) ? config.max : config.min;
     correctConfig.min = (config.max > config.min) ? config.min : config.max;
     correctConfig.max = (config.max === config.min) ? config.min + 10 : correctConfig.max;
+    correctConfig.from = (config.from < config.min) ? config.min : config.from;
+    correctConfig.to = (config.to > config.max) ? config.max : config.to;
     return correctConfig;
   }
 

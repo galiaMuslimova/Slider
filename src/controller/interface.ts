@@ -6,7 +6,7 @@ interface IController {
   view: IView;
   model: IModel;
 
-  setOptions(options: IOptions): void
+  setOptions(options: IOptions): IConfig
   getOptions(): IConfig
   getValues(): number[]
 }
