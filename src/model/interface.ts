@@ -3,10 +3,11 @@ import {
 } from '../interfaces/interfaces';
 
 interface IModel {
-  init(trackParameters: ITrackPosition): IData
+  init(trackParameters: ITrackPosition): void
   changeParameter(parameter: ICoordinates, order?: number): IParameters[]
   correctFromToByParams(): IData
   setOptions(options: IOptions): void
+  getOptions(): IConfig
   getData(): IData
   getConfig(): IConfig
   getValues(): number[]

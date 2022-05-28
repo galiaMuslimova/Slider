@@ -24,16 +24,13 @@ class Controller implements IController {
     this.init();
   }
 
-  public setOptions(options: IOptions): IConfig {
+  public setOptions(options: IOptions): void {
     this.model.setOptions(options);
-    this.view.changeConfig(this.model.getConfig());
-    const data = this.model.init(this.view.getTrackParameters());
-    this.view.initData(data);
-    return data.config;
+    this.init();
   }
 
   public getOptions(): IConfig {
-    return this.model.getConfig();
+    return this.model.getOptions();
   }
 
   public getValues(): number[] {

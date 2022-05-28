@@ -9,7 +9,6 @@ interface IView {
 
   initSlider($root: JQuery<HTMLElement>, config: IConfig): void
   initData(data: IData): void
-  changeConfig(config: IConfig): void
   getTrackParameters(): ITrackPosition
   setParameters(parameters: IParameters[]): void
 }

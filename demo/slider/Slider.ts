@@ -33,7 +33,8 @@ class Slider implements ISlider {
     this.$element = this.$root.find('.js-slider');
     this.$sliderRootElement = this.$element.find('.js-slider__root');
     this.$sliderValues = this.$element.find('.js-slider__values');
-    this.slider = this.$sliderRootElement.MetaSlider({ ...this.$sliderRootElement.data() }).setOptions({
+    const options = { ...this.$sliderRootElement.data() }
+    this.slider = this.$sliderRootElement.MetaSlider('init', options).MetaSlider('setOptions', {
       onChange: (values) => {
         this.showValues(values);
         return values;
@@ -55,7 +56,7 @@ class Slider implements ISlider {
   }
 
   private changeSettings(setting: ISettings) {
-    this.slider = this.slider.setOptions(setting)
+    this.slider = this.slider.MetaSlider('setOptions', setting)
     const options = { ...this.$element.data() };
     this.changeValues([options.from, options.to]);    
   }
