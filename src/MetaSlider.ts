@@ -16,10 +16,6 @@ class MetaSlider implements IMetaSlider {
   public getOptions(): IConfig {
     return this.controller.getOptions();
   }
-
-  public getValues(): number[] {
-    return this.controller.getValues();
-  }
 }
 
 export default MetaSlider;

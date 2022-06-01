@@ -1,17 +1,20 @@
 import MetaSlider from './MetaSlider';
 import { IConfig, IOptions } from './interfaces/interfaces';
 
-declare global {
-  interface JQuery {
-    MetaSlider(method: keyof IMethods, args?: IOptions): JQuery<HTMLElement>;
-    getOptions(): IConfig;
-    getValues(): number[];
-  }
+interface MetaSl {
+  (method: keyof IMethods): IConfig;
+  (method: keyof IMethods, options: IOptions): JQuery<HTMLElement>;
 }
 
+declare global {
+  interface JQuery {
+    MetaSlider: MetaSl;
+  }
+}
 interface IMethods {
-  init: (options?: IOptions) => void,
-  setOptions: (options?: IOptions) => void
+  init: (options: IOptions) => void;
+  setOptions: (options: IOptions) => void;
+  getOptions: () => IConfig;
 }
 
 (function ($) {
@@ -24,7 +27,7 @@ interface IMethods {
     vertical: false,
     tip: true,
     range: true,
-    onChange: (values: number[]) => values,
+    onChange: (config: IConfig) => [config.from, config.to],
   };
 
   const methods: IMethods = {
@@ -36,34 +39,49 @@ interface IMethods {
       });
       this.data('slider', slider);
     },
-    setOptions(this: JQuery<HTMLElement>, options?: IOptions) {
+    setOptions(this: JQuery<HTMLElement>, options: IOptions) {
       const config = this.data('slider').setOptions(options);
       $.each(config, (key, value) => {
         this.attr(`data-${String(key)}`, `${value}`);
       });
     },
+    getOptions(this: JQuery<HTMLElement>) {
+      return this.data('slider').getOptions();
+    },
   };
 
-  $.fn.MetaSlider = function (method: keyof IMethods, ...args) {
+  function makeSlider(method: keyof IMethods): IConfig;
+  function makeSlider(
+    method: keyof IMethods,
+    options?: IOptions
+  ): JQuery<HTMLElement>;
+  function makeSlider(
+    this: JQuery<HTMLElement>,
+    method: keyof IMethods,
+    options?: IOptions,
+  ) {
     const $this = $(this);
-    if (methods[method]) {
-      methods[method].apply($this, args);
-      return this;
-    } if (typeof method === 'object' || !method) {
-      methods.init.apply($this, args);
+    if (method === 'getOptions') {
+      return methods[method].apply($this);
+    }
+    if (!method && !options) {
+      methods.init.apply($this, [{}]);
       return this;
     }
+    if (!method && options) {
+      methods.init.apply($this, [options]);
+      return this;
+    }
+    if (methods[method] && options) {
+      methods[method].apply($this, [options]);
+      return this;
+    }
+
     $.error(`Method ${method} does not exist on jQuery.tooltip`);
     return this;
-  };
+  }
 
-  $.fn.getOptions = function () {
-    return this.data('slider').getOptions();
-  };
-
-  $.fn.getValues = function () {
-    return this.data('slider').getValues();
-  };
+  $.fn.MetaSlider = makeSlider;
 }(jQuery));
 
 export default MetaSlider;

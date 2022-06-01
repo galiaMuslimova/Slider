@@ -44,8 +44,7 @@ class Model implements IModel {
     const newParameter = this.takeClosestParameter(parameter);
     const parameterOrder = parameter.key || this.makeOrder(parameter);
     this.data.parameters[parameterOrder] = newParameter;
-    const values = this.getValues();
-    this.options.onChange?.call(this, values);
+    this.options.onChange?.call(this, this.data.config);
     return this.data.parameters;
   }
 
@@ -72,10 +71,6 @@ class Model implements IModel {
     this.data.config = this.correctConfig(this.options);
   }
 
-  public getOptions(): IConfig {
-    return this.data.config;
-  }
-
   public getData(): IData {
     return this.data;
   }
@@ -86,15 +81,6 @@ class Model implements IModel {
 
   public setSetting(setting: ISettings): void {
     this.data.config = $.extend({}, this.data.config, setting);
-  }
-
-  public getValues(): number[] {
-    const { parameters } = this.data;
-    const values: number[] = [parameters[0].value];
-    if (this.data.config.range) {
-      values.push(parameters[1].value);
-    }
-    return values;
   }
 
   static takeClosestNum(num: number, array: number[]): number {

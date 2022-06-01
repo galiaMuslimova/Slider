@@ -6,7 +6,6 @@ interface IMetaSlider {
 
   setOptions(options: IOptions): IConfig
   getOptions(): IConfig
-  getValues(): number[]
 }
 
 export default IMetaSlider;

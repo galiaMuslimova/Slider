@@ -1,5 +1,5 @@
 import '../../src/index';
-import { ISettings } from '../../src/interfaces/interfaces';
+import { IConfig, IOptions, ISettings } from '../../src/interfaces/interfaces';
 import IPanel from '../panel/interface';
 import Panel from '../panel/Panel';
 import ISlider from './interface';
@@ -15,7 +15,7 @@ class Slider implements ISlider {
 
   constructor($root: JQuery<HTMLElement>) {
     this.$root = $root;
-    this.$element = $('<div>');
+    this.$element = $("<div>");
     this.$sliderRootElement;
     this.$sliderValues;
     this.slider = null;
@@ -30,41 +30,48 @@ class Slider implements ISlider {
   }
 
   private init(): void {
-    this.$element = this.$root.find('.js-slider');
-    this.$sliderRootElement = this.$element.find('.js-slider__root');
-    this.$sliderValues = this.$element.find('.js-slider__values');
-    const options = { ...this.$sliderRootElement.data() }
-    this.slider = this.$sliderRootElement.MetaSlider('init', options).MetaSlider('setOptions', {
-      onChange: (values) => {
-        this.showValues(values);
-        return values;
-      }
-    })
+    this.$element = this.$root.find(".js-slider");
+    this.$sliderRootElement = this.$element.find(".js-slider__root");
+    this.$sliderValues = this.$element.find(".js-slider__values");
+    const options = { ...this.$sliderRootElement.data() };
+    this.slider = this.$sliderRootElement
+      .MetaSlider("init", options)
+      .MetaSlider("setOptions", {
+        onChange: (config) => {
+          this.showValues(config);
+          return config;
+        },
+      });
+    const data: IConfig = this.slider.MetaSlider("getOptions");
   }
 
-  private showValues(values: number[]): void {
+  private showValues(config: IConfig): void {
     if (this.isDisplayValues) {
-      this.$sliderValues.text(`from: ${values[0]}; to: ${values[1]}`);
-      this.changeValues(values)
+      this.$sliderValues.text(`from: ${config.from}; to: ${config.to}`);
+      this.changeValues(config);
     }
   }
 
   private initPanel(): void {
-    const $sliderPanelElement = this.$root.find('.js-slider__panel');
-    this.panel = new Panel($sliderPanelElement, this.slider.getOptions());
-    this.panel.observer.subscribe({ key: 'setting', observer: this.changeSettings.bind(this) });
+    const $sliderPanelElement = this.$root.find(".js-slider__panel");
+    this.panel = new Panel(
+      $sliderPanelElement,
+      this.slider.MetaSlider("getOptions")
+    );
+    this.panel.observer.subscribe({
+      key: "setting",
+      observer: this.changeSettings.bind(this),
+    });
   }
 
   private changeSettings(setting: ISettings) {
-    this.slider = this.slider.MetaSlider('setOptions', setting)
-    const options = { ...this.$element.data() };
-    this.changeValues([options.from, options.to]);    
+    this.slider.MetaSlider("setOptions", setting);
   }
 
-  private changeValues(values) {
-    this.panel.setValue({ 'from': values[0] })
-    if (values[1]) {
-      this.panel.setValue({ 'to': values[1] })
+  private changeValues(config:IConfig) {
+    this.panel.setValue({ from: config.from });
+    if (config.to) {
+      this.panel.setValue({ to: config.to });
     }
   }
 }
