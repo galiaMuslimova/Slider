@@ -31,9 +31,6 @@ class Input implements IInput {
 
   public getValue(): number | boolean {
     const { value } = this;
-    if (typeof value === "number") {
-      Number(value);
-    }
     return value;
   }
 

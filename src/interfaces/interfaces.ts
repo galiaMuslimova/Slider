@@ -20,7 +20,7 @@ interface IOptions {
   vertical?: boolean;
   tip?: boolean;
   range?: boolean;
-  onChange?: (config: IConfig) => IConfig;
+  onChange?: (config: IConfig) => void;
 }
 
 interface IParameters {

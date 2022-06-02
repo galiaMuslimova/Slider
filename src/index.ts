@@ -2,7 +2,8 @@ import MetaSlider from './MetaSlider';
 import { IConfig, IOptions } from './interfaces/interfaces';
 
 interface MetaSl {
-  (method: keyof IMethods): IConfig;
+  (method?: 'init'): JQuery<HTMLElement>;
+  (method: 'getOptions'): IConfig;
   (method: keyof IMethods, options: IOptions): JQuery<HTMLElement>;
 }
 
@@ -31,7 +32,7 @@ interface IMethods {
   };
 
   const methods: IMethods = {
-    init(this: JQuery<HTMLElement>, options?: IOptions) {
+    init(this: JQuery<HTMLElement>, options: IOptions) {
       const config = $.extend({}, defaults, options);
       const slider = new MetaSlider(this, config);
       $.each(config, (key, value) => {
@@ -50,27 +51,24 @@ interface IMethods {
     },
   };
 
-  function makeSlider(method: keyof IMethods): IConfig;
+  function makeSlider(method?: 'init'): JQuery<HTMLElement>;
+  function makeSlider(method: 'getOptions'): IConfig;
   function makeSlider(
     method: keyof IMethods,
     options?: IOptions
   ): JQuery<HTMLElement>;
   function makeSlider(
     this: JQuery<HTMLElement>,
-    method: keyof IMethods,
+    method?: keyof IMethods,
     options?: IOptions,
   ) {
     const $this = $(this);
+    if (!method || method === 'init') {
+      methods.init.apply($this, [options || {}]);
+      return this;
+    }
     if (method === 'getOptions') {
       return methods[method].apply($this);
-    }
-    if (!method && !options) {
-      methods.init.apply($this, [{}]);
-      return this;
-    }
-    if (!method && options) {
-      methods.init.apply($this, [options]);
-      return this;
     }
     if (methods[method] && options) {
       methods[method].apply($this, [options]);
