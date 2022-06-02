@@ -1,8 +1,8 @@
-import { ISettings } from '../interfaces/interfaces';
-import Observer from '../observer/Observer';
-import IObserver from '../observer/interface';
-import IInput from './interface';
-import './input.scss';
+import { IOptions } from "../../src/interfaces/interfaces";
+import Observer from "../../src/observer/Observer";
+import IObserver from "../../src/observer/interface";
+import IInput from "./interface";
+import "./input.scss";
 
 class Input implements IInput {
   public observer: IObserver;
@@ -15,11 +15,15 @@ class Input implements IInput {
 
   private value: number | boolean;
 
-  constructor($root: JQuery<HTMLElement>, key: string, value: number | boolean) {
+  constructor(
+    $root: JQuery<HTMLElement>,
+    key: string,
+    value: number | boolean
+  ) {
     this.$root = $root;
     this.value = value;
     this.name = key;
-    this.type = (typeof value === 'number') ? 'number' : 'checkbox';
+    this.type = typeof value === "number" ? "number" : "checkbox";
     this.observer = new Observer();
     this.setValue(this.value);
     this.bindEventListeners();
@@ -27,7 +31,7 @@ class Input implements IInput {
 
   public getValue(): number | boolean {
     const { value } = this;
-    if (typeof value === 'number') {
+    if (typeof value === "number") {
       Number(value);
     }
     return value;
@@ -35,10 +39,10 @@ class Input implements IInput {
 
   public setValue(value: number | boolean): void {
     this.value = value;
-    if (typeof value === 'number') {
+    if (typeof value === "number") {
       this.$root.val(value);
     } else {
-      this.$root.prop('checked', value);
+      this.$root.prop("checked", value);
     }
   }
 
@@ -47,23 +51,23 @@ class Input implements IInput {
   }
 
   private bindEventListeners(): void {
-    this.$root.on('change keyup', this.handleInputValueChange.bind(this));
+    this.$root.on("change keyup", this.handleInputValueChange.bind(this));
   }
 
   private handleInputValueChange(event: Event): void {
     switch (this.type) {
-      case 'number':
+      case "number":
         this.value = Number((<HTMLInputElement>event.target).value);
         break;
-      case 'checkbox':
+      case "checkbox":
         this.value = (<HTMLInputElement>event.target).checked;
         break;
       default:
         break;
     }
-    const setting: ISettings = {};
+    const setting: IOptions = {};
     setting[this.name] = this.value;
-    this.observer.notify('setting', setting);
+    this.observer.notify("setting", setting);
   }
 }
 

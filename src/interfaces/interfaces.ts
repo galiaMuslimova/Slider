@@ -23,10 +23,6 @@ interface IOptions {
   onChange?: (config: IConfig) => IConfig;
 }
 
-interface ISettings {
-  [index: string]: number | boolean;
-}
-
 interface IParameters {
   value: number;
   position: number;
@@ -58,7 +54,6 @@ interface IData {
 export {
   IOptions,
   IConfig,
-  ISettings,
   IParameters,
   IEventPosition,
   ITrackPosition,

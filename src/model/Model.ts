@@ -1,5 +1,5 @@
 import {
-  IOptions, IConfig, IParameters, ISettings, IData, ITrackPosition, ICoordinates,
+  IOptions, IConfig, IParameters, IData, ITrackPosition, ICoordinates,
 } from '../interfaces/interfaces';
 import IModel from './interface';
 
@@ -33,9 +33,7 @@ class Model implements IModel {
     const { trackStart, trackWidth } = trackParameters;
     this.data.trackParameters.trackStart = trackStart;
     this.data.trackParameters.trackWidth = trackWidth === undefined ? 500 : trackWidth;
-    this.data.config = this.correctMinMax();
     this.data.stepsArr = this.initStepsArr();
-    this.data.config = this.correctFromTo();
     this.data.parameters = this.initParameters();
     this.correctFromToByParams();
   }
@@ -79,7 +77,7 @@ class Model implements IModel {
     return this.data.config;
   }
 
-  public setSetting(setting: ISettings): void {
+  public setSetting(setting: IOptions): void {
     this.data.config = $.extend({}, this.data.config, setting);
   }
 
@@ -103,7 +101,7 @@ class Model implements IModel {
     config.vertical = typeof options.vertical === 'boolean' ? options.vertical : defaults.vertical;
     config.tip = typeof options.tip === 'boolean' ? options.tip : defaults.tip;
     config.range = typeof options.range === 'boolean' ? options.range : defaults.range;
-    return config;
+    return this.correctMinMax(config);
   }
 
   private correctMinMax(config: IConfig = this.data.config): IConfig {
@@ -135,6 +133,7 @@ class Model implements IModel {
       stepsArr.push({ value: max, position: trackWidth });
     }
     this.data.stepsArr = stepsArr;
+    this.data.config = this.correctFromTo();
     return stepsArr;
   }
 

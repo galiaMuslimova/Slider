@@ -1,5 +1,5 @@
 import '../../src/index';
-import { IConfig, IOptions, ISettings } from '../../src/interfaces/interfaces';
+import { IConfig, IOptions } from '../../src/interfaces/interfaces';
 import IPanel from '../panel/interface';
 import Panel from '../panel/Panel';
 import ISlider from './interface';
@@ -42,7 +42,6 @@ class Slider implements ISlider {
           return config;
         },
       });
-    const data: IConfig = this.slider.MetaSlider("getOptions");
   }
 
   private showValues(config: IConfig): void {
@@ -64,7 +63,7 @@ class Slider implements ISlider {
     });
   }
 
-  private changeSettings(setting: ISettings) {
+  private changeSettings(setting: IOptions) {
     this.slider.MetaSlider("setOptions", setting);
   }
 
