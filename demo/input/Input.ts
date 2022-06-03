@@ -30,8 +30,7 @@ class Input implements IInput {
   }
 
   public getValue(): number | boolean {
-    const { value } = this;
-    return value;
+    return this.value;
   }
 
   public setValue(value: number | boolean): void {

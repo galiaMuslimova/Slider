@@ -41,12 +41,12 @@ class Slider implements ISlider {
 
   private showValues(config: IConfig): void {
     const $sliderValues = this.$element.find(".js-slider__values");
+    this.panel.setValue({ from: config.from });
+    if (config.to) {
+      this.panel.setValue({ to: config.to });
+    }
     if (this.isDisplayValues) {
       $sliderValues.text(`from: ${config.from}; to: ${config.to}`);
-      this.panel.setValue({ from: config.from });
-      if (config.to) {
-        this.panel.setValue({ to: config.to });
-      }
     }
   }
 
@@ -61,7 +61,8 @@ class Slider implements ISlider {
   }
 
   private changeSettings(setting: IOptions) {
-    this.slider.MetaSlider("setOptions", setting);
+    this.slider = this.slider.MetaSlider("setOptions", setting);
+    this.panel.setValue(this.slider.MetaSlider("getOptions"))
   }
 }
 

@@ -120,10 +120,6 @@ describe('Controller', () => {
     }
   });
 
-  it('проверяет получение values', () => {
-    expect(controller?.getValues()).to.deep.equal([2, 8]);
-  });
-
   it('проверяет опции', () => {
     controller?.setOptions({
       min: -10, max: 15, step: 2, to: 12,

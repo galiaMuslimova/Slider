@@ -41,7 +41,12 @@ interface IMethods {
       this.data('slider', slider);
     },
     setOptions(this: JQuery<HTMLElement>, options: IOptions) {
-      const config = this.data('slider').setOptions(options);
+      const dataOptions = $.extend(
+        {},
+        this.data('slider').getOptions(),
+        options,
+      );
+      const config = this.data('slider').setOptions(dataOptions);
       $.each(config, (key, value) => {
         this.attr(`data-${String(key)}`, `${value}`);
       });
@@ -64,7 +69,8 @@ interface IMethods {
   ) {
     const $this = $(this);
     if (!method || method === 'init') {
-      methods.init.apply($this, [options || {}]);
+      const dataOptions = { ...$this.data() } || {};
+      methods.init.apply($this, [options || dataOptions]);
       return this;
     }
     if (method === 'getOptions') {

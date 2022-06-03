@@ -1,13 +1,13 @@
-import { ISettings } from '../interfaces/interfaces';
-import IObserver from '../observer/interface';
+import { IOptions } from "../../src/interfaces/interfaces";
+import IObserver from "../../src/observer/interface";
 import Input from '../input/Input';
 
 interface IPanel {
-  inputs: Map<string, Input>;
+  inputs: {};
   observer: IObserver;
   readonly $root: JQuery<HTMLElement>;
 
-  setValue(setting: ISettings): void
+  setValue(options: IOptions): void;
 }
 
 export default IPanel;

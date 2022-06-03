@@ -77,10 +77,6 @@ class Model implements IModel {
     return this.data.config;
   }
 
-  public setSetting(setting: IOptions): void {
-    this.data.config = $.extend({}, this.data.config, setting);
-  }
-
   static takeClosestNum(num: number, array: number[]): number {
     const indexOfClosest = Model.takeClosestIndex(num, array);
     return array[indexOfClosest];
