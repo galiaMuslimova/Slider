@@ -2,17 +2,7 @@ import {
   IOptions, IConfig, IParameters, IData, ITrackPosition, ICoordinates,
 } from '../interfaces/interfaces';
 import IModel from './interface';
-
-const defaults = {
-  min: 10,
-  max: 40,
-  step: 4,
-  from: 8,
-  to: 24,
-  vertical: false,
-  tip: true,
-  range: true,
-};
+import defaults from '../defaults';
 
 class Model implements IModel {
   private options: IOptions;

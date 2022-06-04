@@ -1,5 +1,6 @@
 import MetaSlider from './MetaSlider';
 import { IConfig, IOptions } from './interfaces/interfaces';
+import defaults from './defaults';
 
 interface MetaSl {
   (method?: 'init'): JQuery<HTMLElement>;
@@ -19,18 +20,6 @@ interface IMethods {
 }
 
 (function ($) {
-  const defaults = {
-    min: 10,
-    max: 40,
-    step: 4,
-    from: 8,
-    to: 24,
-    vertical: false,
-    tip: true,
-    range: true,
-    onChange: (config: IConfig) => [config.from, config.to],
-  };
-
   const methods: IMethods = {
     init(this: JQuery<HTMLElement>, options: IOptions) {
       const config = $.extend({}, defaults, options);
