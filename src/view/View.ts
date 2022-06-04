@@ -1,5 +1,10 @@
 import {
-  IConfig, ICoordinates, IData, IOptions, IParameters, ITrackPosition,
+  IConfig,
+  ICoordinates,
+  IData,
+  IOptions,
+  IParameters,
+  ITrackPosition,
 } from '../interfaces/interfaces';
 import Observer from '../observer/Observer';
 
@@ -20,6 +25,8 @@ class View implements IView {
 
   public $slider: JQuery<HTMLElement>;
 
+  private $root: JQuery<HTMLElement>;
+
   private $trackElement: JQuery<HTMLElement>;
 
   private track: ITrack;
@@ -32,7 +39,8 @@ class View implements IView {
 
   private scale: IScale;
 
-  constructor() {
+  constructor($root: JQuery<HTMLElement>) {
+    this.$root = $root;
     this.observer = new Observer();
     this.$slider = jQuery('<div>');
     this.$trackElement = jQuery('<div>');
@@ -41,23 +49,39 @@ class View implements IView {
     this.firstHandle = new Handle();
     this.secondHandle = null;
     this.interval = new Interval();
+    this.init();
   }
 
-  public initSlider($root: JQuery<HTMLElement>, config: IConfig): void {
+  private init() {
     this.$slider.addClass('meta-slider js-meta-slider meta-slider_horizontal');
-    this.$slider.prependTo($root);
+    this.$slider.prependTo(this.$root);
     this.track.init(this.$slider);
     this.$trackElement = this.track.getElement();
+    this.track.observer.subscribe({
+      key: 'trackClick',
+      observer: this.trackClick.bind(this),
+    });
+    this.firstHandle.init(this.$trackElement);
+    this.firstHandle.observer.subscribe({
+      key: 'mouseMove',
+      observer: this.mouseMove.bind(this, 0),
+    });
+    this.firstHandle.observer.subscribe({
+      key: 'moveEnd',
+      observer: this.mouseMoveEnd.bind(this),
+    });
+    this.interval.init(this.$trackElement);
+    this.scale.init(this.$slider);
+    this.scale.observer.subscribe({
+      key: 'scaleClick',
+      observer: this.scaleClick.bind(this),
+    });
+  }
+
+  public initConfig(config: IConfig) {
     this.toggleDirection(config);
     this.toggleRange(config);
     this.toggleTip(config);
-    this.track.observer.subscribe({ key: 'trackClick', observer: this.trackClick.bind(this) });
-    this.firstHandle.init(this.$trackElement);
-    this.firstHandle.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this, 0) });
-    this.firstHandle.observer.subscribe({ key: 'moveEnd', observer: this.mouseMoveEnd.bind(this) });
-    this.interval.init(this.$trackElement);
-    this.scale.init(this.$slider);
-    this.scale.observer.subscribe({ key: 'scaleClick', observer: this.scaleClick.bind(this) });
   }
 
   public initData(data: IData): void {
@@ -80,8 +104,12 @@ class View implements IView {
 
   private toggleDirection(config: IConfig): void {
     const { vertical } = config;
-    this.$slider.removeClass(vertical ? 'meta-slider_horizontal' : 'meta-slider_vertical');
-    this.$slider.addClass(vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
+    this.$slider.removeClass(
+      vertical ? 'meta-slider_horizontal' : 'meta-slider_vertical',
+    );
+    this.$slider.addClass(
+      vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal',
+    );
     this.track.setVertical(vertical);
     this.firstHandle.setVertical(vertical);
     this.secondHandle?.setVertical(vertical);
@@ -96,8 +124,14 @@ class View implements IView {
       this.secondHandle.init(this.$trackElement);
       this.secondHandle.setVertical(vertical);
       this.secondHandle.setTrackParameters(this.track.getTrackParameters());
-      this.secondHandle.observer.subscribe({ key: 'mouseMove', observer: this.mouseMove.bind(this, 1) });
-      this.secondHandle.observer.subscribe({ key: 'moveEnd', observer: this.mouseMoveEnd.bind(this) });
+      this.secondHandle.observer.subscribe({
+        key: 'mouseMove',
+        observer: this.mouseMove.bind(this, 1),
+      });
+      this.secondHandle.observer.subscribe({
+        key: 'moveEnd',
+        observer: this.mouseMoveEnd.bind(this),
+      });
     } else if (!range && this.secondHandle) {
       const handle = this.secondHandle.getElement();
       this.$trackElement.find(handle).remove();

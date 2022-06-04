@@ -20,7 +20,7 @@ class Controller implements IController {
     this.options = options;
     this.$root = root;
     this.model = new Model(this.options);
-    this.view = new View();
+    this.view = new View(this.$root);
     this.init();
   }
 
@@ -35,7 +35,7 @@ class Controller implements IController {
   }
 
   private init() {
-    this.view.initSlider(this.$root, this.model.getConfig());
+    this.view.initConfig(this.model.getConfig());
     this.view.$slider.ready(() => {
       this.model.init(this.view.getTrackParameters());
       this.view.initData(this.model.getData());

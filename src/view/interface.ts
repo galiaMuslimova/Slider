@@ -4,13 +4,13 @@ import {
 import IObserver from '../observer/interface';
 
 interface IView {
-  observer: IObserver
-  $slider: JQuery<HTMLElement>
+  observer: IObserver;
+  $slider: JQuery<HTMLElement>;
 
-  initSlider($root: JQuery<HTMLElement>, config: IConfig): void
-  initData(data: IData): void
-  getTrackParameters(): ITrackPosition
-  setParameters(parameters: IParameters[]): void
+  initConfig(config: IConfig): void;
+  initData(data: IData): void;
+  getTrackParameters(): ITrackPosition;
+  setParameters(parameters: IParameters[]): void;
 }
 
 export default IView;
