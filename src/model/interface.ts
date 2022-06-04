@@ -5,7 +5,7 @@ import {
 interface IModel {
   init(trackParameters: ITrackPosition): void;
   changeParameter(parameter: ICoordinates, order?: number): IParameters[];
-  correctFromToByParams(): IData;
+  correctFromTo(): void;
   setOptions(options: IOptions): void;
   getData(): IData;
   getConfig(): IConfig;
