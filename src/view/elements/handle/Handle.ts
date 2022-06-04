@@ -56,7 +56,10 @@ class Handle implements IHandle {
   }
 
   public moveHandle(parameters: IParameters): void {
-    this.$handle.css(this.vertical ? 'top' : 'left', `${parameters.position - 20 / 2}px`);
+    this.$handle.css(
+      this.vertical ? 'top' : 'left',
+      `${parameters.position - 20 / 2}px`,
+    );
     this.$handle.css(this.vertical ? 'left' : 'top', '-5px');
     this.tip?.changeTip(parameters);
   }
@@ -78,7 +81,10 @@ class Handle implements IHandle {
   }
 
   private bindEventListeners(): void {
-    this.$handle.on('mousedown touchstart', this.handleHandleMouseDown.bind(this));
+    this.$handle.on(
+      'mousedown touchstart',
+      this.handleHandleMouseDown.bind(this),
+    );
   }
 
   private handleHandleMouseDown(event: Event): void {
@@ -90,9 +96,11 @@ class Handle implements IHandle {
   }
 
   private handleMouseMove(event: Event): void {
-    const eventPosition = this.vertical ? (<MouseEvent>event).pageY : (<MouseEvent>event).pageX;
+    const eventPosition = this.vertical
+      ? (<MouseEvent>event).pageY
+      : (<MouseEvent>event).pageX;
     const correctedPosition = Math.round(eventPosition - this.trackStart);
-    const isInScale = (correctedPosition >= 0) && (correctedPosition <= this.trackWidth);
+    const isInScale = correctedPosition >= 0 && correctedPosition <= this.trackWidth;
     if (isInScale) {
       this.observer.notify('mouseMove', correctedPosition);
     }
@@ -100,10 +108,12 @@ class Handle implements IHandle {
 
   private handleTouchMove(event: Event): void {
     const touches = (<TouchEvent>event)?.touches;
-    if (touches !== undefined) {
-      const touch = touches[0];
-      const eventPosition = this.vertical ? touch.pageY : touch.pageX;
-      this.observer.notify('mouseMove', eventPosition);
+    const touch = touches[0];
+    const eventPosition = this.vertical ? touch.pageY : touch.pageX;
+    const correctedPosition = Math.round(eventPosition - this.trackStart);
+    const isInScale = correctedPosition >= 0 && correctedPosition <= this.trackWidth;
+    if (touches !== undefined && isInScale) {
+      this.observer.notify('mouseMove', correctedPosition);
     }
   }
 
