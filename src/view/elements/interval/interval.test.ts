@@ -23,8 +23,8 @@ describe('Interval', () => {
     $track = jQuery('<div>', { class: 'meta-slider__track js-meta-slider__track' });
     $track.appendTo($slider);
     intervalClass = new Interval();
-    intervalClass.init($track);
-    $interval = $track.find('.js-meta-slider__interval');
+    intervalClass.init($slider);
+    $interval = $slider.find('.js-meta-slider__interval');
   });
 
   it('проверить создание элемента interval', () => {

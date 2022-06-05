@@ -35,8 +35,10 @@ describe('View', () => {
       tip: true,
     };
     $root = $(document).find('.testSlider');
-    $root.css('width', '450px');
-    $root.css('height', '350px');
+    $root.css('width', '500');
+    $root.css('height', '400');
+    $root.css('top', '0');
+    $root.css('left', '0');
     view = new View($root);
     view.initConfig(config);
     $slider = $root.find('.js-meta-slider');

@@ -55,7 +55,7 @@ class Controller implements IController {
   }
 
   private correctParameters() {
-    this.model.correctFromTo();
+    this.model.correctParameters();
     this.view.setParameters(this.model.getParameters());
   }
 }

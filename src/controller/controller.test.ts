@@ -27,6 +27,10 @@ describe('Controller', () => {
 
   before(() => {
     $rootEl = $(document).find('.js-body__slider');
+    $rootEl.css('width', '500');
+    $rootEl.css('height', '400');
+    $rootEl.css('top', '0');
+    $rootEl.css('left', '0');
     options = {
       min: 0,
       max: 10,
@@ -53,8 +57,6 @@ describe('Controller', () => {
 
   beforeEach(() => {
     controller = new Controller($rootEl, options);
-    controller?.model.init(expectedStepsArr);
-    controller?.view.initConfig(controller?.model.getConfig());
     $slider = $rootEl.find('.js-meta-slider');
     $track = $rootEl.find('.js-meta-slider__track');
     $scale = $rootEl.find('.js-meta-slider__scale');
@@ -78,14 +80,9 @@ describe('Controller', () => {
     expect($handle?.length).to.equal(2);
   });
 
-  it('устанавливает stepsArr', () => {
-    const stepsArr = controller?.model.getData().stepsArr;
-    expect(stepsArr).to.deep.equal(expectedStepsArr);
-  });
-
   it('проверяет change and correct handles position', () => {
     controller?.model.changeParameter({ key: 1, position: 30 });
-    const parameters = controller?.model.getData().parameters;
+    const parameters = controller?.model.getParameters();
     const exceptParameters = [{ value: 2, position: 100 }, { value: 1, position: 50 }];
     expect(parameters).to.deep.equal(exceptParameters);
     const eStart = jQuery.Event('mousedown');
@@ -96,7 +93,7 @@ describe('Controller', () => {
       $(document).triggerHandler(eEnd);
     }
     const correctParameters = [{ value: 1, position: 50 }, { value: 2, position: 100 }];
-    expect(controller?.model.getData().parameters).to.deep.equal(correctParameters);
+    expect(controller?.model.getParameters()).to.deep.equal(correctParameters);
   });
 
   it('проверяет change handle 1', () => {

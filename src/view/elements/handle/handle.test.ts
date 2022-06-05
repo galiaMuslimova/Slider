@@ -22,19 +22,12 @@ describe('Handle', () => {
     $track = jQuery('<div>', { class: 'meta-slider__track js-meta-slider__track' });
     $track.appendTo($slider);
     handleClass = new Handle();
-    handleClass.init($track);
+    handleClass.init($slider);
   });
 
   it('проверить создание элемента handle', () => {
     const $handle = $track.find('.js-meta-slider__handle');
     expect($handle.length).to.equal(1);
-  });
-
-  it('проверить установку vertical', () => {
-    handleClass.setVertical(true);
-    expect(handleClass.getVertical()).to.equal(true);
-    handleClass.setVertical(false);
-    expect(handleClass.getVertical()).to.equal(false);
   });
 
   it('проверить установку позиции', () => {

@@ -32,16 +32,17 @@ class Model implements IModel {
     this.parameters = this.initParameters();
   }
 
-  public correctFromTo(config: IConfig = this.config): IConfig {
-    const correctedConfig = { ...config };
-    if (config.range) {
-      const isFromLower = config.from < config.to;
-      correctedConfig.from = isFromLower ? config.from : config.to;
-      correctedConfig.to = isFromLower ? config.to : config.from;
-      this.parameters[0].value = correctedConfig.from;
-      this.parameters[1].value = correctedConfig.to;
+  public correctParameters(): void {
+    const isFromHigher = this.config.from > this.config.to;
+    if (this.config.range && isFromHigher) {
+      const firstParameter = this.parameters[0];
+      const secondParameter = this.parameters[1];
+      this.parameters[0] = secondParameter;
+      this.parameters[1] = firstParameter;
+      this.config.from = this.parameters[0].value;
+      this.config.to = this.parameters[1].value;
+      this.options.onChange?.call(this, this.config);
     }
-    return correctedConfig;
   }
 
   public changeParameter(setting: ICoordinates): IParameters[] {
@@ -73,10 +74,9 @@ class Model implements IModel {
   }
 
   private correctConfig(options: IOptions): IConfig {
-    let correctedConfig = this.correctTypes(options);
-    correctedConfig = this.correctMinMax(correctedConfig);
-    correctedConfig = this.correctFromTo(correctedConfig);
-    return correctedConfig;
+    let newConfig = this.correctTypes(options);
+    newConfig = this.correctMinMax(newConfig);
+    return newConfig;
   }
 
   private correctTypes(options: IOptions = this.options): IConfig {
@@ -109,6 +109,8 @@ class Model implements IModel {
     correctConfig.max = config.max > config.min ? config.max : config.min;
     correctConfig.min = config.max > config.min ? config.min : config.max;
     correctConfig.max = config.max === config.min ? config.min + 10 : correctConfig.max;
+    correctConfig.from = config.from < config.min ? config.min : config.from;
+    correctConfig.to = config.to > config.max ? config.max : config.to;
     return correctConfig;
   }
 
@@ -126,13 +128,12 @@ class Model implements IModel {
   private initParameters(): IParameters[] {
     const { parameters } = this;
     const stepValues = this.data.map((el) => el.value);
-    const firstIndex = Model.takeClosestIndex(parameters[0].value, stepValues);
+    const firstIndex = Model.takeClosestIndex(this.config.from, stepValues);
+    parameters[0].value = this.config.from;
     parameters[0].position = this.data[firstIndex].position;
     if (this.config.range) {
-      const secondIndex = Model.takeClosestIndex(
-        parameters[1].value,
-        stepValues,
-      );
+      const secondIndex = Model.takeClosestIndex(this.config.to, stepValues);
+      parameters[1].value = this.config.to;
       parameters[1].position = this.data[secondIndex].position;
     }
     return parameters;

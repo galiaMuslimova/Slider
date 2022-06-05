@@ -1,9 +1,10 @@
 import { expect } from 'chai';
+import IModel from './interface';
 
 import Model from './Model';
 
 describe('Model', () => {
-  const stepsArr = [
+  const data = [
     { value: 1, position: 0 },
     { value: 2, position: 100 },
     { value: 3, position: 200 },
@@ -11,9 +12,21 @@ describe('Model', () => {
     { value: 5, position: 400 },
     { value: 6, position: 500 },
   ];
+  let model: IModel;
+
+  beforeEach(() => {
+    model = new Model({
+      min: 1,
+      max: 6,
+      step: 1,
+      from: 2,
+      to: 4,
+    });
+    model.init(data);
+  });
 
   it('устанавливает значения в конфиг', () => {
-    const model = new Model({
+    model = new Model({
       min: 15,
       max: 25,
       step: 1,
@@ -34,7 +47,7 @@ describe('Model', () => {
   });
 
   it('установлены дефолтные значения в случае отсутствия опций', () => {
-    const model = new Model({
+    model = new Model({
       max: 50,
       step: 10,
       from: 10,
@@ -51,158 +64,86 @@ describe('Model', () => {
   });
 
   it('скорректирован min и max', () => {
-    const model = new Model({
+    model = new Model({
       min: 35,
       max: 25,
     });
-    model.init(stepsArr);
+    model.init(data);
     expect(model.getConfig().min).to.equal(25);
     expect(model.getConfig().max).to.equal(35);
   });
 
-  it('скорректирован from', () => {
-    const model = new Model({
-      min: 10,
-      max: 25,
-      step: 5,
-      from: 5,
-    });
-    model.init(stepsArr);
-    expect(model.getConfig().from).to.equal(10);
-  });
-
-  it('скорректирован to', () => {
-    const model = new Model({
-      min: 10,
-      max: 25,
-      step: 5,
-      from: 1,
-      to: 125,
-    });
-    model.init(stepsArr);
-    expect(model.getConfig().to).to.equal(25);
-  });
-
   it('инициализировать параметры', () => {
-    const model = new Model({
-      min: 0,
-      max: 10,
-      step: 1,
-      from: 3,
-      to: 10,
-    });
-    model.init(stepsArr);
-    const parameters = [{ value: 3, position: 150 }, { value: 10, position: 500 }];
+    const parameters = [{ value: 2, position: 100 }, { value: 4, position: 300 }];
     expect(model.getParameters()).to.deep.equal(parameters);
   });
 
   it('инициализировать параметры с неправильными from и  to', () => {
-    const model = new Model({
-      min: 0,
-      max: 10,
+    model = new Model({
+      min: 1,
+      max: 6,
       step: 1,
       from: -8,
       to: 19,
     });
-    model.init(stepsArr);
-    const parameters = [{ value: 0, position: 0 }, { value: 10, position: 500 }];
+    model.init(data);
+    const parameters = [{ value: 1, position: 0 }, { value: 6, position: 500 }];
     expect(model.getParameters()).to.deep.equal(parameters);
   });
 
   it('получить параметры при движении handle 1', () => {
-    const model = new Model({
-      min: 0,
-      max: 500,
-      step: 50,
-      from: 100,
-      to: 400,
-    });
-    const options = { key: 0, position: 130 };
-    const parameters = [{ value: 150, position: 150 }, { value: 400, position: 400 }];
-    model.init(stepsArr);
+    const options = { key: 0, position: 165 };
+    const parameters = [{ value: 3, position: 200 }, { value: 4, position: 300 }];
     expect(model.changeParameter(options)).to.deep.equal(parameters);
   });
 
   it('получить параметры при движении handle 2', () => {
-    const model = new Model({
-      min: 0,
-      max: 50,
-      step: 5,
-      from: 10,
-      to: 40,
-    });
-    const options = { key: 1, position: 130 };
-    const parameters = [{ value: 10, position: 100 }, { value: 15, position: 150 }];
-    model.init(stepsArr);
+    const options = { key: 1, position: 230 };
+    const parameters = [{ value: 2, position: 100 }, { value: 3, position: 200 }];
     expect(model.changeParameter(options)).to.deep.equal(parameters);
   });
 
   it('получить параметры при клике на шкалу, меняется handle 2', () => {
-    const model = new Model({
-      min: 0,
-      max: 50,
-      step: 5,
-      from: 10,
-      to: 40,
-    });
-    const parameters = [{ value: 10, position: 100 }, { value: 45, position: 450 }];
-    model.init(stepsArr);
-    expect(model.changeParameter({ value: 45 })).to.deep.equal(parameters);
+    const parameters = [{ value: 2, position: 100 }, { value: 5, position: 400 }];
+    expect(model.changeParameter({ value: 5 })).to.deep.equal(parameters);
   });
 
   it('получить параметры при клике на шкалу, меняется handle 1', () => {
-    const model = new Model({
-      min: 0,
-      max: 50,
-      step: 5,
-      from: 10,
-      to: 40,
-    });
-    const parameters = [{ value: 15, position: 150 }, { value: 40, position: 400 }];
-    model.init(stepsArr);
-    expect(model.changeParameter({ value: 15 })).to.deep.equal(parameters);
+    const parameters = [{ value: 1, position: 0 }, { value: 4, position: 300 }];
+    expect(model.changeParameter({ value: 1 })).to.deep.equal(parameters);
   });
 
   it('получить параметры при клике на шкалу, при range=false', () => {
-    const model = new Model({
-      min: 0,
-      max: 50,
-      step: 5,
-      from: 10,
-      to: 40,
+    model = new Model({
+      min: 1,
+      max: 6,
+      step: 1,
+      from: 2,
+      to: 4,
       range: false,
     });
-    const parameters = [{ value: 5, position: 50 }];
-    model.init(stepsArr);
+    const parameters = [{ value: 5, position: 400 }];
+    model.init(data);
     expect(model.changeParameter({ value: 5 })).to.deep.equal(parameters);
   });
 
   it('получить параметры при клике на трэк, при range=false', () => {
-    const model = new Model({
-      min: 0,
-      max: 50,
-      step: 5,
-      from: 10,
-      to: 40,
+    model = new Model({
+      min: 1,
+      max: 6,
+      step: 1,
+      from: 2,
+      to: 4,
       range: false,
     });
-    const parameters = [{ value: 15, position: 150 }];
-    model.init(stepsArr);
-    expect(model.changeParameter({ position: 150 })).to.deep.equal(parameters);
+    const parameters = [{ value: 4, position: 300 }];
+    model.init(data);
+    expect(model.changeParameter({ position: 300 })).to.deep.equal(parameters);
   });
 
   it('получить параметры при клике на трэк, при range=true', () => {
-    const model = new Model({
-      min: 0,
-      max: 50,
-      step: 5,
-      from: 5,
-      to: 40,
-      range: true,
-    });
-    const parameters = [{ value: 5, position: 50 }, { value: 35, position: 350 }];
-    model.init(stepsArr);
-    expect(model.changeParameter({ position: 350 })).to.deep.equal(parameters);
+    const parameters = [{ value: 2, position: 100 }, { value: 5, position: 400 }];
+    expect(model.changeParameter({ position: 370 })).to.deep.equal(parameters);
   });
 
   it('получить параметры', () => {
@@ -216,8 +157,7 @@ describe('Model', () => {
       vertical: false,
       tip: false,
     };
-    const model = new Model(config);
-
+    model = new Model(config);
     expect(model.getConfig()).to.deep.equal(config);
   });
 });

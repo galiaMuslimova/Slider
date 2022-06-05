@@ -109,7 +109,6 @@ describe('create slider', () => {
   });
 
   it('проверить создание слайдера', () => {
-    scaleClass.correctScale();
     const scaleItems = $scale.find('.js-meta-slider__scale-item');
     const scaleValues = $scale.find('.js-meta-slider__value');
     scaleValues.each(function (index) {

@@ -5,7 +5,7 @@ import {
 interface IModel {
   init(stepsArr: IParameters[]): void;
   changeParameter(parameter: ICoordinates, order?: number): IParameters[];
-  correctFromTo(): void;
+  correctParameters(): void;
   setOptions(options: IOptions): void;
   getParameters(): IParameters[];
   getConfig(): IConfig;
