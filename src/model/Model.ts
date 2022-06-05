@@ -56,8 +56,9 @@ class Model implements IModel {
   }
 
   public setOptions(options: IOptions): void {
+    const newOptions = $.extend(this.options, this.config, options);
     this.options = $.extend(this.options, options);
-    this.config = this.correctConfig(this.options);
+    this.config = this.correctConfig(newOptions);
   }
 
   public getConfig(): IConfig {

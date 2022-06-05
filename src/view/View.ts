@@ -104,6 +104,7 @@ class View implements IView {
 
   private toggleRange(config: IConfig): void {
     const { range, vertical } = config;
+    this.interval.setRange(range);
     if (range && !this.secondHandle) {
       this.secondHandle = new Handle();
       this.secondHandle.init(this.$slider);

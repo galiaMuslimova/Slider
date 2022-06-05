@@ -6,9 +6,12 @@ class Interval implements IInterval {
 
   private vertical: boolean;
 
+  private range: boolean;
+
   constructor() {
     this.$interval = jQuery('<div>');
     this.vertical = false;
+    this.range = true;
   }
 
   public init($slider: JQuery<HTMLElement>): void {
@@ -21,24 +24,23 @@ class Interval implements IInterval {
     this.vertical = vertical;
   }
 
+  public setRange(range: boolean): void {
+    this.range = range;
+  }
+
   public moveInterval(parameters: IParameters[]): void {
     let min: number;
     let width: number;
     const handleWidth = 20;
     const gap = 2; // to make a gap between interval and handle
-    switch (parameters.length) {
-      case 1:
-        min = 0;
-        width = parameters[0].position - handleWidth / 2 - gap;
-        break;
-      case 2:
-        min = Math.min(parameters[0].position, parameters[1].position) + handleWidth / 2;
-        width = Math.abs(parameters[1].position - parameters[0].position) - handleWidth - gap;
-        break;
-      default:
-        throw new Error('wrong number of handles');
+    if (this.range) {
+      min = Math.min(parameters[0].position, parameters[1].position) + handleWidth / 2;
+      width = Math.abs(parameters[1].position - parameters[0].position) - handleWidth - gap;
+    } else {
+      min = 0;
+      width = parameters[0].position - handleWidth / 2 - gap;
     }
-    width = (width > 0) ? width : 0;
+    width = width > 0 ? width : 0;
     this.$interval.css(this.vertical ? 'height' : 'width', `${width}px`);
     this.$interval.css(this.vertical ? 'width' : 'height', '10px');
     this.$interval.css(this.vertical ? 'top' : 'left', `${min}px`);
