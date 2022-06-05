@@ -9,7 +9,7 @@
     "esModuleInterop": true,
     "inlineSourceMap": true,
   },
-  "include": ["src/**/*.ts"],
+  "include": ["src/**/*.ts", "demo/**/*.ts"],
   "exclude": ["node_modules", "webpack.common.js", "webpack.dev.js", "webpack.prod.js"],
   "parserOptions": {
     "project": "./tsconfig.json"

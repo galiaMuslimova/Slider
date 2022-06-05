@@ -23,6 +23,7 @@ describe('Handle', () => {
     $track.appendTo($slider);
     handleClass = new Handle();
     handleClass.init($slider);
+    handleClass.setTrackParameters({ trackStart: 0, trackWidth: 300 });
   });
 
   it('проверить создание элемента handle', () => {
@@ -33,6 +34,12 @@ describe('Handle', () => {
   it('проверить установку позиции', () => {
     handleClass.moveHandle({ value: 10, position: 100 });
     expect(handleClass.getElement().css('left')).to.equal('90px');
+  });
+
+  it('проверить изменение vertical', () => {
+    handleClass.setVertical(true);
+    handleClass.moveHandle({ value: 10, position: 100 });
+    expect(handleClass.getElement().css('top')).to.equal('90px');
   });
 
   it('проверить удаление элемента tip', () => {

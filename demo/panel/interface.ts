@@ -1,6 +1,5 @@
-import { IOptions } from "../../src/interfaces/interfaces";
-import IObserver from "../../src/observer/interface";
-import Input from '../input/Input';
+import { IOptions } from '../../src/interfaces/interfaces';
+import IObserver from '../../src/observer/interface';
 
 interface IPanel {
   inputs: {};

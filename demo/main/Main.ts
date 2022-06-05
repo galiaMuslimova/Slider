@@ -2,8 +2,9 @@ import ISlider from '../slider/interface';
 import Slider from '../slider/Slider';
 import IMain from './interface';
 
-class Main implements IMain {  
+class Main implements IMain {
   public sliders: ISlider[];
+
   private $element: JQuery<HTMLElement>;
 
   constructor($element: JQuery<HTMLElement>) {
@@ -18,7 +19,7 @@ class Main implements IMain {
       const slider = new Slider($(item));
       this.sliders.push(slider);
     });
-    this.sliders[0].displayValues();    
+    this.sliders[0].displayValues(true);
   }
 }
 

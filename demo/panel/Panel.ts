@@ -1,10 +1,10 @@
-import { IConfig, IOptions } from "../../src/interfaces/interfaces";
-import Observer from "../../src/observer/Observer";
-import IObserver from "../../src/observer/interface";
-import Input from "../input/Input";
-import IPanel from "./interface";
+import { IConfig, IOptions } from '../../src/interfaces/interfaces';
+import Observer from '../../src/observer/Observer';
+import IObserver from '../../src/observer/interface';
+import Input from '../input/Input';
+import IPanel from './interface';
 
-import "./panel.scss";
+import './panel.scss';
 
 class Panel implements IPanel {
   public inputs: {};
@@ -21,7 +21,7 @@ class Panel implements IPanel {
     this.$root = $root;
     this.options = options;
     this.observer = new Observer();
-    this.$panel = $("<div>");
+    this.$panel = $('<div>');
     this.inputs = {};
     this.initPanel(this.options);
     this.bindEventListeners();
@@ -39,7 +39,7 @@ class Panel implements IPanel {
   }
 
   private initPanel(options: IConfig): void {
-    this.$panel = this.$root.find(".js-panel");
+    this.$panel = this.$root.find('.js-panel');
     const element = this;
     const inputs = {};
     Object.entries(options).forEach(([key, value]) => {
@@ -47,24 +47,24 @@ class Panel implements IPanel {
       const $inputElement = this.$panel.find(`[name=${searcher}]`);
       const input = new Input($inputElement, key, value);
       input.observer.subscribe({
-        key: "setting",
+        key: 'setting',
         observer: element.changeOptions.bind(element),
       });
       inputs[key] = input;
-      if (key === "step") {
-        input.setProp("min", 0.1);
-        input.setProp("step", 0.1);
+      if (key === 'step') {
+        input.setProp('min', 0.1);
+        input.setProp('step', 0.1);
       }
     });
     this.inputs = inputs;
   }
 
   private bindEventListeners(): void {
-    this.$panel.on("submit", Panel.handlePanelFormSubmit);
+    this.$panel.on('submit', Panel.handlePanelFormSubmit);
   }
 
   private changeOptions(options: IOptions): void {
-    this.observer.notify("setting", options);
+    this.observer.notify('setting', options);
   }
 }
 

@@ -61,6 +61,10 @@ describe('Controller', () => {
     $track = $rootEl.find('.js-meta-slider__track');
     $scale = $rootEl.find('.js-meta-slider__scale');
     $handle = $rootEl.find('.js-meta-slider__handle');
+    $track.css('width', '500');
+    controller.view.initConfig(controller.model.getConfig());
+    controller.model.init(controller.view.getStepsArr());
+    controller.view.setParameters(controller.model.getParameters());
   });
 
   afterEach(() => {
@@ -76,12 +80,11 @@ describe('Controller', () => {
     expect($track?.length).to.equal(1);
   });
 
-  it('устанавливает handle', () => {
-    expect($handle?.length).to.equal(2);
-  });
-
   it('проверяет change and correct handles position', () => {
-    controller?.model.changeParameter({ key: 1, position: 30 });
+    controller?.model.changeParameter({
+      key: 1,
+      position: 30,
+    });
     const parameters = controller?.model.getParameters();
     const exceptParameters = [{ value: 2, position: 100 }, { value: 1, position: 50 }];
     expect(parameters).to.deep.equal(exceptParameters);

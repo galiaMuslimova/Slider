@@ -113,34 +113,6 @@ describe('Model', () => {
     expect(model.changeParameter({ value: 1 })).to.deep.equal(parameters);
   });
 
-  it('получить параметры при клике на шкалу, при range=false', () => {
-    model = new Model({
-      min: 1,
-      max: 6,
-      step: 1,
-      from: 2,
-      to: 4,
-      range: false,
-    });
-    const parameters = [{ value: 5, position: 400 }];
-    model.init(data);
-    expect(model.changeParameter({ value: 5 })).to.deep.equal(parameters);
-  });
-
-  it('получить параметры при клике на трэк, при range=false', () => {
-    model = new Model({
-      min: 1,
-      max: 6,
-      step: 1,
-      from: 2,
-      to: 4,
-      range: false,
-    });
-    const parameters = [{ value: 4, position: 300 }];
-    model.init(data);
-    expect(model.changeParameter({ position: 300 })).to.deep.equal(parameters);
-  });
-
   it('получить параметры при клике на трэк, при range=true', () => {
     const parameters = [{ value: 2, position: 100 }, { value: 5, position: 400 }];
     expect(model.changeParameter({ position: 370 })).to.deep.equal(parameters);

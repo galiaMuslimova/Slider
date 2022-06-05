@@ -4,5 +4,4 @@ webpack.dev.js
 webpack.prod.js
 node_modules
 dist
-demo
 .eslintrc.js

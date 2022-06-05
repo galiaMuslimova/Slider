@@ -8,7 +8,7 @@ const { JSDOM } = require('jsdom');
 
 const dom = new JSDOM(`<!DOCTYPE html>
 <body>
-  <div class='testSlider'></div>
+  <div class='body__slider js-body__slider'></div>
 </body>`);
 global.window = dom.window;
 
@@ -18,30 +18,26 @@ global.window = dom.window;
 const { document } = dom.window;
 
 describe('View', () => {
-  let $root: JQuery<HTMLElement>;
+  const $root: JQuery<HTMLElement> = $(document).find('.js-body__slider');
   let $slider: JQuery<HTMLElement>;
   let view: IView;
-  let config: IConfig;
+  const config: IConfig = {
+    min: 0,
+    max: 10,
+    step: 1,
+    from: 2,
+    to: 8,
+    range: true,
+    vertical: true,
+    tip: true,
+  };
 
   before(() => {
-    config = {
-      min: 0,
-      max: 10,
-      step: 1,
-      from: 2,
-      to: 8,
-      range: true,
-      vertical: true,
-      tip: true,
-    };
-    $root = $(document).find('.testSlider');
-    $root.css('width', '500');
-    $root.css('height', '400');
-    $root.css('top', '0');
-    $root.css('left', '0');
     view = new View($root);
-    view.initConfig(config);
     $slider = $root.find('.js-meta-slider');
+    $slider.find('.js-meta-slider__track').css('width', '500');
+    $slider.find('.js-meta-slider__track').css('height', '500');
+    view.initConfig(config);
   });
 
   it('проверяет создание элемента slider', () => {
@@ -54,18 +50,17 @@ describe('View', () => {
   });
 
   it('проверяет установку vertical false', () => {
-    view.initConfig($.extend(config, { vertical: false }));
+    view.initConfig($.extend({}, config, { vertical: false }));
     expect($slider.hasClass('meta-slider_vertical')).to.equal(false);
     expect($slider.hasClass('meta-slider_horizontal')).to.equal(true);
   });
 
   it('проверяет установку range true', () => {
-    view.initConfig($.extend(config, { range: true }));
     expect($slider.find('.js-meta-slider__handle').length).to.equal(2);
   });
 
   it('проверяет установку range false', () => {
-    view.initConfig($.extend(config, { range: false }));
+    view.initConfig($.extend({}, config, { range: false }));
     expect($slider.find('.js-meta-slider__handle').length).to.equal(1);
   });
 });

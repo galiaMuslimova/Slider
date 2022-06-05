@@ -38,12 +38,15 @@ describe('Interval', () => {
   });
 
   it('проверяет создание интервала при range=false, vertical=false', () => {
+    intervalClass.setRange(false);
     intervalClass.moveInterval([{ value: 10, position: 100 }]);
     expect($interval.css('width')).to.eq('88px');
     expect($interval.css('left')).to.eq('0px');
   });
 
   it('проверяет создание интервала при range=false, vertical=false', () => {
+    intervalClass.setRange(false);
+    intervalClass.setVertical(false);
     intervalClass.moveInterval([{ value: 120, position: 120 }]);
     expect($interval.css('width')).to.eq('108px');
     expect($interval.css('left')).to.eq('0px');
@@ -51,6 +54,7 @@ describe('Interval', () => {
 
   it('проверяет создание интервала при range=true, vertical=true', () => {
     intervalClass.setVertical(true);
+    intervalClass.setRange(true);
     $interval = $track.find('.js-meta-slider__interval');
     intervalClass.moveInterval([{ value: 120, position: 120 }, { value: 230, position: 230 }]);
     expect($interval.css('height')).to.eq('88px');
@@ -58,6 +62,7 @@ describe('Interval', () => {
   });
 
   it('проверяет создание интервала при range=false, vertical=true', () => {
+    intervalClass.setRange(false);
     intervalClass.moveInterval([{ value: 155, position: 155 }]);
     expect($interval.css('height')).to.eq('143px');
     expect($interval.css('top')).to.eq('0px');
