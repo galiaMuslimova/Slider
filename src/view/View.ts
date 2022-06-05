@@ -1,10 +1,7 @@
 import {
   IConfig,
   ICoordinates,
-  IData,
-  IOptions,
   IParameters,
-  ITrackPosition,
 } from '../interfaces/interfaces';
 import Observer from '../observer/Observer';
 
@@ -27,9 +24,9 @@ class View implements IView {
 
   private $root: JQuery<HTMLElement>;
 
-  private $trackElement: JQuery<HTMLElement>;
-
   private track: ITrack;
+
+  private scale: IScale;
 
   private firstHandle: IHandle;
 
@@ -37,13 +34,10 @@ class View implements IView {
 
   private interval: IInterval;
 
-  private scale: IScale;
-
   constructor($root: JQuery<HTMLElement>) {
     this.$root = $root;
     this.observer = new Observer();
     this.$slider = jQuery('<div>');
-    this.$trackElement = jQuery('<div>');
     this.track = new Track();
     this.scale = new Scale();
     this.firstHandle = new Handle();
@@ -56,12 +50,16 @@ class View implements IView {
     this.$slider.addClass('meta-slider js-meta-slider meta-slider_horizontal');
     this.$slider.prependTo(this.$root);
     this.track.init(this.$slider);
-    this.$trackElement = this.track.getElement();
     this.track.observer.subscribe({
       key: 'trackClick',
       observer: this.trackClick.bind(this),
     });
-    this.firstHandle.init(this.$trackElement);
+    this.scale.init(this.$slider);
+    this.scale.observer.subscribe({
+      key: 'scaleClick',
+      observer: this.scaleClick.bind(this),
+    });
+    this.firstHandle.init(this.$slider);
     this.firstHandle.observer.subscribe({
       key: 'mouseMove',
       observer: this.mouseMove.bind(this, 0),
@@ -70,23 +68,18 @@ class View implements IView {
       key: 'moveEnd',
       observer: this.mouseMoveEnd.bind(this),
     });
-    this.interval.init(this.$trackElement);
-    this.scale.init(this.$slider);
-    this.scale.observer.subscribe({
-      key: 'scaleClick',
-      observer: this.scaleClick.bind(this),
-    });
+    this.interval.init(this.$slider);
   }
 
   public initConfig(config: IConfig) {
     this.toggleDirection(config);
     this.toggleRange(config);
     this.toggleTip(config);
+    this.scale.initStepsArr(config, this.track.getTrackParameters());
   }
 
-  public initData(data: IData): void {
-    this.correctScale(data.stepsArr);
-    this.setParameters(data.parameters);
+  public getStepsArr(): IParameters[] {
+    return this.scale.getStepsArr();
   }
 
   public setParameters(parameters: IParameters[]): void {
@@ -95,24 +88,16 @@ class View implements IView {
     this.interval.moveInterval(parameters);
   }
 
-  public getTrackParameters(): ITrackPosition {
-    const { trackStart, trackWidth } = this.track.getTrackParameters();
-    this.firstHandle.setTrackParameters({ trackStart, trackWidth });
-    this.secondHandle?.setTrackParameters(this.track.getTrackParameters());
-    return { trackStart, trackWidth };
-  }
-
   private toggleDirection(config: IConfig): void {
     const { vertical } = config;
-    this.$slider.removeClass(
-      vertical ? 'meta-slider_horizontal' : 'meta-slider_vertical',
-    );
-    this.$slider.addClass(
-      vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal',
-    );
+    this.$slider
+      .removeClass(vertical ? 'meta-slider_horizontal' : 'meta-slider_vertical')
+      .addClass(vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
     this.track.setVertical(vertical);
     this.firstHandle.setVertical(vertical);
+    this.firstHandle.setTrackParameters(this.track.getTrackParameters());
     this.secondHandle?.setVertical(vertical);
+    this.secondHandle?.setTrackParameters(this.track.getTrackParameters());
     this.interval.setVertical(vertical);
     this.scale.setVertical(vertical);
   }
@@ -121,7 +106,7 @@ class View implements IView {
     const { range, vertical } = config;
     if (range && !this.secondHandle) {
       this.secondHandle = new Handle();
-      this.secondHandle.init(this.$trackElement);
+      this.secondHandle.init(this.$slider);
       this.secondHandle.setVertical(vertical);
       this.secondHandle.setTrackParameters(this.track.getTrackParameters());
       this.secondHandle.observer.subscribe({
@@ -134,7 +119,7 @@ class View implements IView {
       });
     } else if (!range && this.secondHandle) {
       const handle = this.secondHandle.getElement();
-      this.$trackElement.find(handle).remove();
+      this.$slider.find(handle).remove();
       this.secondHandle = null;
     }
   }
@@ -169,10 +154,6 @@ class View implements IView {
       value,
     };
     this.observer.notify('moveHandle', options);
-  }
-
-  private correctScale(stepsArr: IParameters[]): void {
-    this.scale.correctScale(stepsArr);
   }
 }
 

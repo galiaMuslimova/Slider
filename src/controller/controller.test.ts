@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { IOptions } from '../interfaces/interfaces';
+import { IOptions, IParameters } from '../interfaces/interfaces';
 
 import Controller from './Controller';
 import IController from './interface';
@@ -23,6 +23,7 @@ describe('Controller', () => {
   let $scale: JQuery<HTMLElement> | null;
   let $track: JQuery<HTMLElement> | null;
   let $handle: JQuery<HTMLElement> | null;
+  let expectedStepsArr: IParameters[];
 
   before(() => {
     $rootEl = $(document).find('.js-body__slider');
@@ -35,12 +36,25 @@ describe('Controller', () => {
       range: true,
       vertical: false,
     };
+    expectedStepsArr = [
+      { value: 0, position: 0 },
+      { value: 1, position: 50 },
+      { value: 2, position: 100 },
+      { value: 3, position: 150 },
+      { value: 4, position: 200 },
+      { value: 5, position: 250 },
+      { value: 6, position: 300 },
+      { value: 7, position: 350 },
+      { value: 8, position: 400 },
+      { value: 9, position: 450 },
+      { value: 10, position: 500 },
+    ];
   });
 
   beforeEach(() => {
     controller = new Controller($rootEl, options);
-    controller?.model.init(controller?.view.getTrackParameters());
-    controller?.view.initData(controller?.model.getData());
+    controller?.model.init(expectedStepsArr);
+    controller?.view.initConfig(controller?.model.getConfig());
     $slider = $rootEl.find('.js-meta-slider');
     $track = $rootEl.find('.js-meta-slider__track');
     $scale = $rootEl.find('.js-meta-slider__scale');
@@ -66,19 +80,6 @@ describe('Controller', () => {
 
   it('устанавливает stepsArr', () => {
     const stepsArr = controller?.model.getData().stepsArr;
-    const expectedStepsArr = [
-      { value: 0, position: 0 },
-      { value: 1, position: 50 },
-      { value: 2, position: 100 },
-      { value: 3, position: 150 },
-      { value: 4, position: 200 },
-      { value: 5, position: 250 },
-      { value: 6, position: 300 },
-      { value: 7, position: 350 },
-      { value: 8, position: 400 },
-      { value: 9, position: 450 },
-      { value: 10, position: 500 },
-    ];
     expect(stepsArr).to.deep.equal(expectedStepsArr);
   });
 

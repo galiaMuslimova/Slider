@@ -44,19 +44,11 @@ interface ITrackPosition {
   trackWidth: number;
 }
 
-interface IData {
-  config: IConfig;
-  trackParameters: ITrackPosition;
-  parameters: IParameters[];
-  stepsArr: IParameters[];
-}
-
 export {
   IOptions,
   IConfig,
   IParameters,
   IEventPosition,
   ITrackPosition,
-  IData,
   ICoordinates,
 };

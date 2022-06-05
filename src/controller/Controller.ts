@@ -8,17 +8,17 @@ import IModel from '../model/interface';
 import IController from './interface';
 
 class Controller implements IController {
-  public view: IView;
-
   public model: IModel;
 
-  private options: IOptions;
+  public view: IView;
 
   private $root: JQuery<HTMLElement>;
 
+  private options: IOptions;
+
   constructor(root: JQuery<HTMLElement>, options: IOptions) {
-    this.options = options;
     this.$root = root;
+    this.options = options;
     this.model = new Model(this.options);
     this.view = new View(this.$root);
     this.init();
@@ -37,11 +37,17 @@ class Controller implements IController {
   private init() {
     this.view.initConfig(this.model.getConfig());
     this.view.$slider.ready(() => {
-      this.model.init(this.view.getTrackParameters());
-      this.view.initData(this.model.getData());
+      this.model.init(this.view.getStepsArr());
+      this.view.setParameters(this.model.getParameters());
     });
-    this.view.observer.subscribe({ key: 'moveHandle', observer: this.changeParameters.bind(this) });
-    this.view.observer.subscribe({ key: 'moveEnd', observer: this.correctParameters.bind(this) });
+    this.view.observer.subscribe({
+      key: 'moveHandle',
+      observer: this.changeParameters.bind(this),
+    });
+    this.view.observer.subscribe({
+      key: 'moveEnd',
+      observer: this.correctParameters.bind(this),
+    });
   }
 
   private changeParameters(setting: ICoordinates) {
@@ -50,7 +56,7 @@ class Controller implements IController {
 
   private correctParameters() {
     this.model.correctFromTo();
-    this.view.initData(this.model.getData());
+    this.view.setParameters(this.model.getParameters());
   }
 }
 

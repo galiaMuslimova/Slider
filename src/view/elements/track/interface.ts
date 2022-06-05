@@ -7,7 +7,6 @@ interface ITrack {
   init($slider: JQuery<HTMLElement>): void
   setVertical(vertical: boolean): void
   getTrackParameters(): ITrackPosition
-  getElement(): JQuery<HTMLElement>
 }
 
 export default ITrack;

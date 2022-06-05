@@ -2,15 +2,15 @@ import MetaSlider from './MetaSlider';
 import { IConfig, IOptions } from './interfaces/interfaces';
 import defaults from './defaults';
 
-interface MetaSl {
+interface ISlider {
   (method?: 'init'): JQuery<HTMLElement>;
   (method: 'getOptions'): IConfig;
-  (method: keyof IMethods, options: IOptions): JQuery<HTMLElement>;
+  (method: 'setOptions', options: IOptions): JQuery<HTMLElement>;
 }
 
 declare global {
   interface JQuery {
-    MetaSlider: MetaSl;
+    MetaSlider: ISlider;
   }
 }
 interface IMethods {
@@ -65,7 +65,7 @@ interface IMethods {
     if (method === 'getOptions') {
       return methods[method].apply($this);
     }
-    if (methods[method] && options) {
+    if (method === 'setOptions' && options) {
       methods[method].apply($this, [options]);
       return this;
     }

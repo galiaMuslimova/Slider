@@ -12,14 +12,14 @@ class Track implements ITrack {
 
   private trackStart: number;
 
-  private trackWidth: number;
+  private trackWidth: number | undefined;
 
   constructor() {
     this.observer = new Observer();
     this.$track = jQuery('<div>');
     this.vertical = false;
     this.trackStart = 0;
-    this.trackWidth = 500;
+    this.trackWidth = 0;
   }
 
   public init($slider: JQuery<HTMLElement>): void {
@@ -35,12 +35,11 @@ class Track implements ITrack {
   public getTrackParameters(): ITrackPosition {
     const position = this.$track.position();
     this.trackStart = this.vertical ? Number(position.top) : Number(position.left);
-    this.trackWidth = this.vertical ? this.$track.height() || 500 : this.$track.width() || 500;
-    return { trackStart: this.trackStart, trackWidth: this.trackWidth };
-  }
-
-  public getElement(): JQuery<HTMLElement> {
-    return this.$track;
+    this.trackWidth = this.vertical ? this.$track.height() : this.$track.width();
+    if (this.trackStart && this.trackWidth) {
+      return { trackStart: this.trackStart, trackWidth: this.trackWidth };
+    }
+    throw new Error('wrong width of slider');
   }
 
   private bindEventListeners(): void {

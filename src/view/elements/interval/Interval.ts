@@ -11,7 +11,8 @@ class Interval implements IInterval {
     this.vertical = false;
   }
 
-  public init($track: JQuery<HTMLElement>): void {
+  public init($slider: JQuery<HTMLElement>): void {
+    const $track = $slider.find('.js-meta-slider__track');
     this.$interval.addClass('meta-slider__interval js-meta-slider__interval');
     this.$interval.appendTo($track);
   }

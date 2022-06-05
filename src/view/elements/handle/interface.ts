@@ -3,15 +3,14 @@ import IObserver from '../../../observer/interface';
 
 interface IHandle {
   observer: IObserver;
-  isTip: boolean
+  isTip: boolean;
 
-  init($track: JQuery<HTMLElement>): void
-  setVertical(vertical: boolean): void
-  getVertical(): boolean
-  getElement(): JQuery<HTMLElement>
-  moveHandle(parameters: IParameters): void
-  toggleTip(tip: boolean): void
-  setTrackParameters(trackParameters: ITrackPosition): void
+  init($track: JQuery<HTMLElement>): void;
+  setVertical(vertical: boolean): void;
+  getElement(): JQuery<HTMLElement>;
+  setTrackParameters(trackParameters: ITrackPosition): void;
+  moveHandle(parameters: IParameters): void;
+  toggleTip(tip: boolean): void;
 }
 
 export default IHandle;

@@ -31,7 +31,8 @@ class Handle implements IHandle {
     this.bindEventListeners();
   }
 
-  public init($track: JQuery<HTMLElement>): void {
+  public init($slider: JQuery<HTMLElement>): void {
+    const $track = $slider.find('.js-meta-slider__track');
     this.$handle.addClass('meta-slider__handle js-meta-slider__handle');
     this.$handle.appendTo($track);
     this.tip?.init(this.$handle);
@@ -39,10 +40,6 @@ class Handle implements IHandle {
 
   public setVertical(vertical: boolean): void {
     this.vertical = vertical;
-  }
-
-  public getVertical(): boolean {
-    return this.vertical;
   }
 
   public getElement(): JQuery<HTMLElement> {
@@ -117,7 +114,7 @@ class Handle implements IHandle {
     }
   }
 
-  private handleMoveEnd(event: Event): void {
+  private handleMoveEnd(): void {
     $(document).off('mousemove mouseup touchmove touchend');
     this.observer.notify('moveEnd', 0);
   }

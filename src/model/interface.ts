@@ -1,13 +1,13 @@
 import {
-  IParameters, ITrackPosition, IOptions, IConfig, IData, ICoordinates,
+  IParameters, IOptions, IConfig, ICoordinates,
 } from '../interfaces/interfaces';
 
 interface IModel {
-  init(trackParameters: ITrackPosition): void;
+  init(stepsArr: IParameters[]): void;
   changeParameter(parameter: ICoordinates, order?: number): IParameters[];
   correctFromTo(): void;
   setOptions(options: IOptions): void;
-  getData(): IData;
+  getParameters(): IParameters[];
   getConfig(): IConfig;
 }
 

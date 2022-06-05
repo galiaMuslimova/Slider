@@ -1,12 +1,13 @@
-import { IParameters } from '../../../interfaces/interfaces';
+import { IConfig, IParameters, ITrackPosition } from '../../../interfaces/interfaces';
 import IObserver from '../../../observer/interface';
 
 interface IScale {
   observer: IObserver;
 
-  init($slider: JQuery<HTMLElement>): void
-  setVertical(vertical: boolean): void
-  correctScale(stepsArr: IParameters[]): void
+  init($slider: JQuery<HTMLElement>): void;
+  setVertical(vertical: boolean): void;
+  initStepsArr(config: IConfig, trackParameters: ITrackPosition): void;
+  getStepsArr(): IParameters[];
 }
 
 export default IScale;
