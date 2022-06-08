@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { IConfig, IParameters, ITrackPosition } from '../../../interfaces/interfaces';
+import { IConfig, IPositions, ITrackPosition } from '../../../interfaces/interfaces';
 
 import Scale from './Scale';
 
@@ -14,7 +14,7 @@ global.window = dom.window;
 const { document } = dom.window;
 
 describe('reduceArray', () => {
-  let array: IParameters[];
+  let array: IPositions[];
 
   before(() => {
     array = [
@@ -57,7 +57,7 @@ describe('reduceArray', () => {
 });
 
 describe('correctLastItems', () => {
-  let array: IParameters[];
+  let array: IPositions[];
 
   before(() => {
     array = [
@@ -92,14 +92,13 @@ describe('create slider', () => {
   let $slider: JQuery<HTMLElement>;
   let scaleClass: Scale;
   let $scale: JQuery<HTMLElement>;
-  let expectedArray: IParameters[];
+  let expectedArray: IPositions[];
   let config: IConfig;
   let trackParameters: ITrackPosition;
 
   before(() => {
     $slider = $(document).find('.js-meta-slider');
-    scaleClass = new Scale();
-    scaleClass.init($slider);
+    scaleClass = new Scale($slider);
     $scale = $slider.find('.js-meta-slider__scale');
     $scale.css('width', '1000');
     expectedArray = [
@@ -126,7 +125,7 @@ describe('create slider', () => {
       tip: true,
     };
     trackParameters = { trackStart: 0, trackWidth: 1000 };
-    scaleClass.initStepsArr(config, trackParameters);
+    scaleClass.initPositions(config, trackParameters);
   });
 
   it('проверить создание слайдера', () => {
@@ -139,7 +138,7 @@ describe('create slider', () => {
   });
 
   it('проверить создание массива', () => {
-    scaleClass.initStepsArr(config, trackParameters);
-    expect(scaleClass.getStepsArr()).to.deep.eq(expectedArray);
+    scaleClass.initPositions(config, trackParameters);
+    expect(scaleClass.getPositions()).to.deep.eq(expectedArray);
   });
 });

@@ -21,9 +21,14 @@ interface IOptions {
   onChange?: (config: IConfig) => void;
 }
 
-interface IParameters {
+interface IPositions {
   value: number;
   position: number;
+}
+
+interface IParameters {
+  from: IPositions;
+  to?: IPositions;
 }
 
 interface ICoordinates {
@@ -45,6 +50,7 @@ interface ITrackPosition {
 export {
   IOptions,
   IConfig,
+  IPositions,
   IParameters,
   IEventPosition,
   ITrackPosition,

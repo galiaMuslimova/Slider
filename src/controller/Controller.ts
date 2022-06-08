@@ -37,7 +37,7 @@ class Controller implements IController {
   private init() {
     this.view.$slider.ready(() => {
       this.view.initConfig(this.model.getConfig());
-      this.model.init(this.view.getStepsArr());
+      this.model.init(this.view.getPositions());
       this.view.setParameters(this.model.getParameters());
     });
     this.view.observer.subscribe({

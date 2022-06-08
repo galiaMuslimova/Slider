@@ -27,8 +27,7 @@ describe('Tip', () => {
       class: 'meta-slider__track js-meta-slider__track',
     });
     $track.appendTo($slider);
-    handleClass = new Handle();
-    handleClass.init($track);
+    handleClass = new Handle($track);
     $handle = handleClass.getElement();
     tipClass = new Tip();
     tipClass.init($handle);

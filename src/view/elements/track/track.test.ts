@@ -19,8 +19,7 @@ describe('Track', () => {
 
   before(() => {
     $slider = $(document).find('.js-meta-slider');
-    trackClass = new Track();
-    trackClass.init($slider);
+    trackClass = new Track($slider);
     $track = $slider.find('.js-meta-slider__track');
     $track.css('width', '500');
     $track.css('height', '400');

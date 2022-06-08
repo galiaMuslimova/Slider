@@ -26,17 +26,17 @@ class Interval implements IInterval {
     this.range = range;
   }
 
-  public moveInterval(parameters: IParameters[]): void {
+  public moveInterval(parameters: IParameters): void {
     let min: number;
     let width: number;
     const handleWidth = 20;
     const gap = 2; // to make a gap between interval and handle
-    if (this.range) {
-      min = Math.min(parameters[0].position, parameters[1].position) + handleWidth / 2;
-      width = Math.abs(parameters[1].position - parameters[0].position) - handleWidth - gap;
+    if (parameters.to && this.range) {
+      min = Math.min(parameters.from.position, parameters.to.position) + handleWidth / 2;
+      width = Math.abs(parameters.to.position - parameters.from.position) - handleWidth - gap;
     } else {
       min = 0;
-      width = parameters[0].position - handleWidth / 2 - gap;
+      width = parameters.from.position - handleWidth / 2 - gap;
     }
     width = width > 0 ? width : 0;
     this.$interval.css(this.vertical ? 'height' : 'width', `${width}px`);

@@ -1,13 +1,13 @@
 import {
-  IParameters, IOptions, IConfig, ICoordinates,
+  IParameters, IOptions, IConfig, ICoordinates, IPositions,
 } from '../interfaces/interfaces';
 
 interface IModel {
-  init(stepsArr: IParameters[]): void;
-  changeParameter(parameter: ICoordinates, order?: number): IParameters[];
+  init(positions: IPositions[]): void;
+  changeParameter(parameter: ICoordinates, order?: number): IParameters;
   correctParameters(): void;
   setOptions(options: IOptions): void;
-  getParameters(): IParameters[];
+  getParameters(): IParameters;
   getConfig(): IConfig;
 }
 

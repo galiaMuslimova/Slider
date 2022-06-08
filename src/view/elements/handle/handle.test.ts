@@ -21,8 +21,7 @@ describe('Handle', () => {
     $slider = $(document).find('.js-meta-slider');
     $track = jQuery('<div>', { class: 'meta-slider__track js-meta-slider__track' });
     $track.appendTo($slider);
-    handleClass = new Handle();
-    handleClass.init($slider);
+    handleClass = new Handle($slider);
     handleClass.setTrackParameters({ trackStart: 0, trackWidth: 300 });
   });
 

@@ -74,7 +74,7 @@ describe('Model', () => {
   });
 
   it('инициализировать параметры', () => {
-    const parameters = [{ value: 2, position: 100 }, { value: 4, position: 300 }];
+    const parameters = { from: { value: 2, position: 100 }, to: { value: 4, position: 300 } };
     expect(model.getParameters()).to.deep.equal(parameters);
   });
 
@@ -87,34 +87,34 @@ describe('Model', () => {
       to: 19,
     });
     model.init(data);
-    const parameters = [{ value: 1, position: 0 }, { value: 6, position: 500 }];
+    const parameters = { from: { value: 1, position: 0 }, to: { value: 6, position: 500 } };
     expect(model.getParameters()).to.deep.equal(parameters);
   });
 
   it('получить параметры при движении handle 1', () => {
     const options = { key: 0, position: 165 };
-    const parameters = [{ value: 3, position: 200 }, { value: 4, position: 300 }];
+    const parameters = { from: { value: 3, position: 200 }, to: { value: 4, position: 300 } };
     expect(model.changeParameter(options)).to.deep.equal(parameters);
   });
 
   it('получить параметры при движении handle 2', () => {
     const options = { key: 1, position: 230 };
-    const parameters = [{ value: 2, position: 100 }, { value: 3, position: 200 }];
+    const parameters = { from: { value: 2, position: 100 }, to: { value: 3, position: 200 } };
     expect(model.changeParameter(options)).to.deep.equal(parameters);
   });
 
   it('получить параметры при клике на шкалу, меняется handle 2', () => {
-    const parameters = [{ value: 2, position: 100 }, { value: 5, position: 400 }];
+    const parameters = { from: { value: 2, position: 100 }, to: { value: 5, position: 400 } };
     expect(model.changeParameter({ value: 5 })).to.deep.equal(parameters);
   });
 
   it('получить параметры при клике на шкалу, меняется handle 1', () => {
-    const parameters = [{ value: 1, position: 0 }, { value: 4, position: 300 }];
+    const parameters = { from: { value: 1, position: 0 }, to: { value: 4, position: 300 } };
     expect(model.changeParameter({ value: 1 })).to.deep.equal(parameters);
   });
 
   it('получить параметры при клике на трэк, при range=true', () => {
-    const parameters = [{ value: 2, position: 100 }, { value: 5, position: 400 }];
+    const parameters = { from: { value: 2, position: 100 }, to: { value: 5, position: 400 } };
     expect(model.changeParameter({ position: 370 })).to.deep.equal(parameters);
   });
 

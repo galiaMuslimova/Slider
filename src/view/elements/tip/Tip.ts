@@ -1,4 +1,4 @@
-import { IParameters } from '../../../interfaces/interfaces';
+import { IPositions } from '../../../interfaces/interfaces';
 import ITip from './interface';
 
 class Tip implements ITip {
@@ -13,7 +13,7 @@ class Tip implements ITip {
     this.$tip.appendTo($handle);
   }
 
-  public changeTip(parameter: IParameters): void {
+  public changeTip(parameter: IPositions): void {
     this.$tip.html(`${parameter.value}`);
   }
 

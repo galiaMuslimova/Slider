@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { IOptions, IParameters } from '../interfaces/interfaces';
+import { IPositions, IOptions } from '../interfaces/interfaces';
 
 import Controller from './Controller';
 import IController from './interface';
@@ -23,7 +23,7 @@ describe('Controller', () => {
   let $scale: JQuery<HTMLElement> | null;
   let $track: JQuery<HTMLElement> | null;
   let $handle: JQuery<HTMLElement> | null;
-  let expectedStepsArr: IParameters[];
+  let expectedpositions: IPositions[];
 
   before(() => {
     $rootEl = $(document).find('.js-body__slider');
@@ -40,7 +40,7 @@ describe('Controller', () => {
       range: true,
       vertical: false,
     };
-    expectedStepsArr = [
+    expectedpositions = [
       { value: 0, position: 0 },
       { value: 1, position: 50 },
       { value: 2, position: 100 },
@@ -63,7 +63,7 @@ describe('Controller', () => {
     $handle = $rootEl.find('.js-meta-slider__handle');
     $track.css('width', '500');
     controller.view.initConfig(controller.model.getConfig());
-    controller.model.init(controller.view.getStepsArr());
+    controller.model.init(controller.view.getpositions());
     controller.view.setParameters(controller.model.getParameters());
   });
 
@@ -86,7 +86,7 @@ describe('Controller', () => {
       position: 30,
     });
     const parameters = controller?.model.getParameters();
-    const exceptParameters = [{ value: 2, position: 100 }, { value: 1, position: 50 }];
+    const exceptParameters = { from: { value: 2, position: 100 }, to: { value: 1, position: 50 } };
     expect(parameters).to.deep.equal(exceptParameters);
     const eStart = jQuery.Event('mousedown');
     const eEnd = jQuery.Event('mouseup');
@@ -95,7 +95,7 @@ describe('Controller', () => {
       $(handle1).triggerHandler(eStart);
       $(document).triggerHandler(eEnd);
     }
-    const correctParameters = [{ value: 1, position: 50 }, { value: 2, position: 100 }];
+    const correctParameters = { from: { value: 1, position: 50 }, to: { value: 2, position: 100 } };
     expect(controller?.model.getParameters()).to.deep.equal(correctParameters);
   });
 

@@ -1,4 +1,4 @@
-import { IConfig, IParameters, ITrackPosition } from '../../../interfaces/interfaces';
+import { IConfig, IPositions, ITrackPosition } from '../../../interfaces/interfaces';
 import Observer from '../../../observer/Observer';
 import IObserver from '../../../observer/interface';
 import IScale from './interface';
@@ -10,7 +10,7 @@ class Scale implements IScale {
 
   private $scale: JQuery<HTMLElement>;
 
-  private stepsArr: IParameters[];
+  private positions: IPositions[];
 
   private itemWidth: number;
 
@@ -23,7 +23,7 @@ class Scale implements IScale {
     this.vertical = false;
     this.observer = new Observer();
     this.$scale = jQuery('<div>');
-    this.stepsArr = [];
+    this.positions = [];
     this.itemWidth = 20;
     this.scaleSize = 500;
     this.init();
@@ -33,7 +33,7 @@ class Scale implements IScale {
     this.vertical = vertical;
   }
 
-  public initStepsArr(config: IConfig, trackParameters: ITrackPosition): void {
+  public initPositions(config: IConfig, trackParameters: ITrackPosition): void {
     this.scaleSize = trackParameters.trackWidth;
     const { min, max, step } = config;
     const range = max - min;
@@ -43,25 +43,25 @@ class Scale implements IScale {
     const emptyArr = Array(stepsCount + 1);
     const multiplyStep = step * 10 * arrStep;
     const positionLength = stepLength * arrStep;
-    let stepsArr: IParameters[] = [];
+    let positions: IPositions[] = [];
     const valuesArr = Array.from(
       emptyArr,
       (_, i) => min + Math.round(multiplyStep * i) / 10,
     );
-    stepsArr = valuesArr.map((el, i) => {
+    positions = valuesArr.map((el, i) => {
       const value: number = Math.round(el * 10) / 10;
       const position = Math.round(positionLength * i);
       return { value, position };
     });
     if (valuesArr[valuesArr.length - 1] !== max) {
-      stepsArr.push({ value: max, position: this.scaleSize });
+      positions.push({ value: max, position: this.scaleSize });
     }
-    this.stepsArr = stepsArr;
+    this.positions = positions;
     this.initScale();
   }
 
-  public getStepsArr(): IParameters[] {
-    return this.stepsArr;
+  public getPositions(): IPositions[] {
+    return this.positions;
   }
 
   private init() {
@@ -76,9 +76,9 @@ class Scale implements IScale {
     this.addValues();
   }
 
-  static reduceArray(array: IParameters[], size: number): IParameters[] {
-    const isStepsArrSmall = array.length < size;
-    if (isStepsArrSmall) {
+  static reduceArray(array: IPositions[], size: number): IPositions[] {
+    const ispositionsSmall = array.length < size;
+    if (ispositionsSmall) {
       return array;
     }
     const arrayStep = Math.round(array.length / size);
@@ -93,7 +93,7 @@ class Scale implements IScale {
     return correctedArray;
   }
 
-  static correctLastItems(array: IParameters[], width: number): IParameters[] {
+  static correctLastItems(array: IPositions[], width: number): IPositions[] {
     const correctedArray = [...array];
     const lastItemPosition = Number(array[array.length - 1].position);
     const prevLastItemPosition = Number(array[array.length - 2].position);
@@ -107,7 +107,7 @@ class Scale implements IScale {
   private takeWidth(): number {
     const widthArr: number[] = [];
     const size = this.vertical ? 'height' : 'width';
-    this.stepsArr.forEach((item) => {
+    this.positions.forEach((item) => {
       const $scaleItem = jQuery('<div>', { text: item.value }).appendTo(
         this.$scale,
       );
@@ -129,17 +129,17 @@ class Scale implements IScale {
     });
   }
 
-  private correctScaleArr(): IParameters[] {
+  private correctScaleArr(): IPositions[] {
     const maxStepsCount = Math.floor(this.scaleSize / this.itemWidth);
-    const scaleArr: IParameters[] = Scale.reduceArray(
-      this.stepsArr,
+    const scaleArr: IPositions[] = Scale.reduceArray(
+      this.positions,
       maxStepsCount,
     );
     const correctedScaleArr = Scale.correctLastItems(scaleArr, this.itemWidth);
     return correctedScaleArr;
   }
 
-  private addItem(item: IParameters, position: number): void {
+  private addItem(item: IPositions, position: number): void {
     const scaleItem = jQuery('<div>', {
       class: 'meta-slider__scale-item js-meta-slider__scale-item',
       style: this.vertical

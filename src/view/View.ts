@@ -1,4 +1,6 @@
-import { IConfig, ICoordinates, IParameters } from '../interfaces/interfaces';
+import {
+  IConfig, ICoordinates, IPositions, IParameters,
+} from '../interfaces/interfaces';
 import Observer from '../observer/Observer';
 
 import './slider.scss';
@@ -67,16 +69,19 @@ class View implements IView {
     this.toggleDirection(config);
     this.toggleRange(config);
     this.toggleTip(config);
-    this.scale.initStepsArr(config, this.track.getTrackParameters());
+    this.scale.initPositions(config, this.track.getTrackParameters());
   }
 
-  public getStepsArr(): IParameters[] {
-    return this.scale.getStepsArr();
+  public getPositions(): IPositions[] {
+    return this.scale.getPositions();
   }
 
-  public setParameters(parameters: IParameters[]): void {
-    this.firstHandle.moveHandle(parameters[0]);
-    this.secondHandle?.moveHandle(parameters[1]);
+  public setParameters(parameters: IParameters): void {
+    this.firstHandle.moveHandle(parameters.from);
+    if (parameters.to) {
+      this.secondHandle?.moveHandle(parameters.to);
+    }
+
     this.interval.moveInterval(parameters);
   }
 

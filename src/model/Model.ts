@@ -1,8 +1,9 @@
 import {
   IOptions,
   IConfig,
-  IParameters,
   ICoordinates,
+  IParameters,
+  IPositions,
 } from '../interfaces/interfaces';
 import IModel from './interface';
 import defaults from '../defaults';
@@ -10,24 +11,24 @@ import defaults from '../defaults';
 class Model implements IModel {
   private options: IOptions;
 
-  private parameters: IParameters[];
+  private parameters: IParameters;
 
   private config: IConfig;
 
-  private data: IParameters[];
+  private positions: IPositions[];
 
   constructor(options: IOptions) {
     this.options = options;
-    this.parameters = [
-      { value: 0, position: 0 },
-      { value: 0, position: 0 },
-    ];
+    this.parameters = {
+      from: { value: 0, position: 0 },
+      to: { value: 0, position: 0 },
+    };
     this.config = this.correctConfig(this.options);
-    this.data = [];
+    this.positions = [];
   }
 
-  public init(data: IParameters[]): void {
-    this.data = data;
+  public init(positions: IPositions[]): void {
+    this.positions = positions;
     this.correctConfigByArray();
     this.parameters = this.initParameters();
   }
@@ -35,22 +36,23 @@ class Model implements IModel {
   public correctParameters(): void {
     const isFromHigher = this.config.from > this.config.to;
     if (this.config.range && isFromHigher) {
-      const firstParameter = this.parameters[0];
-      const secondParameter = this.parameters[1];
-      this.parameters[0] = secondParameter;
-      this.parameters[1] = firstParameter;
-      this.config.from = this.parameters[0].value;
-      this.config.to = this.parameters[1].value;
+      const firstParameter = this.parameters.from;
+      const secondParameter = this.parameters.to;
+      this.parameters.from = secondParameter || this.parameters.from;
+      this.parameters.to = firstParameter;
+      this.config.from = this.parameters.from.value;
+      this.config.to = this.parameters.to.value;
       this.options.onChange?.call(this, this.config);
     }
   }
 
-  public changeParameter(setting: ICoordinates): IParameters[] {
+  public changeParameter(setting: ICoordinates): IParameters {
     const newParameter = this.takeClosestParameter(setting);
     const parameterOrder = setting.key || this.makeOrder(setting);
-    this.parameters[parameterOrder] = newParameter;
-    this.config.from = this.parameters[0].value;
-    this.config.to = this.parameters[1].value;
+    const type = parameterOrder === 0 ? 'from' : 'to';
+    this.parameters[type] = newParameter;
+    this.config.from = this.parameters.from.value;
+    this.config.to = this.parameters.to?.value || this.config.from;
     this.options.onChange?.call(this, this.config);
     return this.parameters;
   }
@@ -65,7 +67,7 @@ class Model implements IModel {
     return this.config;
   }
 
-  public getParameters(): IParameters[] {
+  public getParameters(): IParameters {
     return this.parameters;
   }
 
@@ -117,25 +119,25 @@ class Model implements IModel {
 
   private correctConfigByArray(config: IConfig = this.config): IConfig {
     const correctConfig = { ...config };
-    const valuesArr = this.data.map((item) => item.value);
+    const valuesArr = this.positions.map((item) => item.value);
     const firstIndex = Model.takeClosestIndex(config.from, valuesArr);
-    correctConfig.from = this.data[firstIndex].value;
+    correctConfig.from = this.positions[firstIndex].value;
     const secondIndex = Model.takeClosestIndex(config.to, valuesArr);
-    correctConfig.to = this.data[secondIndex].value;
+    correctConfig.to = this.positions[secondIndex].value;
     this.config = correctConfig;
     return correctConfig;
   }
 
-  private initParameters(): IParameters[] {
+  private initParameters(): IParameters {
     const { parameters } = this;
-    const stepValues = this.data.map((el) => el.value);
+    const stepValues = this.positions.map((el) => el.value);
     const firstIndex = Model.takeClosestIndex(this.config.from, stepValues);
-    parameters[0].value = this.config.from;
-    parameters[0].position = this.data[firstIndex].position;
-    if (this.config.range) {
+    parameters.from.value = this.config.from;
+    parameters.from.position = this.positions[firstIndex].position;
+    if (this.config.range && parameters.to) {
       const secondIndex = Model.takeClosestIndex(this.config.to, stepValues);
-      parameters[1].value = this.config.to;
-      parameters[1].position = this.data[secondIndex].position;
+      parameters.to.value = this.config.to;
+      parameters.to.position = this.positions[secondIndex].position;
     }
     return parameters;
   }
@@ -146,13 +148,16 @@ class Model implements IModel {
     }
     const { value, position } = parameter;
     if (value && !position) {
-      const values = [this.parameters[0].value, this.parameters[1].value];
+      const values = [
+        this.parameters.from.value,
+        this.parameters.to?.value || this.parameters.from.value,
+      ];
       return Model.takeClosestIndex(value, values);
     }
     if (position && !value) {
       const positions = [
-        this.parameters[0].position,
-        this.parameters[1].position,
+        this.parameters.from.position,
+        this.parameters.to?.position || this.parameters.from.position,
       ];
       return Model.takeClosestIndex(position, positions);
     }
@@ -164,28 +169,28 @@ class Model implements IModel {
     if (parameter.position) {
       index = Model.takeClosestIndex(
         parameter.position,
-        this.takeStepsArrPositions(),
+        this.takepositionsPositions(),
       );
-      return this.data[index];
+      return this.positions[index];
     }
 
     if (parameter.value) {
       index = Model.takeClosestIndex(
         parameter.value,
-        this.takeStepsArrValues(),
+        this.takepositionsValues(),
       );
-      return this.data[index];
+      return this.positions[index];
     }
 
     throw new Error('wrong parameters');
   }
 
-  private takeStepsArrValues() {
-    return this.data.map((item) => item.value);
+  private takepositionsValues() {
+    return this.positions.map((item) => item.value);
   }
 
-  private takeStepsArrPositions() {
-    return this.data.map((item) => item.position);
+  private takepositionsPositions() {
+    return this.positions.map((item) => item.position);
   }
 }
 

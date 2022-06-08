@@ -1,12 +1,12 @@
-import { IConfig, IParameters, ITrackPosition } from '../../../interfaces/interfaces';
+import { IConfig, IPositions, ITrackPosition } from '../../../interfaces/interfaces';
 import IObserver from '../../../observer/interface';
 
 interface IScale {
   observer: IObserver;
 
   setVertical(vertical: boolean): void;
-  initStepsArr(config: IConfig, trackParameters: ITrackPosition): void;
-  getStepsArr(): IParameters[];
+  initPositions(config: IConfig, trackParameters: ITrackPosition): void;
+  getPositions(): IPositions[];
 }
 
 export default IScale;
