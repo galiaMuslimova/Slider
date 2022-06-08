@@ -6,7 +6,7 @@ interface IController {
   view: IView;
   model: IModel;
 
-  setOptions(options: IOptions): IConfig
+  setOptions(options: IOptions): void
   getOptions(): IConfig
 }
 

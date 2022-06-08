@@ -1,6 +1,4 @@
-import {
-  IOptions, ICoordinates, IConfig,
-} from '../interfaces/interfaces';
+import { IOptions, ICoordinates, IConfig } from '../interfaces/interfaces';
 import View from '../view/View';
 import IView from '../view/interface';
 import Model from '../model/Model';
@@ -24,10 +22,9 @@ class Controller implements IController {
     this.init();
   }
 
-  public setOptions(options: IOptions): IConfig {
+  public setOptions(options: IOptions): void {
     this.model.setOptions(options);
-    this.init();
-    return this.model.getConfig();
+    this.view.initConfig(this.model.getConfig());
   }
 
   public getOptions(): IConfig {
@@ -35,10 +32,9 @@ class Controller implements IController {
   }
 
   private init() {
-    this.view.$slider.ready(() => {
-      this.view.initConfig(this.model.getConfig());
-      this.model.init(this.view.getPositions());
-      this.view.setParameters(this.model.getParameters());
+    this.view.observer.subscribe({
+      key: 'init',
+      observer: this.initParameters.bind(this),
     });
     this.view.observer.subscribe({
       key: 'moveHandle',
@@ -48,6 +44,12 @@ class Controller implements IController {
       key: 'moveEnd',
       observer: this.correctParameters.bind(this),
     });
+    this.view.initConfig(this.model.getConfig());
+  }
+
+  private initParameters() {
+    this.model.init(this.view.getPositions());
+    this.view.setParameters(this.model.getParameters());
   }
 
   private changeParameters(setting: ICoordinates) {

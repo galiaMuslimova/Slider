@@ -30,7 +30,8 @@ interface IMethods {
       this.data('slider', slider);
     },
     setOptions(this: JQuery<HTMLElement>, options: IOptions) {
-      const config = this.data('slider').setOptions(options);
+      this.data('slider').setOptions(options);
+      const config = this.data('slider').getOptions();
       $.each(config, (key, value) => {
         this.attr(`data-${String(key)}`, `${value}`);
       });

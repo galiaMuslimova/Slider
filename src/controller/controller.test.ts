@@ -63,7 +63,7 @@ describe('Controller', () => {
     $handle = $rootEl.find('.js-meta-slider__handle');
     $track.css('width', '500');
     controller.view.initConfig(controller.model.getConfig());
-    controller.model.init(controller.view.getpositions());
+    controller.model.init(controller.view.getPositions());
     controller.view.setParameters(controller.model.getParameters());
   });
 

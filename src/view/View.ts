@@ -69,7 +69,12 @@ class View implements IView {
     this.toggleDirection(config);
     this.toggleRange(config);
     this.toggleTip(config);
-    this.scale.initPositions(config, this.track.getTrackParameters());
+    $(document).ready(() => {
+      this.scale.initPositions(config, this.track.getTrackParameters());
+      this.firstHandle.setTrackParameters(this.track.getTrackParameters());
+      this.secondHandle?.setTrackParameters(this.track.getTrackParameters());
+      this.observer.notify('init', null);
+    });
   }
 
   public getPositions(): IPositions[] {
@@ -92,9 +97,7 @@ class View implements IView {
       .addClass(vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
     this.track.setVertical(vertical);
     this.firstHandle.setVertical(vertical);
-    this.firstHandle.setTrackParameters(this.track.getTrackParameters());
     this.secondHandle?.setVertical(vertical);
-    this.secondHandle?.setTrackParameters(this.track.getTrackParameters());
     this.interval.setVertical(vertical);
     this.scale.setVertical(vertical);
   }
@@ -105,7 +108,6 @@ class View implements IView {
     if (range && !this.secondHandle) {
       this.secondHandle = new Handle(this.$slider);
       this.secondHandle.setVertical(vertical);
-      this.secondHandle.setTrackParameters(this.track.getTrackParameters());
       this.secondHandle.observer.subscribe({
         key: 'mouseMove',
         observer: this.mouseMove.bind(this, 1),
