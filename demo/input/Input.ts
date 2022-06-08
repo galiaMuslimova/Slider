@@ -1,4 +1,4 @@
-import { IOptions } from '../../src/interfaces/interfaces';
+import { IConfig, IOptions } from '../../src/interfaces/interfaces';
 import Observer from '../../src/observer/Observer';
 import IObserver from '../../src/observer/interface';
 import IInput from './interface';
@@ -9,7 +9,7 @@ class Input implements IInput {
 
   readonly $root: JQuery<HTMLElement>;
 
-  private name: string;
+  private name: keyof IOptions;
 
   private type: string;
 
@@ -17,7 +17,7 @@ class Input implements IInput {
 
   constructor(
     $root: JQuery<HTMLElement>,
-    key: string,
+    key: keyof IOptions,
     value: number | boolean,
   ) {
     this.$root = $root;
@@ -57,8 +57,7 @@ class Input implements IInput {
       default:
         break;
     }
-    const setting: IOptions = {};
-    setting[this.name] = this.value;
+    const setting: IOptions = { [this.name]: this.value };
     this.observer.notify('setting', setting);
   }
 }

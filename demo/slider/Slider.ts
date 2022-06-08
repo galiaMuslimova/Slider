@@ -13,7 +13,7 @@ class Slider implements ISlider {
 
   private slider: JQuery<HTMLElement>;
 
-  private panel: IPanel;
+  private panel: IPanel | null;
 
   private isDisplayValues: boolean;
 
@@ -21,7 +21,7 @@ class Slider implements ISlider {
     this.$root = $root;
     this.$element = $('<div>');
     this.$sliderRootElement = $('<div>');
-    this.slider = null;
+    this.slider = $('<div>');
     this.panel = null;
     this.isDisplayValues = false;
     this.init();
@@ -46,7 +46,7 @@ class Slider implements ISlider {
 
   private showValues(config: IConfig): void {
     const $sliderValues = this.$element.find('.js-slider__values');
-    this.panel.setValue(config);
+    this.panel?.setValue(config);
     if (this.isDisplayValues) {
       $sliderValues.text(`from: ${config.from}; to: ${config.to}`);
     }
@@ -64,7 +64,7 @@ class Slider implements ISlider {
 
   private changeSettings(setting: IOptions) {
     this.slider = this.slider.MetaSlider('setOptions', setting);
-    this.panel.setValue(this.slider.MetaSlider('getOptions'));
+    this.panel?.setValue(this.slider.MetaSlider('getOptions'));
   }
 }
 

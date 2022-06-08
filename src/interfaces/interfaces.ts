@@ -9,8 +9,6 @@ interface IConfig {
   range: boolean;
 }
 
-/* type any has to be here,
-cause customer should be able to write any type of options without problems */
 interface IOptions {
   min?: number;
   max?: number;

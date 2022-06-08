@@ -7,7 +7,7 @@ import IPanel from './interface';
 import './panel.scss';
 
 class Panel implements IPanel {
-  public inputs: {};
+  public inputs: { [key: string]: Input };
 
   public observer: IObserver;
 
@@ -41,22 +41,16 @@ class Panel implements IPanel {
   private initPanel(options: IConfig): void {
     this.$panel = this.$root.find('.js-panel');
     const element = this;
-    const inputs = {};
     Object.entries(options).forEach(([key, value]) => {
       const searcher = `${key}`;
       const $inputElement = this.$panel.find(`[name=${searcher}]`);
-      const input = new Input($inputElement, key, value);
+      const input = new Input($inputElement, key as keyof IOptions, value);
       input.observer.subscribe({
         key: 'setting',
         observer: element.changeOptions.bind(element),
       });
-      inputs[key] = input;
-      if (key === 'step') {
-        input.setProp('min', 0.1);
-        input.setProp('step', 0.1);
-      }
+      this.inputs[key] = input;
     });
-    this.inputs = inputs;
   }
 
   private bindEventListeners(): void {
