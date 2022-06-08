@@ -8,6 +8,8 @@ import IHandle from './interface';
 class Handle implements IHandle {
   public observer: IObserver;
 
+  private $slider: JQuery<HTMLElement>;
+
   public isTip: boolean;
 
   private vertical: boolean;
@@ -20,7 +22,8 @@ class Handle implements IHandle {
 
   private trackWidth: number;
 
-  constructor() {
+  constructor($slider: JQuery<HTMLElement>) {
+    this.$slider = $slider;
     this.observer = new Observer();
     this.isTip = true;
     this.vertical = false;
@@ -29,13 +32,7 @@ class Handle implements IHandle {
     this.trackStart = 0;
     this.trackWidth = 500;
     this.bindEventListeners();
-  }
-
-  public init($slider: JQuery<HTMLElement>): void {
-    const $track = $slider.find('.js-meta-slider__track');
-    this.$handle.addClass('meta-slider__handle js-meta-slider__handle');
-    this.$handle.appendTo($track);
-    this.tip?.init(this.$handle);
+    this.init();
   }
 
   public setVertical(vertical: boolean): void {
@@ -75,6 +72,13 @@ class Handle implements IHandle {
 
   static handleDragStart(): boolean {
     return false;
+  }
+
+  private init(): void {
+    const $track = this.$slider.find('.js-meta-slider__track');
+    this.$handle.addClass('meta-slider__handle js-meta-slider__handle');
+    this.$handle.appendTo($track);
+    this.tip?.init(this.$handle);
   }
 
   private bindEventListeners(): void {

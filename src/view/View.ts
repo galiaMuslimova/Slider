@@ -1,8 +1,4 @@
-import {
-  IConfig,
-  ICoordinates,
-  IParameters,
-} from '../interfaces/interfaces';
+import { IConfig, ICoordinates, IParameters } from '../interfaces/interfaces';
 import Observer from '../observer/Observer';
 
 import './slider.scss';
@@ -38,28 +34,25 @@ class View implements IView {
     this.$root = $root;
     this.observer = new Observer();
     this.$slider = jQuery('<div>');
-    this.track = new Track();
-    this.scale = new Scale();
-    this.firstHandle = new Handle();
+    this.track = new Track(this.$slider);
+    this.scale = new Scale(this.$slider);
+    this.firstHandle = new Handle(this.$slider);
     this.secondHandle = null;
-    this.interval = new Interval();
+    this.interval = new Interval(this.$slider);
     this.init();
   }
 
   private init() {
     this.$slider.addClass('meta-slider js-meta-slider meta-slider_horizontal');
     this.$slider.prependTo(this.$root);
-    this.track.init(this.$slider);
     this.track.observer.subscribe({
       key: 'trackClick',
       observer: this.trackClick.bind(this),
     });
-    this.scale.init(this.$slider);
     this.scale.observer.subscribe({
       key: 'scaleClick',
       observer: this.scaleClick.bind(this),
     });
-    this.firstHandle.init(this.$slider);
     this.firstHandle.observer.subscribe({
       key: 'mouseMove',
       observer: this.mouseMove.bind(this, 0),
@@ -68,7 +61,6 @@ class View implements IView {
       key: 'moveEnd',
       observer: this.mouseMoveEnd.bind(this),
     });
-    this.interval.init(this.$slider);
   }
 
   public initConfig(config: IConfig) {
@@ -106,8 +98,7 @@ class View implements IView {
     const { range, vertical } = config;
     this.interval.setRange(range);
     if (range && !this.secondHandle) {
-      this.secondHandle = new Handle();
-      this.secondHandle.init(this.$slider);
+      this.secondHandle = new Handle(this.$slider);
       this.secondHandle.setVertical(vertical);
       this.secondHandle.setTrackParameters(this.track.getTrackParameters());
       this.secondHandle.observer.subscribe({

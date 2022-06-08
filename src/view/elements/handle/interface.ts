@@ -5,7 +5,6 @@ interface IHandle {
   observer: IObserver;
   isTip: boolean;
 
-  init($track: JQuery<HTMLElement>): void;
   setVertical(vertical: boolean): void;
   getElement(): JQuery<HTMLElement>;
   setTrackParameters(trackParameters: ITrackPosition): void;

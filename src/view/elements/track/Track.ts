@@ -6,6 +6,8 @@ import ITrack from './interface';
 class Track implements ITrack {
   public observer: IObserver;
 
+  private $slider: JQuery<HTMLElement>;
+
   private $track: JQuery<HTMLElement>;
 
   private vertical: boolean;
@@ -14,18 +16,14 @@ class Track implements ITrack {
 
   private trackWidth: number | undefined;
 
-  constructor() {
+  constructor($slider: JQuery<HTMLElement>) {
+    this.$slider = $slider;
     this.observer = new Observer();
     this.$track = jQuery('<div>');
     this.vertical = false;
     this.trackStart = 0;
     this.trackWidth = 0;
-  }
-
-  public init($slider: JQuery<HTMLElement>): void {
-    this.$track.addClass('meta-slider__track js-meta-slider__track');
-    this.$track.appendTo($slider);
-    this.bindEventListeners();
+    this.init();
   }
 
   public setVertical(vertical: boolean): void {
@@ -40,6 +38,12 @@ class Track implements ITrack {
       return { trackStart: this.trackStart, trackWidth: this.trackWidth };
     }
     throw new Error('wrong width of slider');
+  }
+
+  private init(): void {
+    this.$track.addClass('meta-slider__track js-meta-slider__track');
+    this.$track.appendTo(this.$slider);
+    this.bindEventListeners();
   }
 
   private bindEventListeners(): void {

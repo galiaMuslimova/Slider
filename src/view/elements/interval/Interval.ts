@@ -2,22 +2,20 @@ import { IParameters } from '../../../interfaces/interfaces';
 import IInterval from './interface';
 
 class Interval implements IInterval {
+  private $slider: JQuery<HTMLElement>;
+
   private $interval: JQuery<HTMLElement>;
 
   private vertical: boolean;
 
   private range: boolean;
 
-  constructor() {
+  constructor($slider: JQuery<HTMLElement>) {
+    this.$slider = $slider;
     this.$interval = jQuery('<div>');
     this.vertical = false;
     this.range = true;
-  }
-
-  public init($slider: JQuery<HTMLElement>): void {
-    const $track = $slider.find('.js-meta-slider__track');
-    this.$interval.addClass('meta-slider__interval js-meta-slider__interval');
-    this.$interval.appendTo($track);
+    this.init();
   }
 
   public setVertical(vertical: boolean): void {
@@ -45,6 +43,12 @@ class Interval implements IInterval {
     this.$interval.css(this.vertical ? 'width' : 'height', '10px');
     this.$interval.css(this.vertical ? 'top' : 'left', `${min}px`);
     this.$interval.css(this.vertical ? 'left' : 'top', '0px');
+  }
+
+  private init(): void {
+    const $track = this.$slider.find('.js-meta-slider__track');
+    this.$interval.addClass('meta-slider__interval js-meta-slider__interval');
+    this.$interval.appendTo($track);
   }
 }
 

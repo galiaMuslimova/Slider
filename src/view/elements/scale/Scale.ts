@@ -6,6 +6,8 @@ import IScale from './interface';
 class Scale implements IScale {
   public observer: IObserver;
 
+  private $slider: JQuery<HTMLElement>;
+
   private $scale: JQuery<HTMLElement>;
 
   private stepsArr: IParameters[];
@@ -16,19 +18,15 @@ class Scale implements IScale {
 
   private vertical: boolean;
 
-  constructor() {
+  constructor($slider: JQuery<HTMLElement>) {
+    this.$slider = $slider;
     this.vertical = false;
     this.observer = new Observer();
     this.$scale = jQuery('<div>');
     this.stepsArr = [];
     this.itemWidth = 20;
     this.scaleSize = 500;
-  }
-
-  public init($slider: JQuery<HTMLElement>) {
-    this.$scale.addClass('meta-slider__scale js-meta-slider__scale');
-    this.$scale.appendTo($slider);
-    this.bindEventListeners();
+    this.init();
   }
 
   public setVertical(vertical: boolean): void {
@@ -64,6 +62,12 @@ class Scale implements IScale {
 
   public getStepsArr(): IParameters[] {
     return this.stepsArr;
+  }
+
+  private init() {
+    this.$scale.addClass('meta-slider__scale js-meta-slider__scale');
+    this.$scale.appendTo(this.$slider);
+    this.bindEventListeners();
   }
 
   private initScale(): void {

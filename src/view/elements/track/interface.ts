@@ -4,7 +4,6 @@ import IObserver from '../../../observer/interface';
 interface ITrack {
   observer: IObserver;
 
-  init($slider: JQuery<HTMLElement>): void
   setVertical(vertical: boolean): void
   getTrackParameters(): ITrackPosition
 }
