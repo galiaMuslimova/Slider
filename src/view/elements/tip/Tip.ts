@@ -2,15 +2,19 @@ import { IPositions } from '../../../interfaces/interfaces';
 import ITip from './interface';
 
 class Tip implements ITip {
+  private $handle: JQuery<HTMLElement>;
+
   private $tip: JQuery<HTMLElement>;
 
-  constructor() {
+  constructor($handle: JQuery<HTMLElement>) {
+    this.$handle = $handle;
     this.$tip = jQuery('<div>');
+    this.init();
   }
 
-  public init($handle: JQuery<HTMLElement>) {
+  public init() {
     this.$tip.addClass('meta-slider__tip js-meta-slider__tip');
-    this.$tip.appendTo($handle);
+    this.$tip.appendTo(this.$handle);
   }
 
   public changeTip(parameter: IPositions): void {

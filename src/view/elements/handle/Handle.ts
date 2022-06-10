@@ -28,7 +28,7 @@ class Handle implements IHandle {
     this.isTip = true;
     this.vertical = false;
     this.$handle = jQuery('<div>');
-    this.tip = new Tip();
+    this.tip = new Tip(this.$handle);
     this.trackStart = 0;
     this.trackWidth = 500;
     this.bindEventListeners();
@@ -61,8 +61,7 @@ class Handle implements IHandle {
   public toggleTip(tip: boolean): void {
     this.isTip = tip;
     if (tip && !this.tip) {
-      this.tip = new Tip();
-      this.tip.init(this.$handle);
+      this.tip = new Tip(this.$handle);
     } else if (!tip && this.tip) {
       const tipElement = this.tip.getElement();
       tipElement.remove();
@@ -78,7 +77,6 @@ class Handle implements IHandle {
     const $track = this.$slider.find('.js-meta-slider__track');
     this.$handle.addClass('meta-slider__handle js-meta-slider__handle');
     this.$handle.appendTo($track);
-    this.tip?.init(this.$handle);
   }
 
   private bindEventListeners(): void {
