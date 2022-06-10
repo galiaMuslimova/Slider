@@ -110,7 +110,11 @@
   &__scale {
     width: 100%;
     height: 40px;
-    user-select: none;
+      
+  }
+
+  &__scale-row {
+    user-select: none;  
     display: flex;
     flex-direction: row;
     justify-content: space-between;

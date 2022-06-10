@@ -1,4 +1,8 @@
-import { IConfig, IPositions, ITrackPosition } from '../../../interfaces/interfaces';
+import {
+  IConfig,
+  IPositions,
+  ITrackPosition,
+} from '../../../interfaces/interfaces';
 import Observer from '../../../observer/Observer';
 import IObserver from '../../../observer/interface';
 import IScale from './interface';
@@ -123,10 +127,15 @@ class Scale implements IScale {
 
   private addValues(): void {
     const scaleArr = this.correctScaleArr();
+    const $scaleRow = jQuery('<div>', {
+      class: 'meta-slider__scale-row js-meta-slider__scale-row',
+    });
     scaleArr.forEach((item) => {
       const position = item.position - this.itemWidth / 2;
-      this.addItem(item, position);
+      const $scaleItem = this.createItem(item, position);
+      $scaleRow.append($scaleItem);
     });
+    this.$scale.append($scaleRow);
   }
 
   private correctScaleArr(): IPositions[] {
@@ -139,8 +148,8 @@ class Scale implements IScale {
     return correctedScaleArr;
   }
 
-  private addItem(item: IPositions, position: number): void {
-    const scaleItem = jQuery('<div>', {
+  private createItem(item: IPositions, position: number): JQuery<HTMLElement> {
+    const $scaleItem = jQuery('<div>', {
       class: 'meta-slider__scale-item js-meta-slider__scale-item',
       style: this.vertical
         ? `top: ${position}px; line-height: ${this.itemWidth}px`
@@ -150,7 +159,7 @@ class Scale implements IScale {
       class: 'meta-slider__line',
       text: this.vertical ? '\u2014' : '|',
     });
-    $line.appendTo(scaleItem);
+    $line.appendTo($scaleItem);
     const $value = jQuery('<div>', {
       class: 'meta-slider__value js-meta-slider__value',
       'data-value': item.value,
@@ -159,8 +168,8 @@ class Scale implements IScale {
         ? `height: ${this.itemWidth}px`
         : `width: ${this.itemWidth}px`,
     });
-    $value.appendTo(scaleItem);
-    scaleItem.appendTo(this.$scale);
+    $value.appendTo($scaleItem);
+    return $scaleItem;
   }
 
   private bindEventListeners(): void {
