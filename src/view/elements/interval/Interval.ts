@@ -2,7 +2,7 @@ import { IParameters } from '../../../interfaces/interfaces';
 import IInterval from './interface';
 
 class Interval implements IInterval {
-  private $slider: JQuery<HTMLElement>;
+  private $track: JQuery<HTMLElement>;
 
   private $interval: JQuery<HTMLElement>;
 
@@ -10,8 +10,8 @@ class Interval implements IInterval {
 
   private range: boolean;
 
-  constructor($slider: JQuery<HTMLElement>) {
-    this.$slider = $slider;
+  constructor($track: JQuery<HTMLElement>) {
+    this.$track = $track;
     this.$interval = jQuery('<div>');
     this.vertical = false;
     this.range = true;
@@ -46,9 +46,8 @@ class Interval implements IInterval {
   }
 
   private init(): void {
-    const $track = this.$slider.find('.js-meta-slider__track');
     this.$interval.addClass('meta-slider__interval js-meta-slider__interval');
-    this.$interval.appendTo($track);
+    this.$interval.appendTo(this.$track);
   }
 }
 

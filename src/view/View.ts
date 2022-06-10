@@ -38,9 +38,9 @@ class View implements IView {
     this.$slider = jQuery('<div>');
     this.track = new Track(this.$slider);
     this.scale = new Scale(this.$slider);
-    this.firstHandle = new Handle(this.$slider);
+    this.firstHandle = new Handle(this.track.getElement());
     this.secondHandle = null;
-    this.interval = new Interval(this.$slider);
+    this.interval = new Interval(this.track.getElement());
     this.init();
   }
 
@@ -106,7 +106,7 @@ class View implements IView {
     const { range, vertical } = config;
     this.interval.setRange(range);
     if (range && !this.secondHandle) {
-      this.secondHandle = new Handle(this.$slider);
+      this.secondHandle = new Handle(this.track.getElement());
       this.secondHandle.setVertical(vertical);
       this.secondHandle.observer.subscribe({
         key: 'mouseMove',

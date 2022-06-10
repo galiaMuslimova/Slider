@@ -8,7 +8,7 @@ import IHandle from './interface';
 class Handle implements IHandle {
   public observer: IObserver;
 
-  private $slider: JQuery<HTMLElement>;
+  private $track: JQuery<HTMLElement>;
 
   public isTip: boolean;
 
@@ -22,8 +22,8 @@ class Handle implements IHandle {
 
   private trackWidth: number;
 
-  constructor($slider: JQuery<HTMLElement>) {
-    this.$slider = $slider;
+  constructor($track: JQuery<HTMLElement>) {
+    this.$track = $track;
     this.observer = new Observer();
     this.isTip = true;
     this.vertical = false;
@@ -74,9 +74,8 @@ class Handle implements IHandle {
   }
 
   private init(): void {
-    const $track = this.$slider.find('.js-meta-slider__track');
     this.$handle.addClass('meta-slider__handle js-meta-slider__handle');
-    this.$handle.appendTo($track);
+    this.$handle.appendTo(this.$track);
   }
 
   private bindEventListeners(): void {

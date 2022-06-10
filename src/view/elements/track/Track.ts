@@ -30,6 +30,10 @@ class Track implements ITrack {
     this.vertical = vertical;
   }
 
+  public getElement(): JQuery<HTMLElement> {
+    return this.$track;
+  }
+
   public getTrackParameters(): ITrackPosition {
     const position = this.$track.position();
     this.trackStart = this.vertical ? Number(position.top) : Number(position.left);
