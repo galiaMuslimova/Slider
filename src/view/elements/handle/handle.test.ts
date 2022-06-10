@@ -21,7 +21,7 @@ describe('Handle', () => {
     $slider = $(document).find('.js-meta-slider');
     $track = jQuery('<div>', { class: 'meta-slider__track js-meta-slider__track' });
     $track.appendTo($slider);
-    handleClass = new Handle($slider);
+    handleClass = new Handle($track);
     handleClass.setTrackParameters({ trackStart: 0, trackWidth: 300 });
   });
 
@@ -35,22 +35,22 @@ describe('Handle', () => {
     expect(handleClass.getElement().css('left')).to.equal('90px');
   });
 
-  it('проверить изменение vertical', () => {
+  it('проверить изменение isVertical', () => {
     handleClass.setVertical(true);
     handleClass.moveHandle({ value: 10, position: 100 });
     expect(handleClass.getElement().css('top')).to.equal('90px');
   });
 
-  it('проверить удаление элемента tip', () => {
+  it('проверить удаление элемента hasTip', () => {
     handleClass.toggleTip(false);
-    const $tip = handleClass.getElement().find('.js-meta-slider__tip');
-    expect($tip.length).to.equal(0);
+    const $hasTip = handleClass.getElement().find('.js-meta-slider__tip');
+    expect($hasTip.length).to.equal(0);
   });
 
-  it('проверить создание элемента tip', () => {
+  it('проверить создание элемента hasTip', () => {
     handleClass.toggleTip(true);
-    const $tip = handleClass.getElement().find('.js-meta-slider__tip');
-    expect($tip.length).to.equal(1);
+    const $hasTip = handleClass.getElement().find('.js-meta-slider__tip');
+    expect($hasTip.length).to.equal(1);
   });
 
   it('проверить handleDragStart', () => {

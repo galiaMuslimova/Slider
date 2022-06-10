@@ -4,9 +4,9 @@ interface IConfig {
   step: number;
   from: number;
   to: number;
-  vertical: boolean;
-  tip: boolean;
-  range: boolean;
+  isVertical: boolean;
+  hasTip: boolean;
+  withRange: boolean;
 }
 
 interface IOptions {
@@ -15,9 +15,9 @@ interface IOptions {
   step?: number;
   from?: number;
   to?: number;
-  vertical?: boolean;
-  tip?: boolean;
-  range?: boolean;
+  isVertical?: boolean;
+  hasTip?: boolean;
+  withRange?: boolean;
   onChange?: (config: IConfig) => void;
 }
 

@@ -5,7 +5,7 @@ interface ITrack {
   observer: IObserver;
 
   getElement(): JQuery<HTMLElement>
-  setVertical(vertical: boolean): void
+  setVertical(isVertical: boolean): void
   getTrackParameters(): ITrackPosition
 }
 

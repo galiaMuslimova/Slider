@@ -120,9 +120,9 @@ describe('create slider', () => {
       step: 1,
       from: 2,
       to: 8,
-      range: true,
-      vertical: false,
-      tip: true,
+      withRange: true,
+      isVertical: false,
+      hasTip: true,
     };
     trackParameters = { trackStart: 0, trackWidth: 1000 };
     scaleClass.initPositions(config, trackParameters);

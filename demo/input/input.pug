@@ -1,6 +1,6 @@
-mixin input({type='number', name='min'})
+mixin input({type='number', text='min', name='min' })
   .input.js-input 
-    .input__text= name
+    .input__text= text
     .input__label      
       input.input__field.js-input__field(class=`input__field_with-${type}` type=type,
       name=name)

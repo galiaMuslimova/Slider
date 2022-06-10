@@ -10,9 +10,9 @@ class Handle implements IHandle {
 
   private $track: JQuery<HTMLElement>;
 
-  public isTip: boolean;
+  public hasTip: boolean;
 
-  private vertical: boolean;
+  private isVertical: boolean;
 
   private $handle: JQuery<HTMLElement>;
 
@@ -25,8 +25,8 @@ class Handle implements IHandle {
   constructor($track: JQuery<HTMLElement>) {
     this.$track = $track;
     this.observer = new Observer();
-    this.isTip = true;
-    this.vertical = false;
+    this.hasTip = true;
+    this.isVertical = false;
     this.$handle = jQuery('<div>');
     this.tip = new Tip(this.$handle);
     this.trackStart = 0;
@@ -35,8 +35,8 @@ class Handle implements IHandle {
     this.init();
   }
 
-  public setVertical(vertical: boolean): void {
-    this.vertical = vertical;
+  public setVertical(isVertical: boolean): void {
+    this.isVertical = isVertical;
   }
 
   public getElement(): JQuery<HTMLElement> {
@@ -51,18 +51,18 @@ class Handle implements IHandle {
 
   public moveHandle(parameters: IPositions): void {
     this.$handle.css(
-      this.vertical ? 'top' : 'left',
+      this.isVertical ? 'top' : 'left',
       `${parameters.position - 20 / 2}px`,
     );
-    this.$handle.css(this.vertical ? 'left' : 'top', '-5px');
+    this.$handle.css(this.isVertical ? 'left' : 'top', '-5px');
     this.tip?.changeTip(parameters);
   }
 
-  public toggleTip(tip: boolean): void {
-    this.isTip = tip;
-    if (tip && !this.tip) {
+  public toggleTip(hasTip: boolean): void {
+    this.hasTip = hasTip;
+    if (hasTip && !this.tip) {
       this.tip = new Tip(this.$handle);
-    } else if (!tip && this.tip) {
+    } else if (!hasTip && this.tip) {
       const tipElement = this.tip.getElement();
       tipElement.remove();
       this.tip = null;
@@ -94,7 +94,7 @@ class Handle implements IHandle {
   }
 
   private handleMouseMove(event: Event): void {
-    const eventPosition = this.vertical
+    const eventPosition = this.isVertical
       ? (<MouseEvent>event).pageY
       : (<MouseEvent>event).pageX;
     const correctedPosition = Math.round(eventPosition - this.trackStart);
@@ -107,7 +107,7 @@ class Handle implements IHandle {
   private handleTouchMove(event: Event): void {
     const touches = (<TouchEvent>event)?.touches;
     const touch = touches[0];
-    const eventPosition = this.vertical ? touch.pageY : touch.pageX;
+    const eventPosition = this.isVertical ? touch.pageY : touch.pageX;
     const correctedPosition = Math.round(eventPosition - this.trackStart);
     const isInScale = correctedPosition >= 0 && correctedPosition <= this.trackWidth;
     if (touches !== undefined && isInScale) {

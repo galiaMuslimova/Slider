@@ -35,7 +35,7 @@ class Model implements IModel {
 
   public correctParameters(): void {
     const isFromHigher = this.config.from > this.config.to;
-    if (this.config.range && isFromHigher) {
+    if (this.config.withRange && isFromHigher) {
       const firstParameter = this.parameters.from;
       const secondParameter = this.parameters.to;
       this.parameters.from = secondParameter || this.parameters.from;
@@ -99,11 +99,11 @@ class Model implements IModel {
     config.to = Number.isFinite(Number(options.to))
       ? Number(options.to)
       : defaults.to;
-    config.vertical = typeof options.vertical === 'boolean'
-      ? options.vertical
-      : defaults.vertical;
-    config.tip = typeof options.tip === 'boolean' ? options.tip : defaults.tip;
-    config.range = typeof options.range === 'boolean' ? options.range : defaults.range;
+    config.isVertical = typeof options.isVertical === 'boolean'
+      ? options.isVertical
+      : defaults.isVertical;
+    config.hasTip = typeof options.hasTip === 'boolean' ? options.hasTip : defaults.hasTip;
+    config.withRange = typeof options.withRange === 'boolean' ? options.withRange : defaults.withRange;
     return config;
   }
 
@@ -134,7 +134,7 @@ class Model implements IModel {
     const firstIndex = Model.takeClosestIndex(this.config.from, stepValues);
     parameters.from.value = this.config.from;
     parameters.from.position = this.positions[firstIndex].position;
-    if (this.config.range && parameters.to) {
+    if (this.config.withRange && parameters.to) {
       const secondIndex = Model.takeClosestIndex(this.config.to, stepValues);
       parameters.to.value = this.config.to;
       parameters.to.position = this.positions[secondIndex].position;
@@ -143,7 +143,7 @@ class Model implements IModel {
   }
 
   private makeOrder(parameter: ICoordinates): number {
-    if (!this.config.range) {
+    if (!this.config.withRange) {
       return 0;
     }
     const { value, position } = parameter;

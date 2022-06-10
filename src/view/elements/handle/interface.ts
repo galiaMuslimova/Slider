@@ -3,13 +3,13 @@ import IObserver from '../../../observer/interface';
 
 interface IHandle {
   observer: IObserver;
-  isTip: boolean;
+  hasTip: boolean;
 
-  setVertical(vertical: boolean): void;
+  setVertical(isVertical: boolean): void;
   getElement(): JQuery<HTMLElement>;
   setTrackParameters(trackParameters: ITrackPosition): void;
   moveHandle(parameters: IPositions): void;
-  toggleTip(tip: boolean): void;
+  toggleTip(hasTip: boolean): void;
 }
 
 export default IHandle;

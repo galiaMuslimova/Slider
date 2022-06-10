@@ -37,8 +37,8 @@ describe('Controller', () => {
       step: 1,
       from: 2,
       to: 8,
-      range: true,
-      vertical: false,
+      withRange: true,
+      isVertical: false,
     };
     expectedpositions = [
       { value: 0, position: 0 },
@@ -130,9 +130,9 @@ describe('Controller', () => {
       step: 2,
       from: 2,
       to: 12,
-      range: true,
-      tip: true,
-      vertical: false,
+      withRange: true,
+      hasTip: true,
+      isVertical: false,
     };
     expect(controller?.getOptions()).to.deep.equal(expectedOptions);
   });

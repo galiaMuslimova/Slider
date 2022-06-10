@@ -27,9 +27,9 @@ describe('View', () => {
     step: 1,
     from: 2,
     to: 8,
-    range: true,
-    vertical: true,
-    tip: true,
+    withRange: true,
+    isVertical: true,
+    hasTip: true,
   };
 
   before(() => {
@@ -44,23 +44,23 @@ describe('View', () => {
     expect($slider.length).to.equal(1);
   });
 
-  it('проверяет установку vertical true', () => {
+  it('проверяет установку isVertical true', () => {
     expect($slider.hasClass('meta-slider_vertical')).to.equal(true);
     expect($slider.hasClass('meta-slider_horizontal')).to.equal(false);
   });
 
-  it('проверяет установку vertical false', () => {
-    view.initConfig($.extend({}, config, { vertical: false }));
-    expect($slider.hasClass('meta-slider_vertical')).to.equal(false);
+  it('проверяет установку isVertical false', () => {
+    view.initConfig($.extend({}, config, { isVertical: false }));
+    expect($slider.hasClass('meta-slider_isVertical')).to.equal(false);
     expect($slider.hasClass('meta-slider_horizontal')).to.equal(true);
   });
 
-  it('проверяет установку range true', () => {
+  it('проверяет установку withRange true', () => {
     expect($slider.find('.js-meta-slider__handle').length).to.equal(2);
   });
 
-  it('проверяет установку range false', () => {
-    view.initConfig($.extend({}, config, { range: false }));
+  it('проверяет установку withRange false', () => {
+    view.initConfig($.extend({}, config, { withRange: false }));
     expect($slider.find('.js-meta-slider__handle').length).to.equal(1);
   });
 });

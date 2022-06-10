@@ -10,7 +10,7 @@ class Track implements ITrack {
 
   private $track: JQuery<HTMLElement>;
 
-  private vertical: boolean;
+  private isVertical: boolean;
 
   private trackStart: number;
 
@@ -20,14 +20,14 @@ class Track implements ITrack {
     this.$slider = $slider;
     this.observer = new Observer();
     this.$track = jQuery('<div>');
-    this.vertical = false;
+    this.isVertical = false;
     this.trackStart = 0;
     this.trackWidth = 0;
     this.init();
   }
 
-  public setVertical(vertical: boolean): void {
-    this.vertical = vertical;
+  public setVertical(isVertical: boolean): void {
+    this.isVertical = isVertical;
   }
 
   public getElement(): JQuery<HTMLElement> {
@@ -36,8 +36,8 @@ class Track implements ITrack {
 
   public getTrackParameters(): ITrackPosition {
     const position = this.$track.position();
-    this.trackStart = this.vertical ? Number(position.top) : Number(position.left);
-    this.trackWidth = this.vertical ? this.$track.height() : this.$track.width();
+    this.trackStart = this.isVertical ? Number(position.top) : Number(position.left);
+    this.trackWidth = this.isVertical ? this.$track.height() : this.$track.width();
     if (this.trackWidth) {
       return { trackStart: this.trackStart, trackWidth: this.trackWidth };
     }
@@ -55,7 +55,7 @@ class Track implements ITrack {
   }
 
   private handleTrackClick(event: Event): void {
-    const eventPosition = this.vertical ? (<MouseEvent>event).pageY : (<MouseEvent>event).pageX;
+    const eventPosition = this.isVertical ? (<MouseEvent>event).pageY : (<MouseEvent>event).pageX;
     const position = Math.round(eventPosition - this.trackStart);
     this.observer.notify('trackClick', position);
   }

@@ -4,7 +4,7 @@ import IObserver from '../../../observer/interface';
 interface IScale {
   observer: IObserver;
 
-  setVertical(vertical: boolean): void;
+  setVertical(isVertical: boolean): void;
   initPositions(config: IConfig, trackParameters: ITrackPosition): void;
   getPositions(): IPositions[];
 }

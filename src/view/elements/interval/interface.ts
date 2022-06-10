@@ -2,7 +2,7 @@ import { IParameters } from '../../../interfaces/interfaces';
 
 interface IInterval {
   setVertical(vertical: boolean): void;
-  setRange(range: boolean): void;
+  setRange(withRange: boolean): void;
   moveInterval(parameters: IParameters): void;
 }
 

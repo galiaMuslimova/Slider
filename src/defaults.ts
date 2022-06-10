@@ -6,9 +6,9 @@ const defaults: IConfig = {
   step: 4,
   from: 8,
   to: 24,
-  vertical: false,
-  tip: true,
-  range: true,
+  isVertical: false,
+  hasTip: true,
+  withRange: true,
 };
 
 export default defaults;

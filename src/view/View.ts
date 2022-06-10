@@ -91,23 +91,23 @@ class View implements IView {
   }
 
   private toggleDirection(config: IConfig): void {
-    const { vertical } = config;
+    const { isVertical } = config;
     this.$slider
-      .removeClass(vertical ? 'meta-slider_horizontal' : 'meta-slider_vertical')
-      .addClass(vertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
-    this.track.setVertical(vertical);
-    this.firstHandle.setVertical(vertical);
-    this.secondHandle?.setVertical(vertical);
-    this.interval.setVertical(vertical);
-    this.scale.setVertical(vertical);
+      .removeClass(isVertical ? 'meta-slider_horizontal' : 'meta-slider_vertical')
+      .addClass(isVertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
+    this.track.setVertical(isVertical);
+    this.firstHandle.setVertical(isVertical);
+    this.secondHandle?.setVertical(isVertical);
+    this.interval.setVertical(isVertical);
+    this.scale.setVertical(isVertical);
   }
 
   private toggleRange(config: IConfig): void {
-    const { range, vertical } = config;
-    this.interval.setRange(range);
-    if (range && !this.secondHandle) {
+    const { withRange, isVertical } = config;
+    this.interval.setRange(withRange);
+    if (withRange && !this.secondHandle) {
       this.secondHandle = new Handle(this.track.getElement());
-      this.secondHandle.setVertical(vertical);
+      this.secondHandle.setVertical(isVertical);
       this.secondHandle.observer.subscribe({
         key: 'mouseMove',
         observer: this.mouseMove.bind(this, 1),
@@ -116,7 +116,7 @@ class View implements IView {
         key: 'moveEnd',
         observer: this.mouseMoveEnd.bind(this),
       });
-    } else if (!range && this.secondHandle) {
+    } else if (!withRange && this.secondHandle) {
       const handle = this.secondHandle.getElement();
       this.$slider.find(handle).remove();
       this.secondHandle = null;
@@ -124,9 +124,9 @@ class View implements IView {
   }
 
   private toggleTip(config: IConfig): void {
-    const { tip } = config;
-    this.firstHandle.toggleTip(tip);
-    this.secondHandle?.toggleTip(tip);
+    const { hasTip } = config;
+    this.firstHandle.toggleTip(hasTip);
+    this.secondHandle?.toggleTip(hasTip);
   }
 
   private trackClick(position: number): void {

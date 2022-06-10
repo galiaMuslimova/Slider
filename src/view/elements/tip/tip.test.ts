@@ -29,8 +29,7 @@ describe('Tip', () => {
     $track.appendTo($slider);
     handleClass = new Handle($track);
     $handle = handleClass.getElement();
-    tipClass = new Tip();
-    tipClass.init($handle);
+    tipClass = new Tip($handle);
     $tip = tipClass.getElement();
   });
 

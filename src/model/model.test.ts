@@ -32,18 +32,18 @@ describe('Model', () => {
       step: 1,
       from: 18,
       to: 20,
-      vertical: false,
-      tip: true,
-      range: true,
+      isVertical: false,
+      hasTip: true,
+      withRange: true,
     });
     expect(model.getConfig().min).to.equal(15);
     expect(model.getConfig().max).to.equal(25);
     expect(model.getConfig().step).to.equal(1);
     expect(model.getConfig().from).to.equal(18);
     expect(model.getConfig().to).to.equal(20);
-    expect(model.getConfig().vertical).to.equal(false);
-    expect(model.getConfig().tip).to.equal(true);
-    expect(model.getConfig().range).to.equal(true);
+    expect(model.getConfig().isVertical).to.equal(false);
+    expect(model.getConfig().hasTip).to.equal(true);
+    expect(model.getConfig().withRange).to.equal(true);
   });
 
   it('установлены дефолтные значения в случае отсутствия опций', () => {
@@ -58,9 +58,9 @@ describe('Model', () => {
     expect(model.getConfig().step).to.equal(10);
     expect(model.getConfig().from).to.equal(10);
     expect(model.getConfig().to).to.equal(20);
-    expect(model.getConfig().vertical).to.equal(false);
-    expect(model.getConfig().tip).to.equal(true);
-    expect(model.getConfig().range).to.equal(true);
+    expect(model.getConfig().isVertical).to.equal(false);
+    expect(model.getConfig().hasTip).to.equal(true);
+    expect(model.getConfig().withRange).to.equal(true);
   });
 
   it('скорректирован min и max', () => {
@@ -113,7 +113,7 @@ describe('Model', () => {
     expect(model.changeParameter({ value: 1 })).to.deep.equal(parameters);
   });
 
-  it('получить параметры при клике на трэк, при range=true', () => {
+  it('получить параметры при клике на трэк, при withRange=true', () => {
     const parameters = { from: { value: 2, position: 100 }, to: { value: 5, position: 400 } };
     expect(model.changeParameter({ position: 370 })).to.deep.equal(parameters);
   });
@@ -125,9 +125,9 @@ describe('Model', () => {
       step: 5,
       from: 10,
       to: 40,
-      range: true,
-      vertical: false,
-      tip: false,
+      withRange: true,
+      isVertical: false,
+      hasTip: false,
     };
     model = new Model(config);
     expect(model.getConfig()).to.deep.equal(config);

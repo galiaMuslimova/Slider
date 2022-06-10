@@ -20,11 +20,11 @@ class Scale implements IScale {
 
   private scaleSize: number;
 
-  private vertical: boolean;
+  private isVertical: boolean;
 
   constructor($slider: JQuery<HTMLElement>) {
     this.$slider = $slider;
-    this.vertical = false;
+    this.isVertical = false;
     this.observer = new Observer();
     this.$scale = jQuery('<div>');
     this.positions = [];
@@ -33,8 +33,8 @@ class Scale implements IScale {
     this.init();
   }
 
-  public setVertical(vertical: boolean): void {
-    this.vertical = vertical;
+  public setVertical(isVertical: boolean): void {
+    this.isVertical = isVertical;
   }
 
   public initPositions(config: IConfig, trackParameters: ITrackPosition): void {
@@ -110,13 +110,13 @@ class Scale implements IScale {
 
   private takeWidth(): number {
     const widthArr: number[] = [];
-    const size = this.vertical ? 'height' : 'width';
+    const size = this.isVertical ? 'height' : 'width';
     this.positions.forEach((item) => {
       const $scaleItem = jQuery('<div>', { text: item.value }).appendTo(
         this.$scale,
       );
       $scaleItem.css(size, 'min-content');
-      const itemWidth = this.vertical
+      const itemWidth = this.isVertical
         ? $scaleItem.height()
         : $scaleItem.width();
       widthArr.push(itemWidth || 0);
@@ -151,20 +151,20 @@ class Scale implements IScale {
   private createItem(item: IPositions, position: number): JQuery<HTMLElement> {
     const $scaleItem = jQuery('<div>', {
       class: 'meta-slider__scale-item js-meta-slider__scale-item',
-      style: this.vertical
+      style: this.isVertical
         ? `top: ${position}px; line-height: ${this.itemWidth}px`
         : `left: ${position}px`,
     });
     const $line = jQuery('<div>', {
       class: 'meta-slider__line',
-      text: this.vertical ? '\u2014' : '|',
+      text: this.isVertical ? '\u2014' : '|',
     });
     $line.appendTo($scaleItem);
     const $value = jQuery('<div>', {
       class: 'meta-slider__value js-meta-slider__value',
       'data-value': item.value,
       text: item.value,
-      style: this.vertical
+      style: this.isVertical
         ? `height: ${this.itemWidth}px`
         : `width: ${this.itemWidth}px`,
     });
