@@ -1,8 +1,6 @@
-import { IPositions } from '../../../interfaces/interfaces';
-
 interface ITip {
   init($handle: JQuery<HTMLElement>): void
-  changeTip(parameter: IPositions): void
+  changeTip(item: number): void
   getElement(): JQuery<HTMLElement>
 }
 

@@ -1,5 +1,5 @@
 import Controller from './controller/Controller';
-import { IConfig, IOptions } from './interfaces/interfaces';
+import { IOptions } from './interfaces/interfaces';
 import IMetaSlider from './interface';
 
 class MetaSlider implements IMetaSlider {
@@ -13,7 +13,7 @@ class MetaSlider implements IMetaSlider {
     this.controller.setOptions(options);
   }
 
-  public getOptions(): IConfig {
+  public getOptions(): IOptions {
     return this.controller.getOptions();
   }
 }

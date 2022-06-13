@@ -17,8 +17,8 @@ class Tip implements ITip {
     this.$tip.appendTo(this.$handle);
   }
 
-  public changeTip(parameter: IPositions): void {
-    this.$tip.html(`${parameter.value}`);
+  public changeTip(item: number): void {
+    this.$tip.html(`${item}`);
   }
 
   public getElement(): JQuery<HTMLElement> {

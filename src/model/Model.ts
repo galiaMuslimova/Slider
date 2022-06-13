@@ -2,7 +2,6 @@ import {
   IOptions,
   IConfig,
   ICoordinates,
-  IParameters,
   IPositions,
 } from '../interfaces/interfaces';
 import IModel from './interface';
@@ -11,64 +10,73 @@ import defaults from '../defaults';
 class Model implements IModel {
   private options: IOptions;
 
-  private parameters: IParameters;
-
   private config: IConfig;
 
   private positions: IPositions[];
 
   constructor(options: IOptions) {
     this.options = options;
-    this.parameters = {
-      from: { value: 0, position: 0 },
-      to: { value: 0, position: 0 },
-    };
-    this.config = this.correctConfig(this.options);
+    this.config = this.createConfig(this.options);
     this.positions = [];
   }
 
   public init(positions: IPositions[]): void {
     this.positions = positions;
-    this.correctConfigByArray();
-    this.parameters = this.initParameters();
+    this.correctConfigByPositions();
   }
 
   public correctParameters(): void {
     const isFromHigher = this.config.from > this.config.to;
     if (this.config.withRange && isFromHigher) {
-      const firstParameter = this.parameters.from;
-      const secondParameter = this.parameters.to;
-      this.parameters.from = secondParameter || this.parameters.from;
-      this.parameters.to = firstParameter;
-      this.config.from = this.parameters.from.value;
-      this.config.to = this.parameters.to.value;
-      this.options.onChange?.call(this, this.config);
+      const { from, fromPosition } = { ...this.config };
+      this.config.from = this.config.to;
+      this.config.fromPosition = this.config.toPosition;
+      this.config.to = from;
+      this.config.toPosition = fromPosition;
+      this.options.onChange?.call(this, this.getOptions());
     }
   }
 
-  public changeParameter(setting: ICoordinates): IParameters {
+  public changeParameter(setting: ICoordinates): void {
     const newParameter = this.takeClosestParameter(setting);
     const parameterOrder = setting.key || this.makeOrder(setting);
     const type = parameterOrder === 0 ? 'from' : 'to';
-    this.parameters[type] = newParameter;
-    this.config.from = this.parameters.from.value;
-    this.config.to = this.parameters.to?.value || this.config.from;
-    this.options.onChange?.call(this, this.config);
-    return this.parameters;
+    this.config[type] = newParameter.value;
+    this.config[`${type}Position`] = newParameter.position;
+    this.options.onChange?.call(this, this.getOptions());
   }
 
   public setOptions(options: IOptions): void {
     const newOptions = $.extend(this.options, this.config, options);
     this.options = $.extend(this.options, options);
-    this.config = this.correctConfig(newOptions);
+    this.config = this.createConfig(newOptions);
   }
 
   public getConfig(): IConfig {
     return this.config;
   }
 
-  public getParameters(): IParameters {
-    return this.parameters;
+  public getOptions(): IOptions {
+    const options = (({
+      min,
+      max,
+      step,
+      from,
+      to,
+      withRange,
+      hasTip,
+      isVertical,
+    }) => ({
+      min,
+      max,
+      step,
+      from,
+      to,
+      withRange,
+      hasTip,
+      isVertical,
+    }))(this.config);
+    return options;
   }
 
   static takeClosestIndex(num: number, array: number[]): number {
@@ -76,35 +84,40 @@ class Model implements IModel {
     return array.indexOf(closest);
   }
 
-  private correctConfig(options: IOptions): IConfig {
-    let newConfig = this.correctTypes(options);
-    newConfig = this.correctMinMax(newConfig);
-    return newConfig;
+  private createConfig(options: IOptions): IConfig {
+    let newOptions = this.correctTypes(options);
+    newOptions = this.correctMinMax(newOptions);
+    return newOptions;
   }
 
   private correctTypes(options: IOptions = this.options): IConfig {
-    const config = { ...defaults };
-    config.max = Number.isFinite(Number(options.max))
+    const newOptions: IConfig = $.extend({}, defaults, {
+      fromPosition: 0,
+      toPosition: 0,
+    });
+    newOptions.max = Number.isFinite(Number(options.max))
       ? Number(options.max)
       : defaults.max;
-    config.min = Number.isFinite(Number(options.min))
+    newOptions.min = Number.isFinite(Number(options.min))
       ? Number(options.min)
       : defaults.min;
-    config.step = Number.isFinite(Number(options.step))
+    newOptions.step = Number.isFinite(Number(options.step))
       ? Number(options.step)
       : defaults.step;
-    config.from = Number.isFinite(Number(options.from))
+    newOptions.from = Number.isFinite(Number(options.from))
       ? Number(options.from)
       : defaults.from;
-    config.to = Number.isFinite(Number(options.to))
+    newOptions.to = Number.isFinite(Number(options.to))
       ? Number(options.to)
       : defaults.to;
-    config.isVertical = typeof options.isVertical === 'boolean'
+    newOptions.isVertical = typeof options.isVertical === 'boolean'
       ? options.isVertical
       : defaults.isVertical;
-    config.hasTip = typeof options.hasTip === 'boolean' ? options.hasTip : defaults.hasTip;
-    config.withRange = typeof options.withRange === 'boolean' ? options.withRange : defaults.withRange;
-    return config;
+    newOptions.hasTip = typeof options.hasTip === 'boolean' ? options.hasTip : defaults.hasTip;
+    newOptions.withRange = typeof options.withRange === 'boolean'
+      ? options.withRange
+      : defaults.withRange;
+    return newOptions;
   }
 
   private correctMinMax(config: IConfig = this.config): IConfig {
@@ -113,33 +126,18 @@ class Model implements IModel {
     correctConfig.min = config.max > config.min ? config.min : config.max;
     correctConfig.max = config.max === config.min ? config.min + 10 : correctConfig.max;
     correctConfig.from = config.from < config.min ? config.min : config.from;
-    correctConfig.to = config.to > config.max ? config.max : config.to;
+    correctConfig.to = config.to && config.to > config.max ? config.max : config.to;
     return correctConfig;
   }
 
-  private correctConfigByArray(config: IConfig = this.config): IConfig {
-    const correctConfig = { ...config };
-    const valuesArr = this.positions.map((item) => item.value);
-    const firstIndex = Model.takeClosestIndex(config.from, valuesArr);
-    correctConfig.from = this.positions[firstIndex].value;
-    const secondIndex = Model.takeClosestIndex(config.to, valuesArr);
-    correctConfig.to = this.positions[secondIndex].value;
-    this.config = correctConfig;
-    return correctConfig;
-  }
-
-  private initParameters(): IParameters {
-    const { parameters } = this;
-    const stepValues = this.positions.map((el) => el.value);
-    const firstIndex = Model.takeClosestIndex(this.config.from, stepValues);
-    parameters.from.value = this.config.from;
-    parameters.from.position = this.positions[firstIndex].position;
-    if (this.config.withRange && parameters.to) {
-      const secondIndex = Model.takeClosestIndex(this.config.to, stepValues);
-      parameters.to.value = this.config.to;
-      parameters.to.position = this.positions[secondIndex].position;
-    }
-    return parameters;
+  private correctConfigByPositions(): void {
+    ['from', 'to'].forEach((item) => {
+      const correctItem = item as 'from' | 'to';
+      const valuesArr = this.positions.map((el) => el.value);
+      const index = Model.takeClosestIndex(this.config[correctItem], valuesArr);
+      this.config[correctItem] = this.positions[index].value;
+      this.config[`${correctItem}Position`] = this.positions[index].position;
+    });
   }
 
   private makeOrder(parameter: ICoordinates): number {
@@ -148,17 +146,11 @@ class Model implements IModel {
     }
     const { value, position } = parameter;
     if (value && !position) {
-      const values = [
-        this.parameters.from.value,
-        this.parameters.to?.value || this.parameters.from.value,
-      ];
+      const values = [this.config.from, this.config.to];
       return Model.takeClosestIndex(value, values);
     }
     if (position && !value) {
-      const positions = [
-        this.parameters.from.position,
-        this.parameters.to?.position || this.parameters.from.position,
-      ];
+      const positions = [this.config.fromPosition, this.config.toPosition];
       return Model.takeClosestIndex(position, positions);
     }
     throw new Error('wrong parameter for order');
@@ -169,7 +161,7 @@ class Model implements IModel {
     if (parameter.position) {
       index = Model.takeClosestIndex(
         parameter.position,
-        this.takepositionsPositions(),
+        this.positions.map((item) => item.position),
       );
       return this.positions[index];
     }
@@ -177,20 +169,12 @@ class Model implements IModel {
     if (parameter.value) {
       index = Model.takeClosestIndex(
         parameter.value,
-        this.takepositionsValues(),
+        this.positions.map((item) => item.value),
       );
       return this.positions[index];
     }
 
     throw new Error('wrong parameters');
-  }
-
-  private takepositionsValues() {
-    return this.positions.map((item) => item.value);
-  }
-
-  private takepositionsPositions() {
-    return this.positions.map((item) => item.position);
   }
 }
 

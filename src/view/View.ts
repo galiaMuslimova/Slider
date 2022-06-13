@@ -1,6 +1,4 @@
-import {
-  IConfig, ICoordinates, IPositions, IParameters,
-} from '../interfaces/interfaces';
+import { IConfig, ICoordinates, IPositions } from '../interfaces/interfaces';
 import Observer from '../observer/Observer';
 
 import './slider.scss';
@@ -81,19 +79,21 @@ class View implements IView {
     return this.scale.getPositions();
   }
 
-  public setParameters(parameters: IParameters): void {
-    this.firstHandle.moveHandle(parameters.from);
-    if (parameters.to) {
-      this.secondHandle?.moveHandle(parameters.to);
+  public setParameters(config: IConfig): void {
+    this.firstHandle.moveHandle(config.from, config.fromPosition);
+    if (config.withRange) {
+      this.secondHandle?.moveHandle(config.to, config.toPosition);
     }
 
-    this.interval.moveInterval(parameters);
+    this.interval.moveInterval(config.fromPosition, config.toPosition);
   }
 
   private toggleDirection(config: IConfig): void {
     const { isVertical } = config;
     this.$slider
-      .removeClass(isVertical ? 'meta-slider_horizontal' : 'meta-slider_vertical')
+      .removeClass(
+        isVertical ? 'meta-slider_horizontal' : 'meta-slider_vertical',
+      )
       .addClass(isVertical ? 'meta-slider_vertical' : 'meta-slider_horizontal');
     this.track.setVertical(isVertical);
     this.firstHandle.setVertical(isVertical);

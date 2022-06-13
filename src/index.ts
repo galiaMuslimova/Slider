@@ -1,10 +1,10 @@
 import MetaSlider from './MetaSlider';
-import { IConfig, IOptions } from './interfaces/interfaces';
+import { IOptions } from './interfaces/interfaces';
 import defaults from './defaults';
 
 interface ISlider {
   (method?: 'init'): JQuery<HTMLElement>;
-  (method: 'getOptions'): IConfig;
+  (method: 'getOptions'): IOptions;
   (method: 'setOptions', options: IOptions): JQuery<HTMLElement>;
 }
 
@@ -16,7 +16,7 @@ declare global {
 interface IMethods {
   init: (options: IOptions) => void;
   setOptions: (options: IOptions) => void;
-  getOptions: () => IConfig;
+  getOptions: () => IOptions;
 }
 
 (function ($) {
@@ -25,7 +25,7 @@ interface IMethods {
       const config = $.extend({}, defaults, options);
       const slider = new MetaSlider(this, config);
       $.each(config, (key, value) => {
-        this.attr(`data-${key}`, `${value}`);
+        this.data(key, `${value}`);
       });
       this.data('slider', slider);
     },
@@ -33,7 +33,7 @@ interface IMethods {
       this.data('slider').setOptions(options);
       const config = this.data('slider').getOptions();
       $.each(config, (key, value) => {
-        this.attr(`data-${String(key)}`, `${value}`);
+        this.data(`${String(key)}`, `${value}`);
       });
     },
     getOptions(this: JQuery<HTMLElement>) {
@@ -42,7 +42,7 @@ interface IMethods {
   };
 
   function makeSlider(method?: 'init'): JQuery<HTMLElement>;
-  function makeSlider(method: 'getOptions'): IConfig;
+  function makeSlider(method: 'getOptions'): IOptions;
   function makeSlider(
     method: keyof IMethods,
     options?: IOptions

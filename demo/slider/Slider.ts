@@ -1,5 +1,5 @@
 import '../../src/index';
-import { IConfig, IOptions } from '../../src/interfaces/interfaces';
+import { IOptions } from '../../src/interfaces/interfaces';
 import IPanel from '../panel/interface';
 import Panel from '../panel/Panel';
 import ISlider from './interface';
@@ -38,17 +38,17 @@ class Slider implements ISlider {
     this.slider = this.$sliderRootElement
       .MetaSlider()
       .MetaSlider('setOptions', {
-        onChange: (config) => {
-          this.showValues(config);
+        onChange: (options) => {
+          this.showValues(options);
         },
       });
   }
 
-  private showValues(config: IConfig): void {
+  private showValues(options: IOptions): void {
     const $sliderValues = this.$element.find('.js-slider__values');
-    this.panel?.setValue(config);
+    this.panel?.setValue(options);
     if (this.isDisplayValues) {
-      $sliderValues.text(`from: ${config.from}; to: ${config.to}`);
+      $sliderValues.text(`from: ${options.from}; to: ${options.to}`);
     }
   }
 

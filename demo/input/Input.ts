@@ -1,4 +1,4 @@
-import { IConfig, IOptions } from '../../src/interfaces/interfaces';
+import { IOptions } from '../../src/interfaces/interfaces';
 import Observer from '../../src/observer/Observer';
 import IObserver from '../../src/observer/interface';
 import IInput from './interface';

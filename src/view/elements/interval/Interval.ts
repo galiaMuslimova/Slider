@@ -1,4 +1,3 @@
-import { IParameters } from '../../../interfaces/interfaces';
 import IInterval from './interface';
 
 class Interval implements IInterval {
@@ -26,17 +25,17 @@ class Interval implements IInterval {
     this.withRange = withRange;
   }
 
-  public moveInterval(parameters: IParameters): void {
+  public moveInterval(fromPosition: number, toPosition: number): void {
     let min: number;
     let width: number;
     const handleWidth = 20;
     const gap = 2; // to make a gap between interval and handle
-    if (parameters.to && this.withRange) {
-      min = Math.min(parameters.from.position, parameters.to.position) + handleWidth / 2;
-      width = Math.abs(parameters.to.position - parameters.from.position) - handleWidth - gap;
+    if (this.withRange) {
+      min = Math.min(fromPosition, toPosition) + handleWidth / 2;
+      width = Math.abs(toPosition - fromPosition) - handleWidth - gap;
     } else {
       min = 0;
-      width = parameters.from.position - handleWidth / 2 - gap;
+      width = fromPosition - handleWidth / 2 - gap;
     }
     width = width > 0 ? width : 0;
     this.$interval.css(this.isVertical ? 'height' : 'width', `${width}px`);

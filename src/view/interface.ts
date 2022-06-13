@@ -1,5 +1,5 @@
 import {
-  IParameters, IConfig, IPositions,
+  IConfig, IPositions,
 } from '../interfaces/interfaces';
 import IObserver from '../observer/interface';
 
@@ -8,7 +8,7 @@ interface IView {
   $slider: JQuery<HTMLElement>;
 
   initConfig(config: IConfig): void;
-  setParameters(parameters: IParameters): void;
+  setParameters(parameters: IConfig): void;
   getPositions(): IPositions[];
 }
 

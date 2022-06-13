@@ -1,4 +1,4 @@
-import { IPositions, ITrackPosition } from '../../../interfaces/interfaces';
+import { ITrackPosition } from '../../../interfaces/interfaces';
 import IObserver from '../../../observer/interface';
 
 interface IHandle {
@@ -8,7 +8,7 @@ interface IHandle {
   setVertical(isVertical: boolean): void;
   getElement(): JQuery<HTMLElement>;
   setTrackParameters(trackParameters: ITrackPosition): void;
-  moveHandle(parameters: IPositions): void;
+  moveHandle(item: number, itemPosition: number): void;
   toggleTip(hasTip: boolean): void;
 }
 

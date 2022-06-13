@@ -19,7 +19,9 @@ describe('Handle', () => {
 
   before(() => {
     $slider = $(document).find('.js-meta-slider');
-    $track = jQuery('<div>', { class: 'meta-slider__track js-meta-slider__track' });
+    $track = jQuery('<div>', {
+      class: 'meta-slider__track js-meta-slider__track',
+    });
     $track.appendTo($slider);
     handleClass = new Handle($track);
     handleClass.setTrackParameters({ trackStart: 0, trackWidth: 300 });
@@ -31,13 +33,13 @@ describe('Handle', () => {
   });
 
   it('проверить установку позиции', () => {
-    handleClass.moveHandle({ value: 10, position: 100 });
+    handleClass.moveHandle(10, 100);
     expect(handleClass.getElement().css('left')).to.equal('90px');
   });
 
   it('проверить изменение isVertical', () => {
     handleClass.setVertical(true);
-    handleClass.moveHandle({ value: 10, position: 100 });
+    handleClass.moveHandle(10, 100);
     expect(handleClass.getElement().css('top')).to.equal('90px');
   });
 

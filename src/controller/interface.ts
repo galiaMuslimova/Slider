@@ -1,4 +1,4 @@
-import { IConfig, IOptions } from '../interfaces/interfaces';
+import { IOptions } from '../interfaces/interfaces';
 import IModel from '../model/interface';
 import IView from '../view/interface';
 
@@ -7,7 +7,7 @@ interface IController {
   model: IModel;
 
   setOptions(options: IOptions): void
-  getOptions(): IConfig
+  getOptions(): IOptions
 }
 
 export default IController;

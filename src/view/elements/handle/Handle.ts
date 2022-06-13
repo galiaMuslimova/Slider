@@ -1,6 +1,6 @@
 import Observer from '../../../observer/Observer';
 import IObserver from '../../../observer/interface';
-import { IPositions, IParameters, ITrackPosition } from '../../../interfaces/interfaces';
+import { ITrackPosition } from '../../../interfaces/interfaces';
 import ITip from '../tip/interface';
 import Tip from '../tip/tip';
 import IHandle from './interface';
@@ -49,13 +49,13 @@ class Handle implements IHandle {
     this.trackWidth = trackWidth;
   }
 
-  public moveHandle(parameters: IPositions): void {
+  public moveHandle(item: number, itemPosition: number): void {
     this.$handle.css(
       this.isVertical ? 'top' : 'left',
-      `${parameters.position - 20 / 2}px`,
+      `${itemPosition - 20 / 2}px`,
     );
     this.$handle.css(this.isVertical ? 'left' : 'top', '-5px');
-    this.tip?.changeTip(parameters);
+    this.tip?.changeTip(item);
   }
 
   public toggleTip(hasTip: boolean): void {

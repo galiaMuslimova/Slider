@@ -1,4 +1,4 @@
-import { IConfig, IOptions } from '../../src/interfaces/interfaces';
+import { IOptions } from '../../src/interfaces/interfaces';
 import Observer from '../../src/observer/Observer';
 import IObserver from '../../src/observer/interface';
 import Input from '../input/Input';
@@ -13,11 +13,11 @@ class Panel implements IPanel {
 
   readonly $root: JQuery<HTMLElement>;
 
-  private options: IConfig;
+  private options: IOptions;
 
   private $panel: JQuery<HTMLElement>;
 
-  constructor($root: JQuery<HTMLElement>, options: IConfig) {
+  constructor($root: JQuery<HTMLElement>, options: IOptions) {
     this.$root = $root;
     this.options = options;
     this.observer = new Observer();
@@ -38,7 +38,7 @@ class Panel implements IPanel {
     return false;
   }
 
-  private initPanel(options: IConfig): void {
+  private initPanel(options: IOptions): void {
     this.$panel = this.$root.find('.js-panel');
     const element = this;
     Object.entries(options).forEach(([key, value]) => {

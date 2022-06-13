@@ -84,9 +84,11 @@ describe('Controller', () => {
       key: 1,
       position: 30,
     });
-    const parameters = controller?.model.getParameters();
-    const exceptParameters = { from: { value: 2, position: 100 }, to: { value: 1, position: 50 } };
-    expect(parameters).to.deep.equal(exceptParameters);
+    const config = controller?.model.getConfig();
+    expect(config?.from).to.equal(2);
+    expect(config?.fromPosition).to.equal(100);
+    expect(config?.to).to.equal(1);
+    expect(config?.toPosition).to.equal(50);
     const eStart = jQuery.Event('mousedown');
     const eEnd = jQuery.Event('mouseup');
     const handle1 = $slider?.find('.js-meta-slider__handle')[0];
@@ -94,8 +96,11 @@ describe('Controller', () => {
       $(handle1).triggerHandler(eStart);
       $(document).triggerHandler(eEnd);
     }
-    const correctParameters = { from: { value: 1, position: 50 }, to: { value: 2, position: 100 } };
-    expect(controller?.model.getParameters()).to.deep.equal(correctParameters);
+    const correctConfig = controller?.model.getConfig();
+    expect(correctConfig?.from).to.equal(1);
+    expect(correctConfig?.fromPosition).to.equal(50);
+    expect(correctConfig?.to).to.equal(2);
+    expect(correctConfig?.toPosition).to.equal(100);
   });
 
   it('проверяет change handle 1', () => {

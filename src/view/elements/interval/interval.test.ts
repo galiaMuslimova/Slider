@@ -31,15 +31,14 @@ describe('Interval', () => {
   });
 
   it('проверяет создание интервала при withRange=true, isVertical=false', () => {
-    const parameters = { from: { value: 100, position: 100 }, to: { value: 200, position: 200 } };
-    intervalClass.moveInterval(parameters);
+    intervalClass.moveInterval(100, 200);
     expect($interval.css('width')).to.eq('78px');
     expect($interval.css('left')).to.eq('110px');
   });
 
   it('проверяет создание интервала при withRange=false, isVertical=false', () => {
     intervalClass.setRange(false);
-    intervalClass.moveInterval({ from: { value: 10, position: 100 } });
+    intervalClass.moveInterval(100, 200);
     expect($interval.css('width')).to.eq('88px');
     expect($interval.css('left')).to.eq('0px');
   });
@@ -47,7 +46,7 @@ describe('Interval', () => {
   it('проверяет создание интервала при withRange=false, isVertical=false', () => {
     intervalClass.setRange(false);
     intervalClass.setVertical(false);
-    intervalClass.moveInterval({ from: { value: 120, position: 120 } });
+    intervalClass.moveInterval(120, 200);
     expect($interval.css('width')).to.eq('108px');
     expect($interval.css('left')).to.eq('0px');
   });
@@ -56,15 +55,14 @@ describe('Interval', () => {
     intervalClass.setVertical(true);
     intervalClass.setRange(true);
     $interval = $track.find('.js-meta-slider__interval');
-    const parameters = { from: { value: 120, position: 120 }, to: { value: 230, position: 230 } };
-    intervalClass.moveInterval(parameters);
+    intervalClass.moveInterval(120, 230);
     expect($interval.css('height')).to.eq('88px');
     expect($interval.css('top')).to.eq('130px');
   });
 
   it('проверяет создание интервала при withRange=false, isVertical=true', () => {
     intervalClass.setRange(false);
-    intervalClass.moveInterval({ from: { value: 155, position: 155 } });
+    intervalClass.moveInterval(155, 200);
     expect($interval.css('height')).to.eq('143px');
     expect($interval.css('top')).to.eq('0px');
   });

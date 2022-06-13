@@ -38,7 +38,7 @@ describe('Tip', () => {
   });
 
   it('проверяет отсутствие подсказок tips = 0', () => {
-    tipClass.changeTip({ value: 10, position: 100 });
+    tipClass.changeTip(10);
     expect($tip.html()).to.eq('10');
   });
 });

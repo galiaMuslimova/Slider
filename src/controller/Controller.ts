@@ -1,4 +1,4 @@
-import { IOptions, ICoordinates, IConfig } from '../interfaces/interfaces';
+import { IOptions, ICoordinates } from '../interfaces/interfaces';
 import View from '../view/View';
 import IView from '../view/interface';
 import Model from '../model/Model';
@@ -27,8 +27,8 @@ class Controller implements IController {
     this.view.initConfig(this.model.getConfig());
   }
 
-  public getOptions(): IConfig {
-    return this.model.getConfig();
+  public getOptions(): IOptions {
+    return this.model.getOptions();
   }
 
   private init() {
@@ -49,16 +49,17 @@ class Controller implements IController {
 
   private initParameters() {
     this.model.init(this.view.getPositions());
-    this.view.setParameters(this.model.getParameters());
+    this.view.setParameters(this.model.getConfig());
   }
 
   private changeParameters(setting: ICoordinates) {
-    this.view.setParameters(this.model.changeParameter(setting));
+    this.model.changeParameter(setting);
+    this.view.setParameters(this.model.getConfig());
   }
 
   private correctParameters() {
     this.model.correctParameters();
-    this.view.setParameters(this.model.getParameters());
+    this.view.setParameters(this.model.getConfig());
   }
 }
 

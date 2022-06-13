@@ -1,4 +1,4 @@
-interface IConfig {
+interface IDefaults {
   min: number;
   max: number;
   step: number;
@@ -7,6 +7,11 @@ interface IConfig {
   isVertical: boolean;
   hasTip: boolean;
   withRange: boolean;
+}
+
+interface IConfig extends IDefaults {
+  fromPosition: number;
+  toPosition: number;
 }
 
 interface IOptions {
@@ -18,17 +23,12 @@ interface IOptions {
   isVertical?: boolean;
   hasTip?: boolean;
   withRange?: boolean;
-  onChange?: (config: IConfig) => void;
+  onChange?: (options: IOptions) => void;
 }
 
 interface IPositions {
   value: number;
   position: number;
-}
-
-interface IParameters {
-  from: IPositions;
-  to?: IPositions;
 }
 
 interface ICoordinates {
@@ -37,22 +37,16 @@ interface ICoordinates {
   position?: number;
 }
 
-interface IEventPosition {
-  eventPosition: number;
-  index: number;
-}
-
 interface ITrackPosition {
   trackStart: number;
   trackWidth: number;
 }
 
 export {
+  IDefaults,
   IOptions,
   IConfig,
   IPositions,
-  IParameters,
-  IEventPosition,
   ITrackPosition,
   ICoordinates,
 };

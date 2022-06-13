@@ -1,6 +1,6 @@
-import { IConfig } from './interfaces/interfaces';
+import { IDefaults } from './interfaces/interfaces';
 
-const defaults: IConfig = {
+const defaults: IDefaults = {
   min: 10,
   max: 40,
   step: 4,

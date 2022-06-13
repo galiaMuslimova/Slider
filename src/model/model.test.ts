@@ -74,8 +74,11 @@ describe('Model', () => {
   });
 
   it('инициализировать параметры', () => {
-    const parameters = { from: { value: 2, position: 100 }, to: { value: 4, position: 300 } };
-    expect(model.getParameters()).to.deep.equal(parameters);
+    const config = model.getConfig();
+    expect(config?.from).to.deep.equal(2);
+    expect(config?.fromPosition).to.deep.equal(100);
+    expect(config?.to).to.deep.equal(4);
+    expect(config?.toPosition).to.deep.equal(300);
   });
 
   it('инициализировать параметры с неправильными from и  to', () => {
@@ -87,35 +90,58 @@ describe('Model', () => {
       to: 19,
     });
     model.init(data);
-    const parameters = { from: { value: 1, position: 0 }, to: { value: 6, position: 500 } };
-    expect(model.getParameters()).to.deep.equal(parameters);
+    const config = model.getConfig();
+    expect(config?.from).to.deep.equal(1);
+    expect(config?.fromPosition).to.deep.equal(0);
+    expect(config?.to).to.deep.equal(6);
+    expect(config?.toPosition).to.deep.equal(500);
   });
 
   it('получить параметры при движении handle 1', () => {
     const options = { key: 0, position: 165 };
-    const parameters = { from: { value: 3, position: 200 }, to: { value: 4, position: 300 } };
-    expect(model.changeParameter(options)).to.deep.equal(parameters);
+    model.changeParameter(options);
+    const config = model.getConfig();
+    expect(config?.from).to.deep.equal(3);
+    expect(config?.fromPosition).to.deep.equal(200);
+    expect(config?.to).to.deep.equal(4);
+    expect(config?.toPosition).to.deep.equal(300);
   });
 
   it('получить параметры при движении handle 2', () => {
     const options = { key: 1, position: 230 };
-    const parameters = { from: { value: 2, position: 100 }, to: { value: 3, position: 200 } };
-    expect(model.changeParameter(options)).to.deep.equal(parameters);
+    model.changeParameter(options);
+    const config = model.getConfig();
+    expect(config?.from).to.deep.equal(2);
+    expect(config?.fromPosition).to.deep.equal(100);
+    expect(config?.to).to.deep.equal(3);
+    expect(config?.toPosition).to.deep.equal(200);
   });
 
   it('получить параметры при клике на шкалу, меняется handle 2', () => {
-    const parameters = { from: { value: 2, position: 100 }, to: { value: 5, position: 400 } };
-    expect(model.changeParameter({ value: 5 })).to.deep.equal(parameters);
+    model.changeParameter({ value: 5 });
+    const config = model.getConfig();
+    expect(config?.from).to.deep.equal(2);
+    expect(config?.fromPosition).to.deep.equal(100);
+    expect(config?.to).to.deep.equal(5);
+    expect(config?.toPosition).to.deep.equal(400);
   });
 
   it('получить параметры при клике на шкалу, меняется handle 1', () => {
-    const parameters = { from: { value: 1, position: 0 }, to: { value: 4, position: 300 } };
-    expect(model.changeParameter({ value: 1 })).to.deep.equal(parameters);
+    model.changeParameter({ value: 1 });
+    const config = model.getConfig();
+    expect(config?.from).to.deep.equal(1);
+    expect(config?.fromPosition).to.deep.equal(0);
+    expect(config?.to).to.deep.equal(4);
+    expect(config?.toPosition).to.deep.equal(300);
   });
 
   it('получить параметры при клике на трэк, при withRange=true', () => {
-    const parameters = { from: { value: 2, position: 100 }, to: { value: 5, position: 400 } };
-    expect(model.changeParameter({ position: 370 })).to.deep.equal(parameters);
+    model.changeParameter({ position: 370 });
+    const config = model.getConfig();
+    expect(config?.from).to.deep.equal(2);
+    expect(config?.fromPosition).to.deep.equal(100);
+    expect(config?.to).to.deep.equal(5);
+    expect(config?.toPosition).to.deep.equal(400);
   });
 
   it('получить параметры', () => {
@@ -130,6 +156,7 @@ describe('Model', () => {
       hasTip: false,
     };
     model = new Model(config);
-    expect(model.getConfig()).to.deep.equal(config);
+    const expectedConfig = $.extend({}, config, { fromPosition: 0, toPosition: 0 });
+    expect(model.getConfig()).to.deep.equal(expectedConfig);
   });
 });
