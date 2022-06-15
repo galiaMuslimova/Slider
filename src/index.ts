@@ -25,7 +25,7 @@ interface IMethods {
       const config = $.extend({}, defaults, options);
       const slider = new MetaSlider(this, config);
       $.each(config, (key, value) => {
-        this.data(key, `${value}`);
+        this.attr(`data-${String(key)}`, `${value}`);
       });
       this.data('slider', slider);
     },
@@ -33,7 +33,7 @@ interface IMethods {
       this.data('slider').setOptions(options);
       const config = this.data('slider').getOptions();
       $.each(config, (key, value) => {
-        this.data(`${String(key)}`, `${value}`);
+        this.attr(`data-${String(key)}`, `${value}`);
       });
     },
     getOptions(this: JQuery<HTMLElement>) {

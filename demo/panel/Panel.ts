@@ -31,6 +31,9 @@ class Panel implements IPanel {
     Object.entries(options).forEach(([key, value]) => {
       const input = this.inputs[key];
       input.setValue(value);
+      if (key === 'withRange') {
+        this.inputs.to.setDisable(value);
+      }
     });
   }
 
@@ -51,6 +54,7 @@ class Panel implements IPanel {
       });
       this.inputs[key] = input;
     });
+    this.setValue(options);
   }
 
   private bindEventListeners(): void {

@@ -13,7 +13,7 @@ class Input implements IInput {
 
   private type: string;
 
-  private value: number | boolean;
+  private value: number | boolean | string;
 
   constructor(
     $root: JQuery<HTMLElement>,
@@ -42,6 +42,10 @@ class Input implements IInput {
     this.$root.prop(name, value);
   }
 
+  public setDisable(value: boolean): void {
+    this.$root.prop('disabled', !value);
+  }
+
   private bindEventListeners(): void {
     this.$root.on('change keyup', this.handleInputValueChange.bind(this));
   }
@@ -49,7 +53,7 @@ class Input implements IInput {
   private handleInputValueChange(event: Event): void {
     switch (this.type) {
       case 'number':
-        this.value = Number((<HTMLInputElement>event.target).value);
+        this.value = (<HTMLInputElement>event.target).value;
         break;
       case 'checkbox':
         this.value = (<HTMLInputElement>event.target).checked;
@@ -58,7 +62,9 @@ class Input implements IInput {
         break;
     }
     const setting: IOptions = { [this.name]: this.value };
-    this.observer.notify('setting', setting);
+    if (this.value !== '') {
+      this.observer.notify('setting', setting);
+    }
   }
 }
 

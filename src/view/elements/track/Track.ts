@@ -42,7 +42,7 @@ class Track implements ITrack {
     this.trackWidth = this.isVertical
       ? this.$track.height()
       : this.$track.width();
-    if (this.trackWidth && this.trackStart) {
+    if (this.trackWidth) {
       return { trackStart: this.trackStart, trackWidth: this.trackWidth };
     }
     throw new Error('wrong width of slider');

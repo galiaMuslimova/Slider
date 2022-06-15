@@ -22,12 +22,9 @@ class Scale implements IScale {
 
   private scaleSize: number | null;
 
-  private isVertical: boolean;
-
   constructor($slider: JQuery<HTMLElement>, config: IConfig) {
     this.$slider = $slider;
     this.config = config;
-    this.isVertical = config.isVertical;
     this.observer = new Observer();
     this.$scale = jQuery('<div>');
     this.positions = [];
@@ -36,14 +33,18 @@ class Scale implements IScale {
     this.init();
   }
 
-  public setVertical(isVertical: boolean): void {
-    this.isVertical = isVertical;
+  public setConfig(config: IConfig): void {
+    this.config = config;
   }
 
   public initPositions(trackParameters: ITrackPosition): void {
     this.scaleSize = trackParameters.trackWidth;
     const { min, max, step } = this.config;
     const range = max - min;
+    const stepArray = step.toString().split('.');
+    const fractionalLength = stepArray.length === 2
+      ? 10 ** stepArray[1].length
+      : 1;
     const stepLength = (this.scaleSize / range) * step;
     const arrStep = stepLength < 1 ? Math.floor(1 / stepLength) : 1;
     const stepsCount = Math.floor(range / step / arrStep);
@@ -53,10 +54,10 @@ class Scale implements IScale {
     let positions: IPositions[] = [];
     const valuesArr = Array.from(
       emptyArr,
-      (_, i) => min + Math.round(multiplyStep * i) / 10,
+      (_, i) => min + Math.round(multiplyStep * i * fractionalLength) / (10 * fractionalLength),
     );
     positions = valuesArr.map((el, i) => {
-      const value: number = Math.round(el * 10) / 10;
+      const value: number = el;
       const position = Math.round(positionLength * i);
       return { value, position };
     });
@@ -113,13 +114,13 @@ class Scale implements IScale {
 
   private takeWidth(): number {
     const widthArr: number[] = [];
-    const size = this.isVertical ? 'height' : 'width';
+    const size = this.config.isVertical ? 'height' : 'width';
     this.positions.forEach((item) => {
       const $scaleItem = jQuery('<div>', { text: item.value }).appendTo(
         this.$scale,
       );
       $scaleItem.css(size, 'min-content');
-      const itemWidth = this.isVertical
+      const itemWidth = this.config.isVertical
         ? $scaleItem.height()
         : $scaleItem.width();
       widthArr.push(itemWidth || 0);
@@ -160,20 +161,20 @@ class Scale implements IScale {
   private createItem(item: IPositions, position: number): JQuery<HTMLElement> {
     const $scaleItem = jQuery('<div>', {
       class: 'meta-slider__scale-item js-meta-slider__scale-item',
-      style: this.isVertical
+      style: this.config.isVertical
         ? `top: ${position}px; line-height: ${this.itemWidth}px`
         : `left: ${position}px`,
     });
     const $line = jQuery('<div>', {
       class: 'meta-slider__line',
-      text: this.isVertical ? '\u2014' : '|',
+      text: this.config.isVertical ? '\u2014' : '|',
     });
     $line.appendTo($scaleItem);
     const $value = jQuery('<div>', {
       class: 'meta-slider__value js-meta-slider__value',
       'data-value': item.value,
       text: item.value,
-      style: this.isVertical
+      style: this.config.isVertical
         ? `height: ${this.itemWidth}px`
         : `width: ${this.itemWidth}px`,
     });

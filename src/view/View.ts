@@ -64,17 +64,20 @@ class View implements IView {
       key: 'moveEnd',
       observer: this.mouseMoveEnd.bind(this),
     });
-    $(document).ready(() => {
+    this.track.getElement().ready(() => {
       this.initTrackParameters();
     });
   }
 
   public changeConfig(config: IConfig) {
     this.config = config;
+    this.scale.setConfig(config);
     this.toggleDirection();
     this.toggleRange();
     this.toggleTip();
-    this.initTrackParameters();
+    this.track.getElement().ready(() => {
+      this.initTrackParameters();
+    });
   }
 
   public getPositions(): IPositions[] {
@@ -109,7 +112,6 @@ class View implements IView {
     this.firstHandle.setVertical(isVertical);
     this.secondHandle?.setVertical(isVertical);
     this.interval.setVertical(isVertical);
-    this.scale.setVertical(isVertical);
   }
 
   private toggleRange(): void {

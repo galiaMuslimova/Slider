@@ -106,6 +106,9 @@ class Model implements IModel {
     correctConfig.max = config.max > config.min ? config.max : config.min;
     correctConfig.min = config.max > config.min ? config.min : config.max;
     correctConfig.max = config.max === config.min ? config.min + 10 : correctConfig.max;
+    correctConfig.step = config.step <= 0 ? 1 : config.step;
+    const range = correctConfig.max - correctConfig.min;
+    correctConfig.step = correctConfig.step > range ? range : correctConfig.step;
     correctConfig.from = config.from < config.min ? config.min : config.from;
     correctConfig.to = config.to && config.to > config.max ? config.max : config.to;
     return correctConfig;
@@ -139,9 +142,8 @@ class Model implements IModel {
   }
 
   private takeClosestParameter(parameter: ICoordinates) {
-    let index = null;
     if (parameter.position) {
-      index = Model.takeClosestIndex(
+      const index = Model.takeClosestIndex(
         parameter.position,
         this.positions.map((item) => item.position),
       );
@@ -149,7 +151,7 @@ class Model implements IModel {
     }
 
     if (parameter.value) {
-      index = Model.takeClosestIndex(
+      const index = Model.takeClosestIndex(
         parameter.value,
         this.positions.map((item) => item.value),
       );
