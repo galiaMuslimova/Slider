@@ -127,8 +127,7 @@ class View implements IView {
         observer: this.mouseMoveEnd.bind(this),
       });
     } else if (!withRange && this.secondHandle) {
-      const handle = this.secondHandle.getElement();
-      this.$slider.find(handle).remove();
+      this.secondHandle.getElement().remove();
       this.secondHandle = null;
     }
   }
