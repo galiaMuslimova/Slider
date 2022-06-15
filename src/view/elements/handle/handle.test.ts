@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { testConfig } from '../../../defaults';
 
 import Handle from './Handle';
 
@@ -23,7 +24,7 @@ describe('Handle', () => {
       class: 'meta-slider__track js-meta-slider__track',
     });
     $track.appendTo($slider);
-    handleClass = new Handle($track);
+    handleClass = new Handle($track, testConfig);
     handleClass.setTrackParameters({ trackStart: 0, trackWidth: 300 });
   });
 

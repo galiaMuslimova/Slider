@@ -7,7 +7,7 @@ interface IView {
   observer: IObserver;
   $slider: JQuery<HTMLElement>;
 
-  initConfig(config: IConfig): void;
+  changeConfig(config: IConfig): void;
   setParameters(parameters: IConfig): void;
   getPositions(): IPositions[];
 }

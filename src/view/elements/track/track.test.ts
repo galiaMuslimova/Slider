@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { testConfig } from '../../../defaults';
 
 import Track from './track';
 
@@ -19,27 +20,11 @@ describe('Track', () => {
 
   before(() => {
     $slider = $(document).find('.js-meta-slider');
-    trackClass = new Track($slider);
-    $track = $slider.find('.js-meta-slider__track');
-    $track.css('width', '500');
-    $track.css('height', '400');
-    $track.css('top', '20');
-    $track.css('left', '10');
+    trackClass = new Track($slider, testConfig);
+    $track = trackClass.getElement();
   });
 
   it('проверяет создание элемента track', () => {
     expect($track.length).to.equal(1);
-  });
-
-  it('проверяет ширину трэка для вертикального', () => {
-    trackClass.setVertical(true);
-    const trackParameters = trackClass.getTrackParameters();
-    expect(trackParameters.trackWidth).to.equal(400);
-  });
-
-  it('проверяет ширину трэка для горизонтального', () => {
-    trackClass.setVertical(false);
-    const trackParameters = trackClass.getTrackParameters();
-    expect(trackParameters.trackWidth).to.equal(500);
   });
 });

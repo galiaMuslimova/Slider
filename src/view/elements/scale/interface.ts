@@ -5,7 +5,7 @@ interface IScale {
   observer: IObserver;
 
   setVertical(isVertical: boolean): void;
-  initPositions(config: IConfig, trackParameters: ITrackPosition): void;
+  initPositions(trackParameters: ITrackPosition): void;
   getPositions(): IPositions[];
 }
 

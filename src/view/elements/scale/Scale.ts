@@ -12,24 +12,27 @@ class Scale implements IScale {
 
   private $slider: JQuery<HTMLElement>;
 
+  private config: IConfig;
+
   private $scale: JQuery<HTMLElement>;
 
   private positions: IPositions[];
 
   private itemWidth: number;
 
-  private scaleSize: number;
+  private scaleSize: number | null;
 
   private isVertical: boolean;
 
-  constructor($slider: JQuery<HTMLElement>) {
+  constructor($slider: JQuery<HTMLElement>, config: IConfig) {
     this.$slider = $slider;
-    this.isVertical = false;
+    this.config = config;
+    this.isVertical = config.isVertical;
     this.observer = new Observer();
     this.$scale = jQuery('<div>');
     this.positions = [];
     this.itemWidth = 20;
-    this.scaleSize = 500;
+    this.scaleSize = null;
     this.init();
   }
 
@@ -37,9 +40,9 @@ class Scale implements IScale {
     this.isVertical = isVertical;
   }
 
-  public initPositions(config: IConfig, trackParameters: ITrackPosition): void {
+  public initPositions(trackParameters: ITrackPosition): void {
     this.scaleSize = trackParameters.trackWidth;
-    const { min, max, step } = config;
+    const { min, max, step } = this.config;
     const range = max - min;
     const stepLength = (this.scaleSize / range) * step;
     const arrStep = stepLength < 1 ? Math.floor(1 / stepLength) : 1;
@@ -139,13 +142,19 @@ class Scale implements IScale {
   }
 
   private correctScaleArr(): IPositions[] {
-    const maxStepsCount = Math.floor(this.scaleSize / this.itemWidth);
-    const scaleArr: IPositions[] = Scale.reduceArray(
-      this.positions,
-      maxStepsCount,
-    );
-    const correctedScaleArr = Scale.correctLastItems(scaleArr, this.itemWidth);
-    return correctedScaleArr;
+    if (this.scaleSize) {
+      const maxStepsCount = Math.floor(this.scaleSize / this.itemWidth);
+      const scaleArr: IPositions[] = Scale.reduceArray(
+        this.positions,
+        maxStepsCount,
+      );
+      const correctedScaleArr = Scale.correctLastItems(
+        scaleArr,
+        this.itemWidth,
+      );
+      return correctedScaleArr;
+    }
+    throw new Error('wrong size of scale');
   }
 
   private createItem(item: IPositions, position: number): JQuery<HTMLElement> {

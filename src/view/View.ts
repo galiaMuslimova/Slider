@@ -20,6 +20,8 @@ class View implements IView {
 
   private $root: JQuery<HTMLElement>;
 
+  private config: IConfig;
+
   private track: ITrack;
 
   private scale: IScale;
@@ -30,15 +32,16 @@ class View implements IView {
 
   private interval: IInterval;
 
-  constructor($root: JQuery<HTMLElement>) {
+  constructor($root: JQuery<HTMLElement>, config: IConfig) {
     this.$root = $root;
+    this.config = config;
     this.observer = new Observer();
     this.$slider = jQuery('<div>');
-    this.track = new Track(this.$slider);
-    this.scale = new Scale(this.$slider);
-    this.firstHandle = new Handle(this.track.getElement());
+    this.track = new Track(this.$slider, this.config);
+    this.scale = new Scale(this.$slider, this.config);
+    this.firstHandle = new Handle(this.track.getElement(), this.config);
     this.secondHandle = null;
-    this.interval = new Interval(this.track.getElement());
+    this.interval = new Interval(this.track.getElement(), this.config);
     this.init();
   }
 
@@ -61,18 +64,17 @@ class View implements IView {
       key: 'moveEnd',
       observer: this.mouseMoveEnd.bind(this),
     });
+    $(document).ready(() => {
+      this.initTrackParameters();
+    });
   }
 
-  public initConfig(config: IConfig) {
-    this.toggleDirection(config);
-    this.toggleRange(config);
-    this.toggleTip(config);
-    $(document).ready(() => {
-      this.scale.initPositions(config, this.track.getTrackParameters());
-      this.firstHandle.setTrackParameters(this.track.getTrackParameters());
-      this.secondHandle?.setTrackParameters(this.track.getTrackParameters());
-      this.observer.notify('init', null);
-    });
+  public changeConfig(config: IConfig) {
+    this.config = config;
+    this.toggleDirection();
+    this.toggleRange();
+    this.toggleTip();
+    this.initTrackParameters();
   }
 
   public getPositions(): IPositions[] {
@@ -88,8 +90,16 @@ class View implements IView {
     this.interval.moveInterval(config.fromPosition, config.toPosition);
   }
 
-  private toggleDirection(config: IConfig): void {
-    const { isVertical } = config;
+  private initTrackParameters() {
+    const trackParameters = this.track.getTrackParameters();
+    this.scale.initPositions(trackParameters);
+    this.firstHandle.setTrackParameters(trackParameters);
+    this.secondHandle?.setTrackParameters(trackParameters);
+    this.observer.notify('init', null);
+  }
+
+  private toggleDirection(): void {
+    const { isVertical } = this.config;
     this.$slider
       .removeClass(
         isVertical ? 'meta-slider_horizontal' : 'meta-slider_vertical',
@@ -102,11 +112,11 @@ class View implements IView {
     this.scale.setVertical(isVertical);
   }
 
-  private toggleRange(config: IConfig): void {
-    const { withRange, isVertical } = config;
+  private toggleRange(): void {
+    const { withRange, isVertical } = this.config;
     this.interval.setRange(withRange);
     if (withRange && !this.secondHandle) {
-      this.secondHandle = new Handle(this.track.getElement());
+      this.secondHandle = new Handle(this.track.getElement(), this.config);
       this.secondHandle.setVertical(isVertical);
       this.secondHandle.observer.subscribe({
         key: 'mouseMove',
@@ -123,8 +133,8 @@ class View implements IView {
     }
   }
 
-  private toggleTip(config: IConfig): void {
-    const { hasTip } = config;
+  private toggleTip(): void {
+    const { hasTip } = this.config;
     this.firstHandle.toggleTip(hasTip);
     this.secondHandle?.toggleTip(hasTip);
   }

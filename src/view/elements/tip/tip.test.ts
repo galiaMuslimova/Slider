@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { testConfig } from '../../../defaults';
 
 import Handle from '../handle/Handle';
 import Tip from './Tip';
@@ -27,7 +28,7 @@ describe('Tip', () => {
       class: 'meta-slider__track js-meta-slider__track',
     });
     $track.appendTo($slider);
-    handleClass = new Handle($track);
+    handleClass = new Handle($track, testConfig);
     $handle = handleClass.getElement();
     tipClass = new Tip($handle);
     $tip = tipClass.getElement();

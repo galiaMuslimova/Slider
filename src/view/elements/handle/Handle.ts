@@ -1,6 +1,6 @@
 import Observer from '../../../observer/Observer';
 import IObserver from '../../../observer/interface';
-import { ITrackPosition } from '../../../interfaces/interfaces';
+import { IConfig, ITrackPosition } from '../../../interfaces/interfaces';
 import ITip from '../tip/interface';
 import Tip from '../tip/tip';
 import IHandle from './interface';
@@ -18,19 +18,19 @@ class Handle implements IHandle {
 
   private tip: ITip | null;
 
-  private trackStart: number;
+  private trackStart: number | null;
 
-  private trackWidth: number;
+  private trackWidth: number | null;
 
-  constructor($track: JQuery<HTMLElement>) {
+  constructor($track: JQuery<HTMLElement>, config: IConfig) {
     this.$track = $track;
     this.observer = new Observer();
-    this.hasTip = true;
-    this.isVertical = false;
+    this.hasTip = config.hasTip;
+    this.isVertical = config.isVertical;
     this.$handle = jQuery('<div>');
     this.tip = new Tip(this.$handle);
-    this.trackStart = 0;
-    this.trackWidth = 500;
+    this.trackStart = null;
+    this.trackWidth = null;
     this.bindEventListeners();
     this.init();
   }
@@ -97,19 +97,29 @@ class Handle implements IHandle {
     const eventPosition = this.isVertical
       ? (<MouseEvent>event).pageY
       : (<MouseEvent>event).pageX;
-    const correctedPosition = Math.round(eventPosition - this.trackStart);
-    const isInScale = correctedPosition >= 0 && correctedPosition <= this.trackWidth;
+    const { correctedPosition, isInScale } = this.getCorrectPosition(eventPosition);
     if (isInScale) {
       this.observer.notify('mouseMove', correctedPosition);
     }
+  }
+
+  private getCorrectPosition(eventPosition: number): {
+    correctedPosition: number;
+    isInScale: boolean;
+  } {
+    if (this.trackStart && this.trackWidth) {
+      const correctedPosition = Math.round(eventPosition - this.trackStart);
+      const isInScale = correctedPosition >= 0 && correctedPosition <= this.trackWidth;
+      return { correctedPosition, isInScale };
+    }
+    throw new Error('wrong track positions');
   }
 
   private handleTouchMove(event: Event): void {
     const touches = (<TouchEvent>event)?.touches;
     const touch = touches[0];
     const eventPosition = this.isVertical ? touch.pageY : touch.pageX;
-    const correctedPosition = Math.round(eventPosition - this.trackStart);
-    const isInScale = correctedPosition >= 0 && correctedPosition <= this.trackWidth;
+    const { correctedPosition, isInScale } = this.getCorrectPosition(eventPosition);
     if (touches !== undefined && isInScale) {
       this.observer.notify('mouseMove', correctedPosition);
     }

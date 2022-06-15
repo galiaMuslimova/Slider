@@ -1,4 +1,4 @@
-import { ITrackPosition } from '../../../interfaces/interfaces';
+import { IConfig, ITrackPosition } from '../../../interfaces/interfaces';
 import Observer from '../../../observer/Observer';
 import IObserver from '../../../observer/interface';
 import ITrack from './interface';
@@ -12,17 +12,17 @@ class Track implements ITrack {
 
   private isVertical: boolean;
 
-  private trackStart: number;
+  private trackStart: number | null;
 
-  private trackWidth: number | undefined;
+  private trackWidth: number | null | undefined;
 
-  constructor($slider: JQuery<HTMLElement>) {
+  constructor($slider: JQuery<HTMLElement>, config: IConfig) {
     this.$slider = $slider;
     this.observer = new Observer();
     this.$track = jQuery('<div>');
-    this.isVertical = false;
-    this.trackStart = 0;
-    this.trackWidth = 0;
+    this.isVertical = config.isVertical;
+    this.trackStart = null;
+    this.trackWidth = null;
     this.init();
   }
 
@@ -36,9 +36,13 @@ class Track implements ITrack {
 
   public getTrackParameters(): ITrackPosition {
     const position = this.$track.position();
-    this.trackStart = this.isVertical ? Number(position.top) : Number(position.left);
-    this.trackWidth = this.isVertical ? this.$track.height() : this.$track.width();
-    if (this.trackWidth) {
+    this.trackStart = this.isVertical
+      ? Number(position.top)
+      : Number(position.left);
+    this.trackWidth = this.isVertical
+      ? this.$track.height()
+      : this.$track.width();
+    if (this.trackWidth && this.trackStart) {
       return { trackStart: this.trackStart, trackWidth: this.trackWidth };
     }
     throw new Error('wrong width of slider');
@@ -55,9 +59,14 @@ class Track implements ITrack {
   }
 
   private handleTrackClick(event: Event): void {
-    const eventPosition = this.isVertical ? (<MouseEvent>event).pageY : (<MouseEvent>event).pageX;
-    const position = Math.round(eventPosition - this.trackStart);
-    this.observer.notify('trackClick', position);
+    if (this.trackStart) {
+      const eventPosition = this.isVertical
+        ? (<MouseEvent>event).pageY
+        : (<MouseEvent>event).pageX;
+      const position = Math.round(eventPosition - this.trackStart);
+      this.observer.notify('trackClick', position);
+    }
+    throw new Error('wrong start position of track');
   }
 }
 

@@ -1,6 +1,6 @@
 import MetaSlider from './MetaSlider';
 import { IOptions } from './interfaces/interfaces';
-import defaults from './defaults';
+import { defaults } from './defaults';
 
 interface ISlider {
   (method?: 'init'): JQuery<HTMLElement>;

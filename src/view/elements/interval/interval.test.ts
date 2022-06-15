@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { testConfig } from '../../../defaults';
 
 import Interval from './Interval';
 
@@ -22,7 +23,7 @@ describe('Interval', () => {
     $slider = $(document).find('.js-meta-slider');
     $track = jQuery('<div>', { class: 'meta-slider__track js-meta-slider__track' });
     $track.appendTo($slider);
-    intervalClass = new Interval($track);
+    intervalClass = new Interval($track, testConfig);
     $interval = $slider.find('.js-meta-slider__interval');
   });
 

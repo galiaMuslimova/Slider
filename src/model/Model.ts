@@ -5,7 +5,7 @@ import {
   IPositions,
 } from '../interfaces/interfaces';
 import IModel from './interface';
-import defaults from '../defaults';
+import { defaults } from '../defaults';
 
 class Model implements IModel {
   private options: IOptions;

@@ -18,13 +18,13 @@ class Controller implements IController {
     this.$root = root;
     this.options = options;
     this.model = new Model(this.options);
-    this.view = new View(this.$root);
+    this.view = new View(this.$root, this.model.getConfig());
     this.init();
   }
 
   public setOptions(options: IOptions): void {
     this.model.setOptions(options);
-    this.view.initConfig(this.model.getConfig());
+    this.view.changeConfig(this.model.getConfig());
   }
 
   public getOptions(): IOptions {
@@ -44,7 +44,6 @@ class Controller implements IController {
       key: 'moveEnd',
       observer: this.correctParameters.bind(this),
     });
-    this.view.initConfig(this.model.getConfig());
   }
 
   private initParameters() {

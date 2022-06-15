@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { testConfig, testPositions } from '../defaults';
 import { IPositions, IOptions } from '../interfaces/interfaces';
 
 import Controller from './Controller';
@@ -10,7 +11,7 @@ const dom = new JSDOM(`<!DOCTYPE html>
 <head></head>
 <body>
   <div class='body__slider js-body__slider'></div>  
-</body>`);
+</body>`, { url: 'http://localhost' });
 global.window = dom.window;
 const { document } = dom.window;
 global.document = document;
@@ -31,28 +32,8 @@ describe('Controller', () => {
     $rootEl.css('height', '400');
     $rootEl.css('top', '0');
     $rootEl.css('left', '0');
-    options = {
-      min: 0,
-      max: 10,
-      step: 1,
-      from: 2,
-      to: 8,
-      withRange: true,
-      isVertical: false,
-    };
-    expectedpositions = [
-      { value: 0, position: 0 },
-      { value: 1, position: 50 },
-      { value: 2, position: 100 },
-      { value: 3, position: 150 },
-      { value: 4, position: 200 },
-      { value: 5, position: 250 },
-      { value: 6, position: 300 },
-      { value: 7, position: 350 },
-      { value: 8, position: 400 },
-      { value: 9, position: 450 },
-      { value: 10, position: 500 },
-    ];
+    options = testConfig;
+    expectedpositions = testPositions;
   });
 
   beforeEach(() => {
@@ -62,7 +43,7 @@ describe('Controller', () => {
     $scale = $rootEl.find('.js-meta-slider__scale');
     $handle = $rootEl.find('.js-meta-slider__handle');
     $track.css('width', '500');
-    controller.view.initConfig(controller.model.getConfig());
+    controller.view.changeConfig(controller.model.getConfig());
     controller.model.init(expectedpositions);
   });
 

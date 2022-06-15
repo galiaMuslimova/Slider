@@ -1,3 +1,4 @@
+import { IConfig } from '../../../interfaces/interfaces';
 import IInterval from './interface';
 
 class Interval implements IInterval {
@@ -9,11 +10,11 @@ class Interval implements IInterval {
 
   private withRange: boolean;
 
-  constructor($track: JQuery<HTMLElement>) {
+  constructor($track: JQuery<HTMLElement>, config: IConfig) {
     this.$track = $track;
     this.$interval = jQuery('<div>');
-    this.isVertical = false;
-    this.withRange = true;
+    this.isVertical = config.isVertical;
+    this.withRange = config.withRange;
     this.init();
   }
 
