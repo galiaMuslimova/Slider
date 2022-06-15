@@ -32,7 +32,7 @@ interface IPositions {
 }
 
 interface ICoordinates {
-  key?: number;
+  key?: 'from' | 'to';
   value?: number;
   position?: number;
 }

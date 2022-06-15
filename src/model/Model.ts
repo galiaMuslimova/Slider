@@ -39,8 +39,7 @@ class Model implements IModel {
 
   public changeParameter(setting: ICoordinates): void {
     const newParameter = this.takeClosestParameter(setting);
-    const parameterOrder = setting.key || this.makeOrder(setting);
-    const type = parameterOrder === 0 ? 'from' : 'to';
+    const type = setting.key || this.createType(setting);
     this.config[type] = newParameter.value;
     this.config[`${type}Position`] = newParameter.position;
     this.options.onChange?.call(this, this.getOptions());
@@ -57,25 +56,7 @@ class Model implements IModel {
   }
 
   public getOptions(): IOptions {
-    const options = (({
-      min,
-      max,
-      step,
-      from,
-      to,
-      withRange,
-      hasTip,
-      isVertical,
-    }) => ({
-      min,
-      max,
-      step,
-      from,
-      to,
-      withRange,
-      hasTip,
-      isVertical,
-    }))(this.config);
+    const { fromPosition, toPosition, ...options } = this.config;
     return options;
   }
 
@@ -140,20 +121,21 @@ class Model implements IModel {
     });
   }
 
-  private makeOrder(parameter: ICoordinates): number {
+  private createType(parameter: ICoordinates): 'from' | 'to' {
     if (!this.config.withRange) {
-      return 0;
+      return 'from';
     }
     const { value, position } = parameter;
+    let index;
     if (value && !position) {
       const values = [this.config.from, this.config.to];
-      return Model.takeClosestIndex(value, values);
+      index = Model.takeClosestIndex(value, values);
     }
     if (position && !value) {
       const positions = [this.config.fromPosition, this.config.toPosition];
-      return Model.takeClosestIndex(position, positions);
+      index = Model.takeClosestIndex(position, positions);
     }
-    throw new Error('wrong parameter for order');
+    return index === 0 ? 'from' : 'to';
   }
 
   private takeClosestParameter(parameter: ICoordinates) {

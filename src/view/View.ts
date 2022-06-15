@@ -58,7 +58,7 @@ class View implements IView {
     });
     this.firstHandle.observer.subscribe({
       key: 'mouseMove',
-      observer: this.mouseMove.bind(this, 0),
+      observer: this.mouseMove.bind(this, 'from'),
     });
     this.firstHandle.observer.subscribe({
       key: 'moveEnd',
@@ -120,7 +120,7 @@ class View implements IView {
       this.secondHandle.setVertical(isVertical);
       this.secondHandle.observer.subscribe({
         key: 'mouseMove',
-        observer: this.mouseMove.bind(this, 1),
+        observer: this.mouseMove.bind(this, 'to'),
       });
       this.secondHandle.observer.subscribe({
         key: 'moveEnd',
@@ -146,7 +146,7 @@ class View implements IView {
     this.observer.notify('moveHandle', options);
   }
 
-  private mouseMove(key: number, eventPosition: number): void {
+  private mouseMove(key: 'from' | 'to', eventPosition: number): void {
     const options: ICoordinates = {
       key,
       position: eventPosition,

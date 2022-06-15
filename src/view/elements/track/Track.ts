@@ -12,17 +12,17 @@ class Track implements ITrack {
 
   private isVertical: boolean;
 
-  private trackStart: number | null;
+  private trackStart: number;
 
-  private trackWidth: number | null | undefined;
+  private trackWidth: number | undefined;
 
   constructor($slider: JQuery<HTMLElement>, config: IConfig) {
     this.$slider = $slider;
     this.observer = new Observer();
     this.$track = jQuery('<div>');
     this.isVertical = config.isVertical;
-    this.trackStart = null;
-    this.trackWidth = null;
+    this.trackStart = 0;
+    this.trackWidth = 500;
     this.init();
   }
 
