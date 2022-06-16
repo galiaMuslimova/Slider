@@ -106,7 +106,6 @@ class Model implements IModel {
     correctConfig.max = config.max > config.min ? config.max : config.min;
     correctConfig.min = config.max > config.min ? config.min : config.max;
     correctConfig.max = config.max === config.min ? config.min + 10 : correctConfig.max;
-    correctConfig.step = config.step <= 0 ? 1 : config.step;
     const range = correctConfig.max - correctConfig.min;
     correctConfig.step = correctConfig.step > range ? range : correctConfig.step;
     correctConfig.from = config.from < config.min ? config.min : config.from;

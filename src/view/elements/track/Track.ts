@@ -14,7 +14,7 @@ class Track implements ITrack {
 
   private trackStart: number;
 
-  private trackWidth: number | undefined;
+  private trackWidth: number;
 
   constructor($slider: JQuery<HTMLElement>, config: IConfig) {
     this.$slider = $slider;
@@ -39,13 +39,11 @@ class Track implements ITrack {
     this.trackStart = this.isVertical
       ? Number(position.top)
       : Number(position.left);
-    this.trackWidth = this.isVertical
-      ? this.$track.height()
-      : this.$track.width();
-    if (this.trackWidth) {
-      return { trackStart: this.trackStart, trackWidth: this.trackWidth };
-    }
-    throw new Error('wrong width of slider');
+    const trackWidth = this.isVertical
+      ? this.$track.css('height')
+      : this.$track.css('width');
+    this.trackWidth = Number(trackWidth.split('px')[0]) || 500;
+    return { trackStart: this.trackStart, trackWidth: this.trackWidth };
   }
 
   private init(): void {
@@ -59,14 +57,11 @@ class Track implements ITrack {
   }
 
   private handleTrackClick(event: Event): void {
-    if (this.trackStart) {
-      const eventPosition = this.isVertical
-        ? (<MouseEvent>event).pageY
-        : (<MouseEvent>event).pageX;
-      const position = Math.round(eventPosition - this.trackStart);
-      this.observer.notify('trackClick', position);
-    }
-    throw new Error('wrong start position of track');
+    const eventPosition = this.isVertical
+      ? (<MouseEvent>event).pageY
+      : (<MouseEvent>event).pageX;
+    const position = Math.round(eventPosition - this.trackStart);
+    this.observer.notify('trackClick', position);
   }
 }
 

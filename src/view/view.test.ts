@@ -25,6 +25,18 @@ describe('View', () => {
 
   before(() => {
     view = new View($root, testConfig);
+    view.changeConfig({
+      min: 0,
+      max: 10,
+      step: 1,
+      from: 2,
+      to: 8,
+      isVertical: false,
+      hasTip: true,
+      withRange: true,
+      fromPosition: 100,
+      toPosition: 400,
+    });
     $slider = $root.find('.js-meta-slider');
   });
 
@@ -37,7 +49,30 @@ describe('View', () => {
     expect($slider.hasClass('meta-slider_horizontal')).to.equal(true);
   });
 
+  it('проверяет trackClick', () => {
+    expect($slider.hasClass('meta-slider_vertical')).to.equal(false);
+    expect($slider.hasClass('meta-slider_horizontal')).to.equal(true);
+  });
+
   it('проверяет установку withRange true', () => {
-    expect($slider.find('.js-meta-slider__handle').length).to.equal(2);
+    const $handles = $root.find('.js-meta-slider__handle');
+    expect($handles.length).to.equal(2);
+  });
+
+  it('проверяет установку withRange false', () => {
+    view.changeConfig({
+      min: 0,
+      max: 10,
+      step: 1,
+      from: 2,
+      to: 8,
+      isVertical: false,
+      hasTip: true,
+      withRange: false,
+      fromPosition: 100,
+      toPosition: 400,
+    });
+    const $handles = $root.find('.js-meta-slider__handle');
+    expect($handles.length).to.equal(1);
   });
 });

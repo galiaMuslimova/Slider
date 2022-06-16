@@ -62,7 +62,8 @@ class Input implements IInput {
         break;
     }
     const setting: IOptions = { [this.name]: this.value };
-    if (this.value !== '') {
+    const isStepLowerZero = this.name === 'step' && this.value <= 0;
+    if (this.value !== '' && !isStepLowerZero) {
       this.observer.notify('setting', setting);
     }
   }

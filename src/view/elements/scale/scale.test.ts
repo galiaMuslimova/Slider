@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { testConfig, testPositions } from '../../../defaults';
-import { IConfig, IPositions, ITrackPosition } from '../../../interfaces/interfaces';
+import { IPositions, ITrackPosition } from '../../../interfaces/interfaces';
 
 import Scale from './Scale';
 
@@ -116,5 +116,27 @@ describe('create slider', () => {
   it('проверить создание массива', () => {
     scaleClass.initPositions(trackParameters);
     expect(scaleClass.getPositions()).to.deep.eq(testPositions);
+  });
+
+  it('проверить создание массива', () => {
+    scaleClass.setConfig({
+      min: 0,
+      max: 10,
+      step: 3,
+      from: 3,
+      to: 9,
+      isVertical: false,
+      hasTip: true,
+      withRange: false,
+      fromPosition: 150,
+      toPosition: 450,
+    });
+    scaleClass.initPositions(trackParameters);
+    expect(scaleClass.getPositions()).to.deep.eq([
+      { value: 0, position: 0 },
+      { value: 3, position: 150 },
+      { value: 6, position: 300 },
+      { value: 9, position: 450 },
+      { value: 10, position: 500 }]);
   });
 });

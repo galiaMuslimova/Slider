@@ -18,7 +18,7 @@ class Handle implements IHandle {
 
   private tip: ITip | null;
 
-  private trackStart: number | null;
+  private trackStart: number;
 
   private trackWidth: number | null;
 
@@ -29,7 +29,7 @@ class Handle implements IHandle {
     this.isVertical = config.isVertical;
     this.$handle = jQuery('<div>');
     this.tip = new Tip(this.$handle);
-    this.trackStart = null;
+    this.trackStart = 0;
     this.trackWidth = null;
     this.bindEventListeners();
     this.init();
@@ -107,7 +107,7 @@ class Handle implements IHandle {
     correctedPosition: number;
     isInScale: boolean;
   } {
-    if (this.trackStart && this.trackWidth) {
+    if (this.trackWidth) {
       const correctedPosition = Math.round(eventPosition - this.trackStart);
       const isInScale = correctedPosition >= 0 && correctedPosition <= this.trackWidth;
       return { correctedPosition, isInScale };
