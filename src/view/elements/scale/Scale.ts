@@ -42,9 +42,7 @@ class Scale implements IScale {
     const { min, max, step } = this.config;
     const range = max - min;
     const stepArray = step.toString().split('.');
-    const fractionalLength = stepArray.length === 2
-      ? 10 ** stepArray[1].length
-      : 1;
+    const fractionalLength = stepArray.length === 2 ? 10 ** stepArray[1].length : 1;
     const stepLength = (this.scaleSize / range) * step;
     const arrStep = stepLength < 1 ? Math.floor(1 / stepLength) : 1;
     const stepsCount = Math.floor(range / step / arrStep);
@@ -54,10 +52,12 @@ class Scale implements IScale {
     let positions: IPositions[] = [];
     const valuesArr = Array.from(
       emptyArr,
-      (_, i) => min + Math.round(multiplyStep * i * fractionalLength) / (10 * fractionalLength),
+      (_, i) => min
+        + Math.round(multiplyStep * i * fractionalLength)
+          / (10 * fractionalLength),
     );
     positions = valuesArr.map((el, i) => {
-      const value: number = el;
+      const value: number = Math.round(el * fractionalLength) / fractionalLength;
       const position = Math.round(positionLength * i);
       return { value, position };
     });

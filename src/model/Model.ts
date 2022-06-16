@@ -67,7 +67,7 @@ class Model implements IModel {
 
   private createConfig(options: IOptions): IConfig {
     let newOptions = this.correctTypes(options);
-    newOptions = this.correctMinMax(newOptions);
+    newOptions = this.correctValues(newOptions);
     return newOptions;
   }
 
@@ -101,7 +101,7 @@ class Model implements IModel {
     return newOptions;
   }
 
-  private correctMinMax(config: IConfig = this.config): IConfig {
+  private correctValues(config: IConfig = this.config): IConfig {
     const correctConfig = { ...config };
     correctConfig.max = config.max > config.min ? config.max : config.min;
     correctConfig.min = config.max > config.min ? config.min : config.max;
