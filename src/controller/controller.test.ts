@@ -12,7 +12,6 @@ const dom = new JSDOM(
 <body>
   <div class='body__slider js-body__slider'></div>  
 </body>`,
-  { url: 'http://localhost' },
 );
 global.window = dom.window;
 const { document } = dom.window;
@@ -61,38 +60,16 @@ describe('Controller', () => {
     expect($track?.length).to.equal(1);
   });
 
-  it('проверяет change and correct handles position', () => {
-    controller?.model.changeParameter({
-      key: 'to',
-      position: 30,
-    });
-    const config = controller?.model.getConfig();
-    expect(config?.from).to.equal(2);
-    expect(config?.fromPosition).to.equal(100);
-    expect(config?.to).to.equal(1);
-    expect(config?.toPosition).to.equal(50);
-    const eStart = jQuery.Event('mousedown');
-    const eEnd = jQuery.Event('mouseup');
-    const handle1 = $slider?.find('.js-meta-slider__handle')[0];
-    if (handle1) {
-      $(handle1).triggerHandler(eStart);
-      $(document).triggerHandler(eEnd);
-    }
-    const correctConfig = controller?.model.getConfig();
-    expect(correctConfig?.from).to.equal(1);
-    expect(correctConfig?.fromPosition).to.equal(50);
-    expect(correctConfig?.to).to.equal(2);
-    expect(correctConfig?.toPosition).to.equal(100);
-  });
-
   it('проверяет change handle', () => {
     const eStart = jQuery.Event('mousedown');
-    const eMove = jQuery.Event('mousemove', { pageY: 190, pageX: 190 });
+    const eMove = jQuery.Event('mousemove', { pageY: 215, pageX: 215 });
+    const eEnd = jQuery.Event('mouseup');
     const handle2 = $slider?.find('.js-meta-slider__handle')[1];
     if (handle2) {
       $(handle2).triggerHandler(eStart);
       $(document).triggerHandler(eMove);
-      expect($(handle2).css('left')).to.deep.equal('190px');
+      $(document).triggerHandler(eEnd);
+      expect($(handle2).css('left')).to.deep.equal('215px');
     }
   });
 

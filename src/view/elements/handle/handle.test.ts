@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import sinon from 'sinon';
 import { testConfig } from '../../../defaults';
 
 import Handle from './Handle';
@@ -12,11 +13,14 @@ const dom = new JSDOM(`<!DOCTYPE html>
 global.window = dom.window;
 
 const { document } = dom.window;
+global.document = document;
 
 describe('Handle', () => {
   let $slider: JQuery<HTMLElement>;
   let $track: JQuery<HTMLElement>;
   let handleClass: Handle;
+  let $handle: JQuery<HTMLElement>;
+  let buttonClickSuccessSpy: sinon.SinonSpy;
 
   before(() => {
     $slider = $(document).find('.js-meta-slider');
@@ -25,11 +29,16 @@ describe('Handle', () => {
     });
     $track.appendTo($slider);
     handleClass = new Handle($track, testConfig);
-    handleClass.setTrackParameters({ trackStart: 0, trackWidth: 300 });
+    handleClass.setTrackParameters({ trackStart: 10, trackWidth: 1000 });
+    $handle = $track.find('.js-meta-slider__handle');
+  });
+
+  beforeEach(() => {
+    buttonClickSuccessSpy = sinon.spy();
+    $(document).on('buttonClickSucess', buttonClickSuccessSpy);
   });
 
   it('проверить создание элемента handle', () => {
-    const $handle = $track.find('.js-meta-slider__handle');
     expect($handle.length).to.equal(1);
   });
 
@@ -58,5 +67,18 @@ describe('Handle', () => {
 
   it('проверить handleDragStart', () => {
     expect(Handle.handleDragStart()).to.equal(false);
+  });
+
+  it('check handle move', () => {
+    const eStart = $.Event('mousedown');
+    const eMove = $.Event('mousemove', { pageY: 215, pageX: 215 });
+    const eEnd = $.Event('mouseup');
+    const spy = sinon.spy(handleClass.observer, 'notify');
+    $handle.triggerHandler(eStart);
+    $(document).triggerHandler(eMove);
+    expect(spy.calledOnce).to.equal(true);
+    $(document).triggerHandler(eEnd);
+    sinon.assert.called(spy);
+    expect(spy.calledTwice).to.equal(true);
   });
 });

@@ -1,7 +1,8 @@
 import { expect } from 'chai';
+import sinon from 'sinon';
 import { testConfig } from '../../../defaults';
 
-import Track from './track';
+import Track from './Track';
 
 const { JSDOM } = require('jsdom');
 
@@ -26,5 +27,12 @@ describe('Track', () => {
 
   it('проверяет создание элемента track', () => {
     expect($track.length).to.equal(1);
+  });
+
+  it('check track click', () => {
+    const eClick = $.Event('click', { pageY: 215, pageX: 215 });
+    const spy = sinon.spy(trackClass.observer, 'notify');
+    $track.triggerHandler(eClick);
+    expect(spy.calledOnce).to.equal(true);
   });
 });

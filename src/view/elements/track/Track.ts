@@ -12,17 +12,17 @@ class Track implements ITrack {
 
   private isVertical: boolean;
 
-  private trackStart: number;
+  private trackStart: number | null;
 
-  private trackWidth: number;
+  private trackWidth: number | null;
 
   constructor($slider: JQuery<HTMLElement>, config: IConfig) {
     this.$slider = $slider;
     this.observer = new Observer();
     this.$track = jQuery('<div>');
     this.isVertical = config.isVertical;
-    this.trackStart = 0;
-    this.trackWidth = 500;
+    this.trackStart = null;
+    this.trackWidth = null;
     this.init();
   }
 
@@ -60,8 +60,10 @@ class Track implements ITrack {
     const eventPosition = this.isVertical
       ? (<MouseEvent>event).pageY
       : (<MouseEvent>event).pageX;
-    const position = Math.round(eventPosition - this.trackStart);
-    this.observer.notify('trackClick', position);
+    if (typeof this.trackStart === 'number') {
+      const position = Math.round(eventPosition - this.trackStart);
+      this.observer.notify('trackClick', position);
+    } throw new Error('wrong track start');
   }
 }
 
