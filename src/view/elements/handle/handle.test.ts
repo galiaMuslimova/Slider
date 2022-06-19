@@ -18,9 +18,9 @@ global.document = document;
 describe('Handle', () => {
   let $slider: JQuery<HTMLElement>;
   let $track: JQuery<HTMLElement>;
-  let handleClass: Handle;
+  let handleClass: Handle | null;
   let $handle: JQuery<HTMLElement>;
-  let buttonClickSuccessSpy: sinon.SinonSpy;
+  let spy: sinon.SinonSpy;
 
   before(() => {
     $slider = $(document).find('.js-meta-slider');
@@ -28,55 +28,65 @@ describe('Handle', () => {
       class: 'meta-slider__track js-meta-slider__track',
     });
     $track.appendTo($slider);
-    handleClass = new Handle($track, testConfig);
-    handleClass.setTrackParameters({ trackStart: 10, trackWidth: 1000 });
-    $handle = $track.find('.js-meta-slider__handle');
   });
 
   beforeEach(() => {
-    buttonClickSuccessSpy = sinon.spy();
-    $(document).on('buttonClickSucess', buttonClickSuccessSpy);
+    handleClass = new Handle($track, testConfig);
+    handleClass.setTrackParameters({ trackStart: 10, trackWidth: 1000 });
+    $handle = $track.find('.js-meta-slider__handle');
+    spy = sinon.spy(handleClass.observer, 'notify');
   });
 
-  it('проверить создание элемента handle', () => {
+  afterEach(() => {
+    handleClass = null;
+    $handle.remove();
+  });
+
+  it('check creating handle element', () => {
     expect($handle.length).to.equal(1);
   });
 
-  it('проверить установку позиции', () => {
-    handleClass.moveHandle(10, 100);
-    expect(handleClass.getElement().css('left')).to.equal('90px');
+  it('check moveHandle', () => {
+    handleClass?.moveHandle(10, 100);
+    expect(handleClass?.getElement().css('left')).to.equal('90px');
   });
 
-  it('проверить изменение isVertical', () => {
-    handleClass.setVertical(true);
-    handleClass.moveHandle(10, 100);
-    expect(handleClass.getElement().css('top')).to.equal('90px');
+  it('check changing isVertical (false)', () => {
+    handleClass?.setVertical(true);
+    handleClass?.moveHandle(10, 100);
+    expect(handleClass?.getElement().css('top')).to.equal('90px');
   });
 
-  it('проверить удаление элемента hasTip', () => {
-    handleClass.toggleTip(false);
-    const $hasTip = handleClass.getElement().find('.js-meta-slider__tip');
-    expect($hasTip.length).to.equal(0);
+  it('check changing isVertical (true)', () => {
+    handleClass?.setVertical(false);
+    handleClass?.moveHandle(10, 150);
+    expect(handleClass?.getElement().css('left')).to.equal('140px');
   });
 
-  it('проверить создание элемента hasTip', () => {
-    handleClass.toggleTip(true);
-    const $hasTip = handleClass.getElement().find('.js-meta-slider__tip');
-    expect($hasTip.length).to.equal(1);
+  it('check removing tip', () => {
+    handleClass?.toggleTip(false);
+    const $tip = handleClass?.getElement().find('.js-meta-slider__tip');
+    expect($tip?.length).to.equal(0);
   });
 
-  it('проверить handleDragStart', () => {
+  it('check adding tip', () => {
+    handleClass?.toggleTip(true);
+    const $tip = handleClass?.getElement().find('.js-meta-slider__tip');
+    expect($tip?.length).to.equal(1);
+  });
+
+  it('check handleDragStart', () => {
     expect(Handle.handleDragStart()).to.equal(false);
   });
 
-  it('check handle move', () => {
+  it('check handle mouse move by event', () => {
     const eStart = $.Event('mousedown');
     const eMove = $.Event('mousemove', { pageY: 215, pageX: 215 });
     const eEnd = $.Event('mouseup');
-    const spy = sinon.spy(handleClass.observer, 'notify');
     $handle.triggerHandler(eStart);
     $(document).triggerHandler(eMove);
     expect(spy.calledOnce).to.equal(true);
+
     $(document).triggerHandler(eEnd);
     sinon.assert.called(spy);
     expect(spy.calledTwice).to.equal(true);

@@ -40,26 +40,26 @@ describe('View', () => {
     $slider = $root.find('.js-meta-slider');
   });
 
-  it('проверяет создание элемента slider', () => {
+  it('check creating slider element', () => {
     expect($slider.length).to.equal(1);
   });
 
-  it('проверяет установку isVertical false', () => {
+  it('shcek settting isVertical false', () => {
     expect($slider.hasClass('meta-slider_vertical')).to.equal(false);
     expect($slider.hasClass('meta-slider_horizontal')).to.equal(true);
   });
 
-  it('проверяет trackClick', () => {
+  it('check trackClick', () => {
     expect($slider.hasClass('meta-slider_vertical')).to.equal(false);
     expect($slider.hasClass('meta-slider_horizontal')).to.equal(true);
   });
 
-  it('проверяет установку withRange true', () => {
+  it('check setting withRange true', () => {
     const $handles = $root.find('.js-meta-slider__handle');
     expect($handles.length).to.equal(2);
   });
 
-  it('проверяет установку withRange false', () => {
+  it('check setting withRange false', () => {
     view.changeConfig({
       min: 0,
       max: 10,

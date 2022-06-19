@@ -27,24 +27,24 @@ describe('Interval', () => {
     $interval = $slider.find('.js-meta-slider__interval');
   });
 
-  it('проверить создание элемента interval', () => {
+  it('check creating interval element', () => {
     expect($interval.length).to.equal(1);
   });
 
-  it('проверяет создание интервала при withRange=true, isVertical=false', () => {
+  it('check creating interval when withRange=true, isVertical=false', () => {
     intervalClass.moveInterval(100, 200);
     expect($interval.css('width')).to.eq('78px');
     expect($interval.css('left')).to.eq('110px');
   });
 
-  it('проверяет создание интервала при withRange=false, isVertical=false', () => {
+  it('check creating interval when withRange=false, isVertical=false', () => {
     intervalClass.setRange(false);
     intervalClass.moveInterval(100, 200);
     expect($interval.css('width')).to.eq('88px');
     expect($interval.css('left')).to.eq('0px');
   });
 
-  it('проверяет создание интервала при withRange=false, isVertical=false', () => {
+  it('check creating interval when withRange=false, isVertical=false', () => {
     intervalClass.setRange(false);
     intervalClass.setVertical(false);
     intervalClass.moveInterval(120, 200);
@@ -52,7 +52,7 @@ describe('Interval', () => {
     expect($interval.css('left')).to.eq('0px');
   });
 
-  it('проверяет создание интервала при withRange=true, isVertical=true', () => {
+  it('check creating interval when withRange=true, isVertical=true', () => {
     intervalClass.setVertical(true);
     intervalClass.setRange(true);
     $interval = $track.find('.js-meta-slider__interval');
@@ -61,7 +61,7 @@ describe('Interval', () => {
     expect($interval.css('top')).to.eq('130px');
   });
 
-  it('проверяет создание интервала при withRange=false, isVertical=true', () => {
+  it('check creating interval when withRange=false, isVertical=true', () => {
     intervalClass.setRange(false);
     intervalClass.moveInterval(155, 200);
     expect($interval.css('height')).to.eq('143px');

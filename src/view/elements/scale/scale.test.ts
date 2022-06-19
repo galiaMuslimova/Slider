@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import sinon from 'sinon';
 import { testConfig, testPositions } from '../../../defaults';
 import { IPositions, ITrackPosition } from '../../../interfaces/interfaces';
 
@@ -31,7 +32,7 @@ describe('reduceArray', () => {
       { value: 10, position: 100 }];
   });
 
-  it('проверить уменьшение массива', () => {
+  it('check reduceArray', () => {
     const correctedArray = Scale.reduceArray(array, 4);
     expect(correctedArray).to.deep.equal([
       { value: 1, position: 10 },
@@ -40,7 +41,7 @@ describe('reduceArray', () => {
       { value: 10, position: 100 }]);
   });
 
-  it('проверить уменьшение массива', () => {
+  it('check reduceArray', () => {
     const correctedArray = Scale.reduceArray(array, 5);
     expect(correctedArray).to.deep.equal([
       { value: 1, position: 10 },
@@ -51,7 +52,7 @@ describe('reduceArray', () => {
       { value: 10, position: 100 }]);
   });
 
-  it('оставить массив без изменений', () => {
+  it('check not reduceArray', () => {
     const correctedArray = Scale.reduceArray(array, 12);
     expect(correctedArray).to.deep.equal(array);
   });
@@ -69,7 +70,7 @@ describe('correctLastItems', () => {
       { value: 5, position: 45 }];
   });
 
-  it('удалить предпоследнее значение', () => {
+  it('remove number before last', () => {
     const correctedArray = Scale.correctLastItems(array, 7);
     expect(correctedArray).to.deep.equal([
       { value: 1, position: 10 },
@@ -78,7 +79,7 @@ describe('correctLastItems', () => {
       { value: 5, position: 45 }]);
   });
 
-  it('не удалять предпоследнее значение', () => {
+  it('not remove number before last', () => {
     const correctedArray = Scale.correctLastItems(array, 4);
     expect(correctedArray).to.deep.equal([
       { value: 1, position: 10 },
@@ -104,7 +105,7 @@ describe('create slider', () => {
     scaleClass.initPositions(trackParameters);
   });
 
-  it('проверить создание слайдера', () => {
+  it('check creating scale element', () => {
     const scaleItems = $scale.find('.js-meta-slider__scale-item');
     const scaleValues = $scale.find('.js-meta-slider__value');
     scaleValues.each(function (index) {
@@ -113,12 +114,12 @@ describe('create slider', () => {
     expect(scaleItems.length).to.eq(11);
   });
 
-  it('проверить создание массива', () => {
+  it('check creating positions', () => {
     scaleClass.initPositions(trackParameters);
     expect(scaleClass.getPositions()).to.deep.eq(testPositions);
   });
 
-  it('проверить создание массива', () => {
+  it('check creating positions', () => {
     scaleClass.setConfig({
       min: 0,
       max: 10,
@@ -138,5 +139,12 @@ describe('create slider', () => {
       { value: 6, position: 300 },
       { value: 9, position: 450 },
       { value: 10, position: 500 }]);
+  });
+
+  it('check click scale', () => {
+    const eClick = jQuery.Event('click', { target: { dataset: { value: 3 } } });
+    const spy = sinon.spy(scaleClass.observer, 'notify');
+    $scale?.triggerHandler(eClick);
+    expect(spy.calledOnce).to.equal(true);
   });
 });

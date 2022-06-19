@@ -26,35 +26,43 @@ describe('Model', () => {
     model = null;
   });
 
-  it('устанавливает значения в конфиг', () => {
-    expect(model?.getConfig().min).to.equal(0);
-    expect(model?.getConfig().max).to.equal(10);
-    expect(model?.getConfig().step).to.equal(1);
-    expect(model?.getConfig().from).to.equal(2);
-    expect(model?.getConfig().to).to.equal(8);
-    expect(model?.getConfig().isVertical).to.equal(false);
-    expect(model?.getConfig().hasTip).to.equal(true);
-    expect(model?.getConfig().withRange).to.equal(true);
+  it('set config', () => {
+    expect(model?.getConfig()).to.deep.equal({
+      min: 0,
+      max: 10,
+      step: 1,
+      from: 2,
+      fromPosition: 100,
+      to: 8,
+      toPosition: 400,
+      isVertical: false,
+      hasTip: true,
+      withRange: true,
+    });
   });
 
-  it('установлены дефолтные значения в случае отсутствия опций', () => {
+  it('set defaults when miss options', () => {
     model = new Model({
       max: 50,
       step: 10,
       from: 10,
       to: 20,
     });
-    expect(model.getConfig().min).to.equal(10);
-    expect(model.getConfig().max).to.equal(50);
-    expect(model.getConfig().step).to.equal(10);
-    expect(model.getConfig().from).to.equal(10);
-    expect(model.getConfig().to).to.equal(20);
-    expect(model.getConfig().isVertical).to.equal(false);
-    expect(model.getConfig().hasTip).to.equal(true);
-    expect(model.getConfig().withRange).to.equal(true);
+    expect(model?.getConfig()).to.deep.equal({
+      min: 10,
+      max: 50,
+      step: 10,
+      from: 10,
+      fromPosition: 0,
+      to: 20,
+      toPosition: 0,
+      isVertical: false,
+      hasTip: true,
+      withRange: true,
+    });
   });
 
-  it('скорректирован min и max', () => {
+  it('correcting min and max', () => {
     model = new Model({
       min: 35,
       max: 25,
@@ -63,15 +71,23 @@ describe('Model', () => {
     expect(model.getConfig().max).to.equal(35);
   });
 
-  it('инициализировать параметры', () => {
+  it('init parameters', () => {
     const config = model?.getConfig();
-    expect(config?.from).to.equal(2);
-    expect(config?.fromPosition).to.equal(100);
-    expect(config?.to).to.equal(8);
-    expect(config?.toPosition).to.equal(400);
+    expect(model?.getConfig()).to.deep.equal({
+      min: 0,
+      max: 10,
+      step: 1,
+      from: 2,
+      fromPosition: 100,
+      to: 8,
+      toPosition: 400,
+      isVertical: false,
+      hasTip: true,
+      withRange: true,
+    });
   });
 
-  it('инициализировать параметры с неправильными from и  to', () => {
+  it('init parameters with wrong from and to', () => {
     model = new Model(
       $.extend({}, testOptions, {
         from: -8,
@@ -79,57 +95,84 @@ describe('Model', () => {
       }),
     );
     model.init(testPositions);
-    const config = model.getConfig();
-    expect(config?.from).to.deep.equal(0);
-    expect(config?.fromPosition).to.deep.equal(0);
-    expect(config?.to).to.deep.equal(10);
-    expect(config?.toPosition).to.deep.equal(500);
+    expect(model?.getConfig()).to.deep.equal({
+      min: 0,
+      max: 10,
+      step: 1,
+      from: 0,
+      fromPosition: 0,
+      to: 10,
+      toPosition: 500,
+      isVertical: false,
+      hasTip: true,
+      withRange: true,
+    });
   });
 
-  it('получить параметры при движении handle 1', () => {
+  it('check changeParameter when key==from', () => {
     const options:ICoordinates = { key: 'from', position: 165 };
     model?.changeParameter(options);
-    const config = model?.getConfig();
-    expect(config?.from).to.deep.equal(3);
-    expect(config?.fromPosition).to.deep.equal(150);
-    expect(config?.to).to.deep.equal(8);
-    expect(config?.toPosition).to.deep.equal(400);
+    expect(model?.getConfig()).to.deep.equal({
+      min: 0,
+      max: 10,
+      step: 1,
+      from: 3,
+      fromPosition: 150,
+      to: 8,
+      toPosition: 400,
+      isVertical: false,
+      hasTip: true,
+      withRange: true,
+    });
   });
 
-  it('получить параметры при движении handle 2', () => {
+  it('check changeParameter when key==to', () => {
     const options:ICoordinates = { key: 'to', position: 230 };
     model?.changeParameter(options);
-    const config = model?.getConfig();
-    expect(config?.from).to.deep.equal(2);
-    expect(config?.fromPosition).to.deep.equal(100);
-    expect(config?.to).to.deep.equal(5);
-    expect(config?.toPosition).to.deep.equal(250);
+    expect(model?.getConfig()).to.deep.equal({
+      min: 0,
+      max: 10,
+      step: 1,
+      from: 2,
+      fromPosition: 100,
+      to: 5,
+      toPosition: 250,
+      isVertical: false,
+      hasTip: true,
+      withRange: true,
+    });
   });
 
-  it('получить параметры при клике на шкалу, меняется handle 2', () => {
+  it('check changeParameter when change value', () => {
     model?.changeParameter({ value: 6 });
     const config = model?.getConfig();
-    expect(config?.from).to.deep.equal(2);
-    expect(config?.fromPosition).to.deep.equal(100);
-    expect(config?.to).to.deep.equal(6);
-    expect(config?.toPosition).to.deep.equal(300);
+    expect(model?.getConfig()).to.deep.equal({
+      min: 0,
+      max: 10,
+      step: 1,
+      from: 2,
+      fromPosition: 100,
+      to: 6,
+      toPosition: 300,
+      isVertical: false,
+      hasTip: true,
+      withRange: true,
+    });
   });
 
-  it('получить параметры при клике на шкалу, меняется handle 1', () => {
-    model?.changeParameter({ value: 1 });
-    const config = model?.getConfig();
-    expect(config?.from).to.deep.equal(1);
-    expect(config?.fromPosition).to.deep.equal(50);
-    expect(config?.to).to.deep.equal(8);
-    expect(config?.toPosition).to.deep.equal(400);
-  });
-
-  it('получить параметры при клике на трэк, при withRange=true', () => {
+  it('check changeParameter when change position', () => {
     model?.changeParameter({ position: 340 });
-    const config = model?.getConfig();
-    expect(config?.from).to.deep.equal(2);
-    expect(config?.fromPosition).to.deep.equal(100);
-    expect(config?.to).to.deep.equal(7);
-    expect(config?.toPosition).to.deep.equal(350);
+    expect(model?.getConfig()).to.deep.equal({
+      min: 0,
+      max: 10,
+      step: 1,
+      from: 2,
+      fromPosition: 100,
+      to: 7,
+      toPosition: 350,
+      isVertical: false,
+      hasTip: true,
+      withRange: true,
+    });
   });
 });

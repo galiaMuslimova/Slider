@@ -22,10 +22,11 @@ describe('Track', () => {
   before(() => {
     $slider = $(document).find('.js-meta-slider');
     trackClass = new Track($slider, testConfig);
+    trackClass.getTrackParameters();
     $track = trackClass.getElement();
   });
 
-  it('проверяет создание элемента track', () => {
+  it('check creating track element', () => {
     expect($track.length).to.equal(1);
   });
 
@@ -34,5 +35,8 @@ describe('Track', () => {
     const spy = sinon.spy(trackClass.observer, 'notify');
     $track.triggerHandler(eClick);
     expect(spy.calledOnce).to.equal(true);
+
+    $track.triggerHandler(eClick);
+    expect(spy.calledTwice).to.equal(true);
   });
 });

@@ -34,11 +34,11 @@ describe('Tip', () => {
     $tip = tipClass.getElement();
   });
 
-  it('проверяет создание элемента tip', () => {
+  it('check creating tip element', () => {
     expect($tip.length).to.eq(1);
   });
 
-  it('проверяет отсутствие подсказок tips = 0', () => {
+  it('check changeTip', () => {
     tipClass.changeTip(10);
     expect($tip.html()).to.eq('10');
   });
