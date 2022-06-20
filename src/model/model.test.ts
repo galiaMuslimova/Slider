@@ -72,7 +72,6 @@ describe('Model', () => {
   });
 
   it('init parameters', () => {
-    const config = model?.getConfig();
     expect(model?.getConfig()).to.deep.equal({
       min: 0,
       max: 10,
@@ -145,7 +144,6 @@ describe('Model', () => {
 
   it('check changeParameter when change value', () => {
     model?.changeParameter({ value: 6 });
-    const config = model?.getConfig();
     expect(model?.getConfig()).to.deep.equal({
       min: 0,
       max: 10,
