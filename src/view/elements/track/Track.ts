@@ -42,7 +42,7 @@ class Track implements ITrack {
     const trackWidth = this.isVertical
       ? this.$track.css('height')
       : this.$track.css('width');
-    this.trackWidth = Number(trackWidth.split('px')[0]) || 500;
+    this.trackWidth = parseFloat(trackWidth);
     return { trackStart: this.trackStart, trackWidth: this.trackWidth };
   }
 

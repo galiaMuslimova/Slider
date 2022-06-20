@@ -15,10 +15,22 @@ global.window = dom.window;
 
 const { document } = dom.window;
 
-describe('reduceArray', () => {
+describe('Scale', () => {
+  let $slider: JQuery<HTMLElement>;
+  let scaleClass: Scale;
+  let $scale: JQuery<HTMLElement>;
+  let trackParameters: ITrackPosition;
+  let spy: sinon.SinonSpy;
   let array: IPositions[];
 
   before(() => {
+    $slider = $(document).find('.js-meta-slider');
+    scaleClass = new Scale($slider, testConfig);
+    $scale = $slider.find('.js-meta-slider__scale');
+    $scale.css('width', '500');
+    trackParameters = { trackStart: 0, trackWidth: 500 };
+    scaleClass.initPositions(trackParameters);
+    spy = sinon.spy(scaleClass.observer, 'notify');
     array = [
       { value: 1, position: 10 },
       { value: 2, position: 20 },
@@ -30,79 +42,6 @@ describe('reduceArray', () => {
       { value: 8, position: 80 },
       { value: 9, position: 90 },
       { value: 10, position: 100 }];
-  });
-
-  it('check reduceArray', () => {
-    const correctedArray = Scale.reduceArray(array, 4);
-    expect(correctedArray).to.deep.equal([
-      { value: 1, position: 10 },
-      { value: 4, position: 40 },
-      { value: 7, position: 70 },
-      { value: 10, position: 100 }]);
-  });
-
-  it('check reduceArray', () => {
-    const correctedArray = Scale.reduceArray(array, 5);
-    expect(correctedArray).to.deep.equal([
-      { value: 1, position: 10 },
-      { value: 3, position: 30 },
-      { value: 5, position: 50 },
-      { value: 7, position: 70 },
-      { value: 9, position: 90 },
-      { value: 10, position: 100 }]);
-  });
-
-  it('check not reduceArray', () => {
-    const correctedArray = Scale.reduceArray(array, 12);
-    expect(correctedArray).to.deep.equal(array);
-  });
-});
-
-describe('correctLastItems', () => {
-  let array: IPositions[];
-
-  before(() => {
-    array = [
-      { value: 1, position: 10 },
-      { value: 2, position: 20 },
-      { value: 3, position: 30 },
-      { value: 4, position: 40 },
-      { value: 5, position: 45 }];
-  });
-
-  it('remove number before last', () => {
-    const correctedArray = Scale.correctLastItems(array, 7);
-    expect(correctedArray).to.deep.equal([
-      { value: 1, position: 10 },
-      { value: 2, position: 20 },
-      { value: 3, position: 30 },
-      { value: 5, position: 45 }]);
-  });
-
-  it('not remove number before last', () => {
-    const correctedArray = Scale.correctLastItems(array, 4);
-    expect(correctedArray).to.deep.equal([
-      { value: 1, position: 10 },
-      { value: 2, position: 20 },
-      { value: 3, position: 30 },
-      { value: 4, position: 40 },
-      { value: 5, position: 45 }]);
-  });
-});
-
-describe('create slider', () => {
-  let $slider: JQuery<HTMLElement>;
-  let scaleClass: Scale;
-  let $scale: JQuery<HTMLElement>;
-  let trackParameters: ITrackPosition;
-
-  before(() => {
-    $slider = $(document).find('.js-meta-slider');
-    scaleClass = new Scale($slider, testConfig);
-    $scale = $slider.find('.js-meta-slider__scale');
-    $scale.css('width', '500');
-    trackParameters = { trackStart: 0, trackWidth: 500 };
-    scaleClass.initPositions(trackParameters);
   });
 
   it('check creating scale element', () => {
@@ -143,8 +82,32 @@ describe('create slider', () => {
 
   it('check click scale', () => {
     const eClick = jQuery.Event('click', { target: { dataset: { value: 3 } } });
-    const spy = sinon.spy(scaleClass.observer, 'notify');
     $scale?.triggerHandler(eClick);
     expect(spy.calledOnce).to.equal(true);
+  });
+
+  it('check reduceArray', () => {
+    const correctedArray = Scale.reduceArray(array, 4);
+    expect(correctedArray).to.deep.equal([
+      { value: 1, position: 10 },
+      { value: 4, position: 40 },
+      { value: 7, position: 70 },
+      { value: 10, position: 100 }]);
+  });
+
+  it('check reduceArray', () => {
+    const correctedArray = Scale.reduceArray(array, 5);
+    expect(correctedArray).to.deep.equal([
+      { value: 1, position: 10 },
+      { value: 3, position: 30 },
+      { value: 5, position: 50 },
+      { value: 7, position: 70 },
+      { value: 9, position: 90 },
+      { value: 10, position: 100 }]);
+  });
+
+  it('check not reduceArray', () => {
+    const correctedArray = Scale.reduceArray(array, 12);
+    expect(correctedArray).to.deep.equal(array);
   });
 });

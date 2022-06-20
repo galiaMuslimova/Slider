@@ -1,5 +1,7 @@
 import { expect } from 'chai';
+import sinon from 'sinon';
 import { testOptions, testPositions } from '../defaults';
+import IView from '../view/interface';
 
 import Controller from './Controller';
 import IController from './interface';
@@ -24,6 +26,7 @@ describe('Controller', () => {
   let $scale: JQuery<HTMLElement> | null;
   let $track: JQuery<HTMLElement> | null;
   let $handle: JQuery<HTMLElement> | null;
+  let stub: sinon.SinonStub;
 
   before(() => {
     $rootEl = $(document).find('.js-body__slider');
@@ -40,6 +43,7 @@ describe('Controller', () => {
       hasTip: true,
       withRange: true,
     });
+    stub = sinon.stub(controller?.view as IView, 'initTrackParameters');
     controller.model.init(testPositions);
     $slider = $rootEl.find('.js-meta-slider');
     $track = $rootEl.find('.js-meta-slider__track');
@@ -90,5 +94,37 @@ describe('Controller', () => {
       toPosition: 400,
     };
     expect(controller?.model.getConfig()).to.deep.equal(expectedConfig);
+  });
+
+  it('check correctParameters', () => {
+    controller?.model.changeParameter({ key: 'from', position: 300 });
+    controller?.model.changeParameter({ key: 'to', position: 200 });
+    const expectedConfig = {
+      min: 0,
+      max: 10,
+      step: 1,
+      from: 6,
+      to: 4,
+      isVertical: false,
+      hasTip: true,
+      withRange: true,
+      fromPosition: 300,
+      toPosition: 200,
+    };
+    expect(controller?.model.getConfig()).to.deep.equal(expectedConfig);
+    controller?.view.observer.notify('moveEnd', 0);
+    const correctedConfig = {
+      min: 0,
+      max: 10,
+      step: 1,
+      from: 4,
+      to: 6,
+      isVertical: false,
+      hasTip: true,
+      withRange: true,
+      fromPosition: 200,
+      toPosition: 300,
+    };
+    expect(controller?.model.getConfig()).to.deep.equal(correctedConfig);
   });
 });

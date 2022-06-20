@@ -93,7 +93,7 @@ class View implements IView {
     this.interval.moveInterval(config.fromPosition, config.toPosition);
   }
 
-  private initTrackParameters() {
+  public initTrackParameters(): void {
     const trackParameters = this.track.getTrackParameters();
     this.scale.initPositions(trackParameters);
     this.firstHandle.setTrackParameters(trackParameters);

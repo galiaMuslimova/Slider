@@ -10,6 +10,7 @@ interface IView {
   changeConfig(config: IConfig): void;
   setParameters(parameters: IConfig): void;
   getPositions(): IPositions[];
+  initTrackParameters(): void
 }
 
 export default IView;

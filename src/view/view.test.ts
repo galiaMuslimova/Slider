@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import sinon from 'sinon';
 import { testConfig } from '../defaults';
 import { IConfig } from '../interfaces/interfaces';
 import IView from './interface';
@@ -22,6 +23,7 @@ describe('View', () => {
   const $root: JQuery<HTMLElement> = $(document).find('.js-body__slider');
   let $slider: JQuery<HTMLElement>;
   let view: IView;
+  let stub: sinon.SinonStub;
 
   before(() => {
     view = new View($root, testConfig);
@@ -38,6 +40,7 @@ describe('View', () => {
       toPosition: 400,
     });
     $slider = $root.find('.js-meta-slider');
+    stub = sinon.stub(view, 'initTrackParameters');
   });
 
   it('check creating slider element', () => {
