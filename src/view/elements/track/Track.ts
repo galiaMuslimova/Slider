@@ -57,11 +57,11 @@ class Track implements ITrack {
   }
 
   private handleTrackClick(event: Event): void {
-    const eventPosition = this.isVertical
+    const mousePosition = this.isVertical
       ? (<MouseEvent>event).pageY
       : (<MouseEvent>event).pageX;
     if (this.trackStart !== null) {
-      const position = Math.round(eventPosition - this.trackStart);
+      const position = Math.round(mousePosition - this.trackStart);
       this.observer.notify('trackClick', position);
     } else { throw new Error('wrong track start'); }
   }

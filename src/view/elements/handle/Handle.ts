@@ -94,10 +94,10 @@ class Handle implements IHandle {
   }
 
   private handleMouseMove(event: Event): void {
-    const eventPosition = this.isVertical
+    const mousePosition = this.isVertical
       ? (<MouseEvent>event).pageY
       : (<MouseEvent>event).pageX;
-    const { correctedPosition, isInScale } = this.getCorrectPosition(eventPosition);
+    const { correctedPosition, isInScale } = this.getCorrectPosition(mousePosition);
     if (isInScale) {
       this.observer.notify('mouseMove', correctedPosition);
     }
@@ -118,8 +118,8 @@ class Handle implements IHandle {
   private handleTouchMove(event: Event): void {
     const touches = (<TouchEvent>event)?.touches;
     const touch = touches[0];
-    const eventPosition = this.isVertical ? touch.pageY : touch.pageX;
-    const { correctedPosition, isInScale } = this.getCorrectPosition(eventPosition);
+    const touchPosition = this.isVertical ? touch.pageY : touch.pageX;
+    const { correctedPosition, isInScale } = this.getCorrectPosition(touchPosition);
     if (touches !== undefined && isInScale) {
       this.observer.notify('mouseMove', correctedPosition);
     }
