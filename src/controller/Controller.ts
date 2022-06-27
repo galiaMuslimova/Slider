@@ -31,7 +31,7 @@ class Controller implements IController {
     return this.model.getOptions();
   }
 
-  private init() {
+  private init(): void {
     this.view.observer.subscribe({
       key: 'init',
       observer: this.initParameters.bind(this),
@@ -46,17 +46,17 @@ class Controller implements IController {
     });
   }
 
-  private initParameters() {
+  private initParameters(): void {
     this.model.init(this.view.getPositions());
     this.view.setParameters(this.model.getConfig());
   }
 
-  private changeParameters(setting: ICoordinates) {
+  private changeParameters(setting: ICoordinates): void {
     this.model.changeParameter(setting);
     this.view.setParameters(this.model.getConfig());
   }
 
-  private correctParameters() {
+  private correctParameters(): void {
     this.model.correctParameters();
     this.view.setParameters(this.model.getConfig());
   }

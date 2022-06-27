@@ -140,7 +140,7 @@ class Model implements IModel {
     return index === 0 ? 'from' : 'to';
   }
 
-  private takeClosestParameter(parameter: ICoordinates) {
+  private takeClosestParameter(parameter: ICoordinates): IPositions {
     if (parameter.position) {
       const index = Model.takeClosestIndex(
         parameter.position,

@@ -12,17 +12,17 @@ class Tip implements ITip {
     this.init();
   }
 
-  public init() {
-    this.$tip.addClass('meta-slider__tip js-meta-slider__tip');
-    this.$tip.appendTo(this.$handle);
-  }
-
   public changeTip(item: number): void {
     this.$tip.html(`${item}`);
   }
 
   public getElement(): JQuery<HTMLElement> {
     return this.$tip;
+  }
+
+  private init(): void {
+    this.$tip.addClass('meta-slider__tip js-meta-slider__tip');
+    this.$tip.appendTo(this.$handle);
   }
 }
 

@@ -7,7 +7,7 @@ import {
 
 interface IModel {
   init(positions: IPositions[]): void;
-  changeParameter(parameter: ICoordinates, order?: number): void;
+  changeParameter(parameter: ICoordinates): void;
   correctParameters(): void;
   setOptions(options: IOptions): void;
   getOptions(): IOptions;

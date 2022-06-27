@@ -3,7 +3,6 @@ import IObserver from '../../../observer/interface';
 
 interface IHandle {
   observer: IObserver;
-  hasTip: boolean;
 
   setVertical(isVertical: boolean): void;
   getElement(): JQuery<HTMLElement>;

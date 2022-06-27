@@ -72,18 +72,6 @@ class Scale implements IScale {
     return this.positions;
   }
 
-  private init() {
-    this.$scale.addClass('meta-slider__scale js-meta-slider__scale');
-    this.$scale.appendTo(this.$slider);
-    this.bindEventListeners();
-  }
-
-  private initScale(): void {
-    this.$scale.empty();
-    this.itemWidth = this.takeWidth();
-    this.addValues();
-  }
-
   static reduceArray(array: IPositions[], size: number): IPositions[] {
     const ispositionsSmall = array.length < size;
     if (ispositionsSmall) {
@@ -110,6 +98,18 @@ class Scale implements IScale {
       correctedArray.splice(array.length - 2, 1);
     }
     return correctedArray;
+  }
+
+  private init(): void {
+    this.$scale.addClass('meta-slider__scale js-meta-slider__scale');
+    this.$scale.appendTo(this.$slider);
+    this.bindEventListeners();
+  }
+
+  private initScale(): void {
+    this.$scale.empty();
+    this.itemWidth = this.takeWidth();
+    this.addValues();
   }
 
   private takeWidth(): number {

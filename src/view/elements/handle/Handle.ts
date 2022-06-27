@@ -10,11 +10,9 @@ class Handle implements IHandle {
 
   private $track: JQuery<HTMLElement>;
 
-  public hasTip: boolean;
+  private $handle: JQuery<HTMLElement>;
 
   private isVertical: boolean;
-
-  private $handle: JQuery<HTMLElement>;
 
   private tip: ITip | null;
 
@@ -25,7 +23,6 @@ class Handle implements IHandle {
   constructor($track: JQuery<HTMLElement>, config: IConfig) {
     this.$track = $track;
     this.observer = new Observer();
-    this.hasTip = config.hasTip;
     this.isVertical = config.isVertical;
     this.$handle = jQuery('<div>');
     this.tip = new Tip(this.$handle);
@@ -59,7 +56,6 @@ class Handle implements IHandle {
   }
 
   public toggleTip(hasTip: boolean): void {
-    this.hasTip = hasTip;
     if (hasTip && !this.tip) {
       this.tip = new Tip(this.$handle);
     } else if (!hasTip && this.tip) {

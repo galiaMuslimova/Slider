@@ -45,30 +45,6 @@ class View implements IView {
     this.init();
   }
 
-  private init() {
-    this.$slider.addClass('meta-slider js-meta-slider meta-slider_horizontal');
-    this.$slider.prependTo(this.$root);
-    this.track.observer.subscribe({
-      key: 'trackClick',
-      observer: this.trackClick.bind(this),
-    });
-    this.scale.observer.subscribe({
-      key: 'scaleClick',
-      observer: this.scaleClick.bind(this),
-    });
-    this.firstHandle.observer.subscribe({
-      key: 'mouseMove',
-      observer: this.mouseMove.bind(this, 'from'),
-    });
-    this.firstHandle.observer.subscribe({
-      key: 'moveEnd',
-      observer: this.mouseMoveEnd.bind(this),
-    });
-    this.track.getElement().ready(() => {
-      this.initTrackParameters();
-    });
-  }
-
   public changeConfig(config: IConfig) {
     this.config = config;
     this.scale.setConfig(config);
@@ -99,6 +75,30 @@ class View implements IView {
     this.firstHandle.setTrackParameters(trackParameters);
     this.secondHandle?.setTrackParameters(trackParameters);
     this.observer.notify('init', null);
+  }
+
+  private init(): void {
+    this.$slider.addClass('meta-slider js-meta-slider meta-slider_horizontal');
+    this.$slider.prependTo(this.$root);
+    this.track.observer.subscribe({
+      key: 'trackClick',
+      observer: this.trackClick.bind(this),
+    });
+    this.scale.observer.subscribe({
+      key: 'scaleClick',
+      observer: this.scaleClick.bind(this),
+    });
+    this.firstHandle.observer.subscribe({
+      key: 'mouseMove',
+      observer: this.mouseMove.bind(this, 'from'),
+    });
+    this.firstHandle.observer.subscribe({
+      key: 'moveEnd',
+      observer: this.mouseMoveEnd.bind(this),
+    });
+    this.track.getElement().ready(() => {
+      this.initTrackParameters();
+    });
   }
 
   private toggleDirection(): void {
@@ -147,10 +147,10 @@ class View implements IView {
     this.observer.notify('moveHandle', options);
   }
 
-  private mouseMove(key: 'from' | 'to', eventPosition: number): void {
+  private mouseMove(key: 'from' | 'to', mousePosition: number): void {
     const options: ICoordinates = {
       key,
-      position: eventPosition,
+      position: mousePosition,
     };
     this.observer.notify('moveHandle', options);
   }
