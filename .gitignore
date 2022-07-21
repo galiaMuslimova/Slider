@@ -3,3 +3,7 @@ node_modules
 docs
 dist
 coverage
+.eslintignore
+.eslintrc.js
+.mocharc.js
+.nycrs

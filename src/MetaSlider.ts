@@ -1,20 +1,20 @@
-import Controller from './controller/Controller';
+import Presenter from './presenter/Presenter';
 import { IOptions } from './interfaces/interfaces';
 import IMetaSlider from './interface';
 
 class MetaSlider implements IMetaSlider {
-  readonly controller: Controller;
+  readonly presenter: Presenter;
 
   constructor(element: JQuery<HTMLElement>, options: IOptions) {
-    this.controller = new Controller(element, options);
+    this.presenter = new Presenter(element, options);
   }
 
   public setOptions(options: IOptions): void {
-    this.controller.setOptions(options);
+    this.presenter.setOptions(options);
   }
 
   public getOptions(): IOptions {
-    return this.controller.getOptions();
+    return this.presenter.getOptions();
   }
 }
 

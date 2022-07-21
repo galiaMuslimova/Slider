@@ -2,7 +2,7 @@ import { IOptions } from '../interfaces/interfaces';
 import IModel from '../model/interface';
 import IView from '../view/interface';
 
-interface IController {
+interface IPresenter {
   view: IView;
   model: IModel;
 
@@ -10,4 +10,4 @@ interface IController {
   getOptions(): IOptions
 }
 
-export default IController;
+export default IPresenter;

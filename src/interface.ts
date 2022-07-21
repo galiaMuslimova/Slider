@@ -1,8 +1,8 @@
-import IController from './controller/interface';
+import IPresenter from './Presenter/interface';
 import { IOptions } from './interfaces/interfaces';
 
 interface IMetaSlider {
-  controller: IController;
+  presenter: IPresenter;
 
   setOptions(options: IOptions): void
   getOptions(): IOptions

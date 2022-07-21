@@ -3,8 +3,8 @@ import sinon from 'sinon';
 import { testOptions, testPositions } from '../defaults';
 import IView from '../view/interface';
 
-import Controller from './Controller';
-import IController from './interface';
+import Presenter from './Presenter';
+import IPresenter from './interface';
 
 const { JSDOM } = require('jsdom');
 
@@ -19,10 +19,10 @@ global.window = dom.window;
 const { document } = dom.window;
 global.document = document;
 
-describe('Controller', () => {
+describe('Presenter', () => {
   let $rootEl: JQuery<HTMLElement>;
   let $slider: JQuery<HTMLElement> | null;
-  let controller: IController | null;
+  let presenter: IPresenter | null;
   let $scale: JQuery<HTMLElement> | null;
   let $track: JQuery<HTMLElement> | null;
   let $handle: JQuery<HTMLElement> | null;
@@ -33,7 +33,7 @@ describe('Controller', () => {
   });
 
   beforeEach(() => {
-    controller = new Controller($rootEl, {
+    presenter = new Presenter($rootEl, {
       min: 0,
       max: 10,
       step: 1,
@@ -43,8 +43,8 @@ describe('Controller', () => {
       hasTip: true,
       withRange: true,
     });
-    stub = sinon.stub(controller?.view as IView, 'initTrackParameters');
-    controller.model.init(testPositions);
+    stub = sinon.stub(presenter?.view as IView, 'initTrackParameters');
+    presenter.model.init(testPositions);
     $slider = $rootEl.find('.js-meta-slider');
     $track = $rootEl.find('.js-meta-slider__track');
     $scale = $rootEl.find('.js-meta-slider__scale');
@@ -52,12 +52,12 @@ describe('Controller', () => {
   });
 
   afterEach(() => {
-    controller = null;
+    presenter = null;
     $rootEl.empty();
   });
 
   it('check setOptions', () => {
-    controller?.setOptions({
+    presenter?.setOptions({
       min: -10,
       max: 15,
       step: 2,
@@ -73,11 +73,11 @@ describe('Controller', () => {
       hasTip: true,
       isVertical: false,
     };
-    expect(controller?.getOptions()).to.deep.equal(expectedOptions);
+    expect(presenter?.getOptions()).to.deep.equal(expectedOptions);
   });
 
   it('check changeParameters', () => {
-    controller?.view.observer.notify('moveHandle', {
+    presenter?.view.observer.notify('moveHandle', {
       key: 'from',
       position: 57,
     });
@@ -93,12 +93,12 @@ describe('Controller', () => {
       fromPosition: 50,
       toPosition: 400,
     };
-    expect(controller?.model.getConfig()).to.deep.equal(expectedConfig);
+    expect(presenter?.model.getConfig()).to.deep.equal(expectedConfig);
   });
 
   it('check correctParameters', () => {
-    controller?.model.changeParameter({ key: 'from', position: 300 });
-    controller?.model.changeParameter({ key: 'to', position: 200 });
+    presenter?.model.changeParameter({ key: 'from', position: 300 });
+    presenter?.model.changeParameter({ key: 'to', position: 200 });
     const expectedConfig = {
       min: 0,
       max: 10,
@@ -111,8 +111,8 @@ describe('Controller', () => {
       fromPosition: 300,
       toPosition: 200,
     };
-    expect(controller?.model.getConfig()).to.deep.equal(expectedConfig);
-    controller?.view.observer.notify('moveEnd', 0);
+    expect(presenter?.model.getConfig()).to.deep.equal(expectedConfig);
+    presenter?.view.observer.notify('moveEnd', 0);
     const correctedConfig = {
       min: 0,
       max: 10,
@@ -125,6 +125,6 @@ describe('Controller', () => {
       fromPosition: 200,
       toPosition: 300,
     };
-    expect(controller?.model.getConfig()).to.deep.equal(correctedConfig);
+    expect(presenter?.model.getConfig()).to.deep.equal(correctedConfig);
   });
 });

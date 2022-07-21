@@ -3,9 +3,9 @@ import View from '../view/View';
 import IView from '../view/interface';
 import Model from '../model/Model';
 import IModel from '../model/interface';
-import IController from './interface';
+import IPresenter from './interface';
 
-class Controller implements IController {
+class Presenter implements IPresenter {
   public model: IModel;
 
   public view: IView;
@@ -62,4 +62,4 @@ class Controller implements IController {
   }
 }
 
-export default Controller;
+export default Presenter;
