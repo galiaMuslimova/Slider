@@ -2,7 +2,7 @@ import Observer from '../../../observer/Observer';
 import IObserver from '../../../observer/interface';
 import { IConfig, ITrackPosition } from '../../../interfaces/interfaces';
 import ITip from '../tip/interface';
-import Tip from '../tip/tip';
+import Tip from '../tip/Tip';
 import IHandle from './interface';
 
 class Handle implements IHandle {
