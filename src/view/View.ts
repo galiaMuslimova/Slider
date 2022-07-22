@@ -4,10 +4,10 @@ import Observer from '../observer/Observer';
 import './slider.scss';
 import IView from './interface';
 
-import Track from './elements/track/track';
-import Scale from './elements/scale/scale';
-import Handle from './elements/handle/handle';
-import Interval from './elements/interval/interval';
+import Track from './elements/track/Track';
+import Scale from './elements/scale/Scale';
+import Handle from './elements/handle/Handle';
+import Interval from './elements/interval/Interval';
 import ITrack from './elements/track/interface';
 import IScale from './elements/scale/interface';
 import IHandle from './elements/handle/interface';
