@@ -1,9 +1,11 @@
-demo
 .nyc_output
 node_modules
 dist
+demo
 coverage
 .eslintignore
 .eslintrc.js
 .mocharc.js
 .nycrs
+package-lock.json
+postcss.config.js
