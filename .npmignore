@@ -1,12 +1,14 @@
-docs
+demo
 node-modules
-src
+.mocharc.js
 .eslintignore
 .eslintrc.js
 package-lock.json
 package.json
 tsconfig.json
-Untitled Diagram.drawio
-Untitled Diagram.jpg
-webpack.config.js
-webpack.config.test.js
+postcss.config.js
+UntitledDiagram.drawio
+Diagram.jpg
+webpack.common.js
+webpack.dev.js
+webpack.prod.js

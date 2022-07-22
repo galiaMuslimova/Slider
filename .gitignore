@@ -1,6 +1,6 @@
+demo
 .nyc_output
 node_modules
-docs
 dist
 coverage
 .eslintignore
