@@ -6,7 +6,7 @@ coverage
 .eslintignore
 .eslintrc.js
 .mocharc.js
-.nycrs
+.nycrc
 package-lock.json
 package.json
 postcss.config.js
